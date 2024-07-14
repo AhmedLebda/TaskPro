@@ -1,0 +1,38 @@
+{
+  "name": "backend-template",
+  "version": "1.1.0",
+  "description": "This is a starter template for node/express REST API backend with basic configuration and packages",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node ./index.js",
+    "dev": "cross-env NODE_ENV=development node --env-file=.env --watch ./index.js",
+    "test": "cross-env NODE_ENV=test node --env-file=.env --test --test-concurrency=1",
+    "build:ui": "rm -rf public && cd ../frontend && npm run build && cp -r dist ../backend/public"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongo",
+    "mongoose",
+    "js"
+  ],
+  "author": "Ahmed Lebda",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "express-validator": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1",
+    "mongoose-sequence": "^6.0.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}
