@@ -1,3 +1,6 @@
+# First User ID = "6695476cd4c69e4c1d57c5de"
+# First Note ID = "669548ce40373f7fb0951000"
+
 #!  Get all users
 GET http://localhost:3001/api/users
 Content-Type: application/json
@@ -9,7 +12,7 @@ POST http://localhost:3001/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "test-one",
+    "username": "test-two",
     "password": "test1234"
 }
 
@@ -19,8 +22,8 @@ PATCH http://localhost:3001/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "6694120b83434423ef583524",
-    "roles": "admin"
+    "id": "6695476cd4c69e4c1d57c5de",
+    "active": true
 }
 ###
 
@@ -29,7 +32,7 @@ DELETE http://localhost:3001/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "6694120b83434423ef583524"
+    "id": "66955913cb115f5a2932a91f"
 }
 
 ###

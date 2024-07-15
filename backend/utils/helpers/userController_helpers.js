@@ -1,6 +1,8 @@
 import UserModel from "../../models/User.js";
 import mongoose from "mongoose";
 
+//@desc: Validate the user request body values and return an object with the updates if they are provided
+
 export const validateUserUpdateInput = async (
     id,
     username,
@@ -8,10 +10,12 @@ export const validateUserUpdateInput = async (
     roles,
     active
 ) => {
+    // Throw error if id isn't provided or not a valid ObjectId
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
         throw Error("invalid id");
     }
 
+    // Check user exists in the db
     const user = await UserModel.findById(id);
 
     if (!user) {
@@ -23,19 +27,34 @@ export const validateUserUpdateInput = async (
     if (username) {
         updates = { username };
     }
-    if (roles && Array.isArray(roles) && roles.length !== 0) {
+
+    // Throw error if roles exist but not an array or an  empty array
+    if (roles) {
+        if (!Array.isArray(roles) || roles.length === 0)
+            throw Error(
+                "user roles must be an array and contains one value or more"
+            );
+
         updates = { ...updates, roles };
     }
-    if (typeof active === "boolean") {
+
+    // Throw error if active status exist but not a boolean value
+    if (active) {
+        if (typeof active !== "boolean")
+            throw Error("user active status must be only true or false");
+
         updates = { ...updates, active };
     }
+
     if (password) {
         updates = { ...updates, password };
     }
 
+    // Throw error if there are no provided values to update
     if (!updates) {
         throw Error("No provided values to update");
     }
 
+    // return an object with the provided updates
     return updates;
 };

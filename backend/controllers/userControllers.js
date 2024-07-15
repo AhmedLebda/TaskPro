@@ -1,8 +1,10 @@
+import mongoose from "mongoose";
 // Validation
 import { validationResult } from "express-validator";
 import userValidation from "../middlewares/validation/userValidation.js";
 // Models
-import userModel from "../models/User.js";
+import UserModel from "../models/User.js";
+import NoteModel from "../models/Note.js";
 // Utils
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 import asyncHandler from "express-async-handler";
@@ -11,9 +13,8 @@ import { validateUserUpdateInput } from "../utils/helpers/userController_helpers
 // @desc: get all users
 // @route: GET /users
 // @access: Private
-
 const users_list = asyncHandler(async (req, res) => {
-    const users = await userModel.find({}, { password: 0 }).lean();
+    const users = await UserModel.find({}, { password: 0 }).lean();
     if (users.length === 0) {
         throw Error("There are no users");
     }
@@ -23,7 +24,6 @@ const users_list = asyncHandler(async (req, res) => {
 // @desc: create new users in db
 // @route: POST /users
 // @access: Private
-
 const user_create = [
     // Validate the request username, password, role
     userValidation,
@@ -55,7 +55,7 @@ const user_create = [
         }
 
         // Create a new user in the db
-        const user = new userModel(userObj);
+        const user = new UserModel(userObj);
         const savedUser = await user.save();
 
         // Create an access token with username and id
@@ -78,7 +78,6 @@ const user_create = [
 // @desc: update a user in db
 // @route: PATCH /users
 // @access: Private
-
 const user_update = asyncHandler(async (req, res) => {
     const { id, username, password, roles, active } = req.body;
 
@@ -90,7 +89,7 @@ const user_update = asyncHandler(async (req, res) => {
         active
     );
 
-    const updatedUser = await userModel.findByIdAndUpdate(id, updates, {
+    const updatedUser = await UserModel.findByIdAndUpdate(id, updates, {
         runValidators: true,
         new: true,
     });
@@ -101,14 +100,30 @@ const user_update = asyncHandler(async (req, res) => {
 // @desc: delete a user from db
 // @route: DELETE /users
 // @access: Private
-
 const user_delete = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
-    if (!id) throw Error("user doesn't exist");
+    // Throw error if id is not provided or isn't a valid ObjectId
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) throw Error("invalid id");
 
-    await userModel.findByIdAndDelete(id);
+    // Check if user with the provided id exists in the db
+    const user = await UserModel.findById(id);
 
+    // Throw error if there isn't a user with the provided id in the db
+    if (!user) throw Error("user doesn't exist");
+
+    // Check if the user still have any notes associated to him
+    const associatedNotes = await NoteModel.find({ user: id });
+
+    // if the user have notes then it can't be deleted
+    if (associatedNotes.length > 0) {
+        throw Error(
+            "This user still have opened tasks and it can't be deleted"
+        );
+    }
+
+    // Delete the user and send a deleted status code
+    await user.deleteOne();
     res.sendStatus(204);
 });
 
