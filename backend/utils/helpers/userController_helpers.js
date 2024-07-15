@@ -1,7 +1,7 @@
 import UserModel from "../../models/User.js";
 import mongoose from "mongoose";
 
-export const validateUpdateInput = async (
+export const validateUserUpdateInput = async (
     id,
     username,
     password,

@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
-import Inc from "mongoose-sequence";
+// import Inc from "mongoose-sequence";
+import mongoose from "mongoose";
+import AutoIncrementFactory from "mongoose-sequence";
 
 const noteSchema = new Schema(
     {
@@ -33,7 +35,7 @@ noteSchema.set("toJSON", {
     },
 });
 
-const AutoIncrement = Inc(noteSchema);
+const AutoIncrement = AutoIncrementFactory(mongoose);
 
 noteSchema.plugin(AutoIncrement, {
     inc_field: "ticket",
@@ -41,4 +43,4 @@ noteSchema.plugin(AutoIncrement, {
     start_seq: 500,
 });
 
-export default model("User", userSchema);
+export default model("Note", noteSchema);

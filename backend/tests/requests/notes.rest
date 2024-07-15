@@ -1,0 +1,32 @@
+# First User ID = "6695476cd4c69e4c1d57c5de"
+# First Note ID = "669548ce40373f7fb0951000"
+#! Get all notes
+GET http://localhost:3001/api/notes
+
+###
+#! Create a note
+POST http://localhost:3001/api/notes HTTP/1.1
+Content-Type: application/json
+
+{
+    "user": "6695476cd4c69e4c1d57c5de",
+    "title": "Second note title",
+    "text": "This is a text for my second note"
+}
+###
+#! Update a note
+PATCH http://localhost:3001/api/notes HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "669552967d10fb20c97f4904",
+    "completed": true
+}
+###
+#! Delete a note
+DELETE http://localhost:3001/api/notes HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "669552967d10fb20c97f4904"
+}

@@ -6,7 +6,7 @@ import userModel from "../models/User.js";
 // Utils
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 import asyncHandler from "express-async-handler";
-import { validateUpdateInput } from "../utils/helpers/userController_helpers.js";
+import { validateUserUpdateInput } from "../utils/helpers/userController_helpers.js";
 
 // @desc: get all users
 // @route: GET /users
@@ -82,7 +82,7 @@ const user_create = [
 const user_update = asyncHandler(async (req, res) => {
     const { id, username, password, roles, active } = req.body;
 
-    let updates = await validateUpdateInput(
+    let updates = await validateUserUpdateInput(
         id,
         username,
         password,

@@ -1,7 +1,7 @@
 import express from "express";
 import corsOptions from "./config/corsOptions.js";
 // routes
-import index_Route from "./routes/index.js";
+import note_Routes from "./routes/note.js";
 import user_Routes from "./routes/user.js";
 // middlewares
 import cookieParser from "cookie-parser";
@@ -33,7 +33,7 @@ app.use(morgan("tiny"));
 app.use(logCorsError);
 
 // Routes
-app.use("/api", index_Route);
+app.use("/api/notes", note_Routes);
 app.use("/api/users", user_Routes);
 
 // Unknown endpoint
