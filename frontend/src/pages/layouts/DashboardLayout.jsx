@@ -2,10 +2,13 @@ import Box from "@mui/material/Box";
 import DashboardDrawer from "../../components/dashboard/DashboardDrawer";
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/Footer";
-
 const DashboardLayout = () => {
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box
+            sx={{
+                display: "flex",
+            }}
+        >
             <DashboardDrawer />
             <Box
                 sx={{
@@ -18,9 +21,7 @@ const DashboardLayout = () => {
                     flexDirection: "column",
                 }}
             >
-                <Box component="main">
-                    <Outlet></Outlet>
-                </Box>
+                <Outlet></Outlet>
                 <Footer />
             </Box>
         </Box>
