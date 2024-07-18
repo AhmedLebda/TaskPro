@@ -31,5 +31,23 @@ const createUser = async (userData) => {
     return data;
 };
 
-const UserServices = { getUsersList, createUser };
+const deleteUser = async (id) => {
+    const reqBody = { id };
+    const response = await fetch(BASE_URL, {
+        ...FETCH_OPTIONS,
+        method: "DELETE",
+        body: JSON.stringify(reqBody),
+    });
+
+    // Only parse the response in case of error which returns an error object
+    if (!response.ok) {
+        const data = await response.json();
+        throw Error(data.error);
+    }
+
+    // We return a response object here because in case of successful delete operation the api only returns a status code '204' and no content so if we tried to parse the response into json data it will only return null and not a promise which will cause error in react query mutation function
+    return response;
+};
+
+const UserServices = { getUsersList, createUser, deleteUser };
 export default UserServices;

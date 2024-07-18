@@ -14,9 +14,9 @@ const DashboardLayout = () => {
                 sx={{
                     flexGrow: 1,
                     p: 3,
-                    width: { sm: `calc(100% - 240px)` },
+                    width: { xs: "100%", sm: `calc(100% - 240px)` },
                     mt: "56px",
-                    minHeight: "calc(100vh - 56px)",
+                    minHeight: "calc(100vh - 80px)",
                     display: "flex",
                     flexDirection: "column",
                 }}
