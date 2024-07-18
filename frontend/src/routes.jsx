@@ -5,8 +5,9 @@ import Error from "./pages/404";
 import Login from "./pages/login/Login";
 import DashboardLayout from "./pages/layouts/DashboardLayout";
 import Notes from "./pages/dashboard/Notes";
-import Users from "./pages/dashboard/Users";
+import Users from "./pages/dashboard/users/Users";
 import DashIndex from "./pages/dashboard/DashIndex";
+import AddUserForm from "./pages/dashboard/users/AddUserForm";
 const routes = [
     {
         path: "/",
@@ -39,7 +40,15 @@ const routes = [
                 path: "notes",
                 element: <Notes />,
             },
-            { path: "users", element: <Users /> },
+            {
+                path: "users",
+                element: <Users />,
+            },
+
+            {
+                path: "users/add",
+                element: <AddUserForm />,
+            },
         ],
     },
 ];

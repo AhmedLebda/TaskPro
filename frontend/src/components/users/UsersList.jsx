@@ -8,13 +8,12 @@ import TableBody from "@mui/material/TableBody";
 import { useTheme } from "@mui/material";
 const UsersList = ({ data }) => {
     const theme = useTheme();
-    console.log(theme.palette.primary.main);
     const tableHeaderCells = ["Username", "Status", "Roles", "Join Date"];
     return (
         <TableContainer
             component={Paper}
             elevation={3}
-            style={{ overflowX: "auto" }}
+            style={{ overflow: "auto", maxHeight: "65vh" }}
         >
             <Table aria-label="users table">
                 <TableHead>

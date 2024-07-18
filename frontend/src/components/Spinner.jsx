@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Spinner = () => {
+const Spinner = ({ item = "Data" }) => {
     return (
         <Box
             component="main"
@@ -15,7 +15,7 @@ const Spinner = () => {
             }}
         >
             <CircularProgress />
-            <Typography variant="caption">Getting your notes</Typography>
+            <Typography variant="caption">Getting {item}</Typography>
         </Box>
     );
 };

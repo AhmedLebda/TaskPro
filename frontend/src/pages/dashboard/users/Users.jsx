@@ -1,13 +1,12 @@
-import useUsersQuery from "../../hooks/users/UseUsersQuery";
-import Spinner from "../../components/Spinner";
+import useUsersQuery from "../../../hooks/users/UseUsersQuery";
+import Spinner from "../../../components/Spinner";
 import Alert from "@mui/material/Alert";
-import UsersList from "../../components/users/UsersList";
+import UsersList from "../../../components/users/UsersList";
 const Users = () => {
     const { data, isLoading, error } = useUsersQuery();
-    console.log(data);
 
     if (isLoading) {
-        return <Spinner />;
+        return <Spinner item="Users" />;
     }
 
     if (error) {

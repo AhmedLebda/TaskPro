@@ -8,7 +8,7 @@ const Notes = () => {
     const { data, isLoading, error } = useNotesQuery();
 
     if (isLoading) {
-        return <Spinner />;
+        return <Spinner item="Notes" />;
     }
 
     if (error) {

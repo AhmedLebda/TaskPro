@@ -16,9 +16,9 @@ import DashAvatar from "./DashAvatar";
 import PeopleIcon from "@mui/icons-material/People";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import HomeIcon from "@mui/icons-material/Home";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-
 const drawerWidth = 240;
 
 const DashboardDrawer = () => {
@@ -40,37 +40,48 @@ const DashboardDrawer = () => {
         }
     };
 
+    const drawerLinks = [
+        {
+            title: "Dashboard",
+            path: "/dashboard",
+            icon: <HomeIcon />,
+        },
+        {
+            title: "Users List",
+            path: "users",
+            icon: <PeopleIcon />,
+        },
+        {
+            title: "Notes List",
+            path: "notes",
+            icon: <ChecklistIcon />,
+        },
+        {
+            title: "Add User",
+            path: "users/add",
+            icon: <PersonAddIcon />,
+        },
+    ];
+
     const drawer = (
         <div>
             <Toolbar />
             <Divider />
             <List>
-                <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="/dashboard">
-                        <ListItemIcon>
-                            <HomeIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="users">
-                        <ListItemIcon>
-                            <PeopleIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Users List" />
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem disablePadding>
-                    <ListItemButton component={RouterLink} to="notes">
-                        <ListItemIcon>
-                            <ChecklistIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Notes List" />
-                    </ListItemButton>
-                </ListItem>
+                {drawerLinks.map((item, index) => (
+                    <ListItem disablePadding key={index}>
+                        <ListItemButton
+                            component={RouterLink}
+                            to={item.path}
+                            onClick={handleDrawerClose}
+                        >
+                            <ListItemIcon sx={{ color: "secondary.main" }}>
+                                {item.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={item.title} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
             </List>
         </div>
     );
