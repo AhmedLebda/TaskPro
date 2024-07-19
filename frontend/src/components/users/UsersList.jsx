@@ -1,3 +1,4 @@
+// MUI Components
 import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -7,24 +8,30 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-
-import { useState } from "react";
+import CustomSnackbar from "../CustomSnackbar";
+// MUI Hooks
 import { useTheme } from "@mui/material";
+// React
+import { useState } from "react";
+// React-router-dom
+import { Link as RouterLink } from "react-router-dom";
+// React Query
 import useDeleteUserMutation from "../../hooks/users/UseDeleteUserMutation";
+
+const tableHeaderCells = [
+    "Username",
+    "Status",
+    "Roles",
+    "Join Date",
+    "Options",
+];
 
 const UsersList = ({ data }) => {
     const [snackbar, setSnackbar] = useState({ open: false, msg: "" });
+
     const theme = useTheme();
+
     const deleteUser = useDeleteUserMutation();
-    const tableHeaderCells = [
-        "Username",
-        "Status",
-        "Roles",
-        "Join Date",
-        "Options",
-    ];
 
     const onUserDelete = (id) => {
         deleteUser.mutate(id, {
@@ -39,29 +46,17 @@ const UsersList = ({ data }) => {
         });
     };
 
-    const onUserEdit = (id) => {
-        console.log(`Editing user: ${id}`);
-    };
     const handleSnackbarClose = () => {
         setSnackbar({ ...snackbar, open: false });
     };
 
     return (
         <>
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={6000}
+            <CustomSnackbar
+                isOpen={snackbar.open}
                 onClose={handleSnackbarClose}
-            >
-                <Alert
-                    onClose={handleSnackbarClose}
-                    severity="success"
-                    variant="filled"
-                    sx={{ width: "100%" }}
-                >
-                    {snackbar.msg}
-                </Alert>
-            </Snackbar>
+                message={snackbar.msg}
+            />
             <TableContainer
                 component={Paper}
                 elevation={3}
@@ -99,6 +94,7 @@ const UsersList = ({ data }) => {
                                 <TableCell>
                                     {new Date(user.createdAt).toLocaleString()}
                                 </TableCell>
+                                {/* Options */}
                                 <TableCell align="right">
                                     <Stack spacing={2} direction="row">
                                         <Button
@@ -113,7 +109,8 @@ const UsersList = ({ data }) => {
                                         <Button
                                             variant="outlined"
                                             color="success"
-                                            onClick={() => onUserEdit(user._id)}
+                                            component={RouterLink}
+                                            to={`edit/${user._id}`}
                                         >
                                             Edit
                                         </Button>

@@ -39,7 +39,7 @@ export const validateUserUpdateInput = async (
     }
 
     // Throw error if active status exist but not a boolean value
-    if (active) {
+    if (active !== null || active !== undefined) {
         if (typeof active !== "boolean")
             throw Error("user active status must be only true or false");
 

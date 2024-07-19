@@ -8,6 +8,7 @@ import Notes from "./pages/dashboard/Notes";
 import Users from "./pages/dashboard/users/Users";
 import DashIndex from "./pages/dashboard/DashIndex";
 import AddUserForm from "./pages/dashboard/users/AddUserForm";
+import EditUserForm from "./pages/dashboard/users/EditUserForm";
 const routes = [
     {
         path: "/",
@@ -48,6 +49,10 @@ const routes = [
             {
                 path: "users/add",
                 element: <AddUserForm />,
+            },
+            {
+                path: "users/edit/:userId",
+                element: <EditUserForm />,
             },
         ],
     },

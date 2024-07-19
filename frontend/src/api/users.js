@@ -49,5 +49,19 @@ const deleteUser = async (id) => {
     return response;
 };
 
-const UserServices = { getUsersList, createUser, deleteUser };
+const updateUser = async (updates) => {
+    const response = await fetch(BASE_URL, {
+        ...FETCH_OPTIONS,
+        method: "PATCH",
+        body: JSON.stringify(updates),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw Error(data.error);
+
+    return data;
+};
+
+const UserServices = { getUsersList, createUser, deleteUser, updateUser };
 export default UserServices;
