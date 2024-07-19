@@ -6,5 +6,6 @@ const MONGO_URI =
         : process.env.DB_CONNECTION;
 
 const ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET;
 
-export default { PORT, MONGO_URI, ACCESS_TOKEN_SECRET };
+export default { PORT, MONGO_URI, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET };

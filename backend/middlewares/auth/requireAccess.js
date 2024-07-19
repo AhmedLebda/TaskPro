@@ -1,4 +1,4 @@
-import AuthHelper from "../../utils/helpers/auth_helpers";
+import AuthHelper from "../../utils/helpers/auth_helpers.js";
 
 // Checks For access token in Authorization as a Bearer token
 // if found: it adds the user id to the request (req.userId)

@@ -1,7 +1,10 @@
 import { Router } from "express";
 import userController from "../controllers/userControllers.js";
+import requireAccessToken from "../middlewares/auth/requireAccess.js";
 
 const router = Router();
+
+router.use(requireAccessToken);
 
 router
     .route("/")

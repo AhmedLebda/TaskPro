@@ -34,13 +34,3 @@ Content-Type: application/json
 {
     "id": "66955913cb115f5a2932a91f"
 }
-
-###
-#! Login
-POST http://localhost:3001/api/users/login HTTP/1.1
-Content-Type: application/json
-
-{
-    "username": "test-temp",
-    "password": "test123"
-}

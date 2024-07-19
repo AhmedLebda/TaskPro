@@ -14,8 +14,18 @@ const createAccessToken = (payload) => {
     });
 };
 
+const createRefreshToken = (payload) => {
+    return jwt.sign(payload, config.REFRESH_TOKEN_SECRET, {
+        expiresIn: "1h",
+    });
+};
+
 const verifyAccessToken = (token) => {
     return jwt.verify(token, config.ACCESS_TOKEN_SECRET);
+};
+
+const verifyRefreshToken = (token) => {
+    return jwt.verify(token, config.REFRESH_TOKEN_SECRET);
 };
 
 // Log user with username and password and if credentials are valid it returns the user from db
@@ -47,10 +57,14 @@ const getBearerToken = (req) => {
     return null;
 };
 
-export default {
+const AuthHelpers = {
     generateHashedPassword,
     createAccessToken,
     verifyAccessToken,
     login,
     getBearerToken,
+    createRefreshToken,
+    verifyRefreshToken,
 };
+
+export default AuthHelpers;

@@ -3,6 +3,7 @@ import corsOptions from "./config/corsOptions.js";
 // routes
 import note_Routes from "./routes/note.js";
 import user_Routes from "./routes/user.js";
+import auth_Routes from "./routes/auth.js";
 // middlewares
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -35,6 +36,7 @@ app.use(logCorsError);
 // Routes
 app.use("/api/notes", note_Routes);
 app.use("/api/users", user_Routes);
+app.use("/api/auth", auth_Routes);
 
 // Unknown endpoint
 app.use((req, res) => {

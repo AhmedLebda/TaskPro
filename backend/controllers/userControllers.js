@@ -127,48 +127,6 @@ const user_delete = asyncHandler(async (req, res) => {
     res.sendStatus(204);
 });
 
-// Log-in Controller
-// ==> Validate the request username and password
-// ==> Log-in with login function in auth_helpers module
-// ==> Create an access token with username and id
-// ==> Send response with user data
-// ==> Catch any errors with express-async-errors middleware
-// const user_login = [
-//     validateLogin,
-
-//     asyncHandler(async (req, res) => {
-//         const errors = validationResult(req);
-
-//         // Throw error if there are errors returned from validateLogin middleware
-//         if (!errors.isEmpty()) {
-//             const errorObj = errors.array().reduce((acc, curr) => {
-//                 acc[curr.path] = curr.msg;
-//                 return acc;
-//             }, {});
-//             throw Error(JSON.stringify(errorObj));
-//         }
-
-//         const { username, password } = req.body;
-
-//         const user = await AuthHelpers.login(username, password);
-
-//         const token = AuthHelpers.createAccessToken({
-//             username: user.username,
-//             id: user._id,
-//         });
-
-//         res.json({
-//             access_token: token,
-//             username: user.username,
-//             email: user.email,
-//             name: user.fullName,
-//             id: user.id,
-//         });
-//     }),
-// ];
-
-// Sign-up Controller
-
 const userController = { users_list, user_create, user_update, user_delete };
 
 export default userController;
