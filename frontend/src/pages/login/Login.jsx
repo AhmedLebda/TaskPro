@@ -10,14 +10,22 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
+// Custom hooks
+import useAuthContext from "../../hooks/auth/useAuthContext";
+
 const Login = () => {
-    const handleSubmit = (event) => {
+    const AuthActions = useAuthContext();
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
+
+        const formData = new FormData(event.currentTarget);
+        const data = {
+            username: formData.get("username"),
+            password: formData.get("password"),
+        };
+
+        await AuthActions.login(data);
     };
 
     return (
@@ -48,10 +56,10 @@ const Login = () => {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id="username"
+                        label="username"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
                     />
                     <TextField
