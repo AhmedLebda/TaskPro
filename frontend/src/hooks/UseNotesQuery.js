@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import NoteServices from "../api/notes";
+import useAuthFetch from "./auth/useAuthFetch";
 
-const useNotesQuery = () =>
-    useQuery({
+const useNotesQuery = () => {
+    const getNotes = useAuthFetch("/notes", "GET");
+    return useQuery({
         queryKey: ["notes"],
-        queryFn: NoteServices.getNotesList,
+        queryFn: getNotes,
     });
+};
 
 export default useNotesQuery;

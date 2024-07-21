@@ -9,6 +9,7 @@ import Users from "./pages/dashboard/users/Users";
 import DashIndex from "./pages/dashboard/DashIndex";
 import AddUserForm from "./pages/dashboard/users/AddUserForm";
 import EditUserForm from "./pages/dashboard/users/EditUserForm";
+import ProtectedRoute from "./components/ProtectedRoute";
 const routes = [
     {
         path: "/",
@@ -31,28 +32,33 @@ const routes = [
     },
     {
         path: "dashboard",
-        element: <DashboardLayout />,
+        element: <ProtectedRoute />,
         children: [
             {
-                index: true,
-                element: <DashIndex />,
-            },
-            {
-                path: "notes",
-                element: <Notes />,
-            },
-            {
-                path: "users",
-                element: <Users />,
-            },
+                element: <DashboardLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <DashIndex />,
+                    },
+                    {
+                        path: "notes",
+                        element: <Notes />,
+                    },
+                    {
+                        path: "users",
+                        element: <Users />,
+                    },
 
-            {
-                path: "users/add",
-                element: <AddUserForm />,
-            },
-            {
-                path: "users/edit/:userId",
-                element: <EditUserForm />,
+                    {
+                        path: "users/add",
+                        element: <AddUserForm />,
+                    },
+                    {
+                        path: "users/edit/:userId",
+                        element: <EditUserForm />,
+                    },
+                ],
             },
         ],
     },

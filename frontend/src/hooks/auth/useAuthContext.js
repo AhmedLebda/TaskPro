@@ -3,6 +3,7 @@ import authContext from "../../contexts/auth/authContext";
 import AuthActionsCreator from "../../contexts/auth/authActions";
 import useLoginMutation from "./useLoginMutation";
 import { useNavigate } from "react-router-dom";
+import AuthServices from "../../api/auth";
 
 const useAuthContext = () => {
     const context = useContext(authContext);
@@ -14,7 +15,6 @@ const useAuthContext = () => {
             "useAuthContext must be used inside an AuthContextProvider"
         );
 
-    // eslint-disable-next-line no-unused-vars
     const { user, dispatch } = context;
 
     const login = async (loginData) => {
@@ -27,7 +27,33 @@ const useAuthContext = () => {
         });
     };
 
-    const AuthActions = { login };
+    const setCredentials = (credentials) =>
+        dispatch(AuthActionsCreator.setCredentials(credentials));
+
+    const updateCredentials = (updates) => {
+        dispatch(AuthActionsCreator.updateCredentials(updates));
+    };
+
+    const refreshToken = async () => {
+        try {
+            const token = await AuthServices.refreshToken();
+            if (!token.access_token) {
+                throw Error("Invalid token");
+            }
+            updateCredentials(token);
+        } catch (error) {
+            navigate("/login");
+        }
+    };
+    const getUserData = () => user;
+
+    const AuthActions = {
+        login,
+        updateCredentials,
+        setCredentials,
+        refreshToken,
+        getUserData,
+    };
 
     return AuthActions;
 };

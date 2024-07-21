@@ -1,10 +1,11 @@
 const BASE_URL = "http://localhost:3001/api/auth";
 
 const FETCH_OPTIONS = {
-    method: "cors",
+    mode: "cors",
     headers: {
         "Content-Type": "application/json",
     },
+    credentials: "include",
 };
 
 const login = async (userData) => {
@@ -21,6 +22,18 @@ const login = async (userData) => {
     return data;
 };
 
-const AuthServices = { login };
+const refreshToken = async () => {
+    const response = await fetch(`${BASE_URL}/refresh`, {
+        ...FETCH_OPTIONS,
+        method: "GET",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw Error("refresh token expired");
+    return data;
+};
+
+const AuthServices = { login, refreshToken };
 
 export default AuthServices;

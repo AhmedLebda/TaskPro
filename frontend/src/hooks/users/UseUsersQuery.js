@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import UserServices from "../../api/users";
+import useAuthFetch from "../auth/useAuthFetch";
 
-const useUsersQuery = () =>
-    useQuery({
+const useUsersQuery = () => {
+    const getUsers = useAuthFetch("/users", "GET");
+    return useQuery({
         queryKey: ["users"],
-        queryFn: UserServices.getUsersList,
+        queryFn: getUsers,
     });
+};
 
 export default useUsersQuery;

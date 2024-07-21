@@ -5,6 +5,8 @@ const authReducer = (state, action) => {
     switch (action.type) {
         case "auth/setCredentials":
             return action.payload;
+        case "auth/updateCredentials":
+            return { ...state, ...action.payload };
         case "auth/removeCredentials":
             return null;
         default:
@@ -14,7 +16,7 @@ const authReducer = (state, action) => {
 
 const AuthContextProvider = ({ children }) => {
     const [user, dispatch] = useReducer(authReducer, null);
-
+    console.log(user);
     return (
         <authContext.Provider value={{ user, dispatch }}>
             {children}

@@ -1,9 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import UserServices from "../../api/users";
+import useAuthFetch from "../auth/useAuthFetch";
 
-const useCreateUserMutation = () =>
-    useMutation({
-        mutationFn: (userData) => UserServices.createUser(userData),
+const useCreateUserMutation = () => {
+    const createUser = useAuthFetch("/users", "POST");
+    return useMutation({
+        mutationFn: (userData) => createUser(userData),
+        mutationKey: "createUser",
     });
+};
 
 export default useCreateUserMutation;
