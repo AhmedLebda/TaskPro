@@ -3,7 +3,6 @@ import authContext from "../../contexts/auth/authContext";
 import AuthActionsCreator from "../../contexts/auth/authActions";
 import useLoginMutation from "./useLoginMutation";
 import { useNavigate } from "react-router-dom";
-import AuthServices from "../../api/auth";
 
 const useAuthContext = () => {
     const context = useContext(authContext);
@@ -38,18 +37,6 @@ const useAuthContext = () => {
         });
     };
 
-    const refreshToken = async () => {
-        try {
-            const token = await AuthServices.refreshToken();
-            if (!token.access_token) {
-                throw Error("Invalid token");
-            }
-            return token;
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
     const getUserData = () => user;
 
     const getAuthStatus = () => isAuthenticated;
@@ -59,7 +46,6 @@ const useAuthContext = () => {
         updateCredentials,
         setCredentials,
         resetCredentials,
-        refreshToken,
         getUserData,
         getAuthStatus,
     };

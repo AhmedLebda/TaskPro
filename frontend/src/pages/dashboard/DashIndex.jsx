@@ -6,7 +6,6 @@ const DashIndex = () => {
     const { getUserData } = useAuthContext();
     const username = getUserData()?.username;
     const roles = getUserData()?.roles;
-    console.log(getUserData());
     return (
         <Box>
             <Typography

@@ -22,8 +22,6 @@ const AuthContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    console.log("user data", user);
-    console.log("is Authenticated", isAuthenticated);
     useEffect(() => {
         const checkAuth = async () => {
             if (user) {
@@ -40,7 +38,6 @@ const AuthContextProvider = ({ children }) => {
                 setIsAuthenticated(true);
             } catch (error) {
                 setIsAuthenticated(false);
-                console.log(error.message);
             } finally {
                 setIsLoading(false);
             }
