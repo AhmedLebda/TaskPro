@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
-const DashAvatar = () => {
+const UserAvatar = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -20,7 +20,11 @@ const DashAvatar = () => {
         <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Test user" src="/static/images/avatar/2.jpg" />
+                    <Avatar
+                        alt="Test user"
+                        src="/static/images/avatar/2.jpg"
+                        sx={{ bgcolor: "secondary.main" }}
+                    />
                 </IconButton>
             </Tooltip>
 
@@ -47,9 +51,16 @@ const DashAvatar = () => {
                 >
                     <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
+                <MenuItem
+                    onClick={handleCloseUserMenu}
+                    component={RouterLink}
+                    to="/"
+                >
+                    <Typography textAlign="center">Edit profile</Typography>
+                </MenuItem>
             </Menu>
         </Box>
     );
 };
 
-export default DashAvatar;
+export default UserAvatar;

@@ -15,17 +15,7 @@ const useAuthContext = () => {
             "useAuthContext must be used inside an AuthContextProvider"
         );
 
-    const { user, dispatch } = context;
-
-    const login = async (loginData) => {
-        loginMutation.mutate(loginData, {
-            onSuccess: (data) => {
-                dispatch(AuthActionsCreator.setCredentials(data));
-                navigate("/dashboard");
-            },
-            onError: (error) => console.log(error.message),
-        });
-    };
+    const { user, dispatch, isAuthenticated } = context;
 
     const setCredentials = (credentials) =>
         dispatch(AuthActionsCreator.setCredentials(credentials));
@@ -34,18 +24,31 @@ const useAuthContext = () => {
         dispatch(AuthActionsCreator.updateCredentials(updates));
     };
 
+    const login = async (loginData) => {
+        loginMutation.mutate(loginData, {
+            onSuccess: (data) => {
+                setCredentials(data);
+                navigate("/dashboard");
+            },
+            onError: (error) => console.log(error.message),
+        });
+    };
+
     const refreshToken = async () => {
         try {
             const token = await AuthServices.refreshToken();
             if (!token.access_token) {
                 throw Error("Invalid token");
             }
-            updateCredentials(token);
+            return token;
         } catch (error) {
-            navigate("/login");
+            console.log(error.message);
         }
     };
+
     const getUserData = () => user;
+
+    const getAuthStatus = () => isAuthenticated;
 
     const AuthActions = {
         login,
@@ -53,6 +56,7 @@ const useAuthContext = () => {
         setCredentials,
         refreshToken,
         getUserData,
+        getAuthStatus,
     };
 
     return AuthActions;

@@ -9,9 +9,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-
 // Custom hooks
 import useAuthContext from "../../hooks/auth/useAuthContext";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
     const AuthActions = useAuthContext();
@@ -27,6 +27,10 @@ const Login = () => {
 
         await AuthActions.login(data);
     };
+
+    if (AuthActions.getAuthStatus()) {
+        return <Navigate to="/dashboard" />;
+    }
 
     return (
         <Container component="main" maxWidth="xs">

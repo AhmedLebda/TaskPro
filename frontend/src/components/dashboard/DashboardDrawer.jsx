@@ -12,7 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import DashAvatar from "./DashAvatar";
+import UserAvatar from "./UserAvatar";
 import PeopleIcon from "@mui/icons-material/People";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import HomeIcon from "@mui/icons-material/Home";
@@ -119,7 +119,7 @@ const DashboardDrawer = () => {
                             Home
                         </Button>
                         {/* Avatar */}
-                        <DashAvatar />
+                        <UserAvatar />
                     </Box>
                 </Toolbar>
             </AppBar>

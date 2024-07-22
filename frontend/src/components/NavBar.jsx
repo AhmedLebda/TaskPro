@@ -3,9 +3,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link as RouterLink } from "react-router-dom";
-import { Container } from "@mui/material";
-
+import { Box, Container } from "@mui/material";
+import useAuthContext from "../hooks/auth/useAuthContext";
+import UserAvatar from "./dashboard/UserAvatar";
 const NavBar = () => {
+    const { getAuthStatus } = useAuthContext();
+    const isAuth = getAuthStatus();
     return (
         <AppBar
             position="static"
@@ -25,16 +28,26 @@ const NavBar = () => {
                     >
                         Notes
                     </Typography>
-                    <Button
-                        color="inherit"
-                        component={RouterLink}
-                        to="/dashboard"
-                    >
-                        Dashboard
-                    </Button>
-                    <Button color="inherit" component={RouterLink} to="/login">
-                        Login
-                    </Button>
+                    {isAuth ? (
+                        <Box sx={{ display: "flex", gap: 2 }}>
+                            <Button
+                                color="inherit"
+                                component={RouterLink}
+                                to="/dashboard"
+                            >
+                                Dashboard
+                            </Button>
+                            <UserAvatar />
+                        </Box>
+                    ) : (
+                        <Button
+                            color="inherit"
+                            component={RouterLink}
+                            to="/login"
+                        >
+                            Login
+                        </Button>
+                    )}
                 </Toolbar>
             </Container>
         </AppBar>
