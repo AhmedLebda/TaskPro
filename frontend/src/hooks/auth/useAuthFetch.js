@@ -7,8 +7,8 @@ const useAuthFetch = (endpoint, method) => {
     const accessToken = AuthActions.getUserData()?.access_token;
 
     if (accessToken && !isJwtExpired(accessToken)) {
-        return async (body = {}) =>
-            customFetch(endpoint, method, accessToken, body);
+        return async (body = {}, credentials = "none") =>
+            customFetch(endpoint, method, accessToken, body, credentials);
     }
 
     return async (body = {}) => {

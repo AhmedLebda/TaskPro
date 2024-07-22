@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Container } from "@mui/material";
 import useAuthContext from "../hooks/auth/useAuthContext";
-import UserAvatar from "./dashboard/UserAvatar";
+import UserAvatar from "./UserAvatar";
 const NavBar = () => {
     const { getAuthStatus } = useAuthContext();
     const isAuth = getAuthStatus();

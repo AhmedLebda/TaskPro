@@ -16,14 +16,21 @@ export function isJwtExpired(token) {
     return false;
 }
 
-export const customFetch = async (endpoint, method, token, body) => {
+export const customFetch = async (
+    endpoint,
+    method,
+    token,
+    body,
+    credentials
+) => {
     let options = {
         mode: "cors",
-        method: method,
+        method: method.toUpperCase(),
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
+        credentials: credentials,
     };
     if (method.toLowerCase() !== "get") {
         options.body = JSON.stringify(body);

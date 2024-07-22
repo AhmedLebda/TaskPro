@@ -24,6 +24,10 @@ const useAuthContext = () => {
         dispatch(AuthActionsCreator.updateCredentials(updates));
     };
 
+    const resetCredentials = () => {
+        dispatch(AuthActionsCreator.removeCredentials());
+    };
+
     const login = async (loginData) => {
         loginMutation.mutate(loginData, {
             onSuccess: (data) => {
@@ -54,6 +58,7 @@ const useAuthContext = () => {
         login,
         updateCredentials,
         setCredentials,
+        resetCredentials,
         refreshToken,
         getUserData,
         getAuthStatus,
