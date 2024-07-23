@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useAuthFetch from "./auth/useAuthFetch";
+import useAuthFetch from "../auth/useAuthFetch";
 
 const useNotesQuery = () => {
     const getNotes = useAuthFetch("/notes", "GET");

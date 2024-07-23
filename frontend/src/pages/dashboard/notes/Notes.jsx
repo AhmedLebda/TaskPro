@@ -1,4 +1,4 @@
-import useNotesQuery from "../../../hooks/UseNotesQuery";
+import useNotesQuery from "../../../hooks/notes/useNotesQuery";
 import Spinner from "../../../components/Spinner";
 import Alert from "@mui/material/Alert";
 import NoteCard from "../../../components/notes/NoteCard";
