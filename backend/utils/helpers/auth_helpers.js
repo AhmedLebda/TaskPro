@@ -10,13 +10,13 @@ const generateHashedPassword = async (password) => {
 
 const createAccessToken = (payload) => {
     return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1h",
+        expiresIn: config.ACCESS_TOKEN_EXPIRY,
     });
 };
 
 const createRefreshToken = (payload) => {
     return jwt.sign(payload, config.REFRESH_TOKEN_SECRET, {
-        expiresIn: "1h",
+        expiresIn: config.REFRESH_TOKEN_EXPIRY,
     });
 };
 

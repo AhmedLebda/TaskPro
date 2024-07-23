@@ -1,10 +1,11 @@
 // Utils
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 import asyncHandler from "express-async-handler";
+import config from "../config/config.js";
 
 const refCookieOptions = {
     httpOnly: true,
-    maxAge: 1 * 60 * 60 * 1000,
+    maxAge: config.REFRESH_TOKEN_EXPIRY * 1000,
 };
 
 // @Desc: log user in
@@ -19,7 +20,12 @@ const login = asyncHandler(async (req, res) => {
         id: user._id,
     });
 
-    const refreshToken = AuthHelpers.createRefreshToken({ id: user._id });
+    const refreshToken = AuthHelpers.createRefreshToken({
+        id: user._id,
+        username: user.username,
+        active: user.active,
+        roles: user.roles,
+    });
 
     res.cookie("ref_jwt", refreshToken, refCookieOptions);
 
@@ -27,6 +33,7 @@ const login = asyncHandler(async (req, res) => {
         access_token: accessToken,
         username: user.username,
         roles: user.roles,
+        active: user.active,
         id: user.id,
     });
 });
@@ -55,12 +62,16 @@ const refresh = asyncHandler(async (req, res) => {
     // Send a successful response with the new access token
     res.status(200).json({
         access_token: accessToken,
+        id: decoded.id,
+        username: decoded.username,
+        roles: decoded.roles,
+        active: decoded.active,
     });
 });
 
 // @Desc: logs user out
 // @Route: POST /api/auth/logout
-// @Access: Private
+// @Access: Public
 const logout = asyncHandler(async (req, res) => {
     res.clearCookie("ref_jwt");
     res.status(200).json({ message: "Cookies cleared!" });
