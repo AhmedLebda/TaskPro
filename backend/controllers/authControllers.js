@@ -2,6 +2,7 @@
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 import asyncHandler from "express-async-handler";
 import config from "../config/config.js";
+import User from "../models/User.js";
 
 const refCookieOptions = {
     httpOnly: true,
@@ -13,7 +14,7 @@ const refCookieOptions = {
 // @Access: Public
 const login = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
-    console.log(username, password);
+
     const user = await AuthHelpers.login(username, password);
 
     const accessToken = AuthHelpers.createAccessToken({
@@ -22,9 +23,6 @@ const login = asyncHandler(async (req, res) => {
 
     const refreshToken = AuthHelpers.createRefreshToken({
         id: user._id,
-        username: user.username,
-        active: user.active,
-        roles: user.roles,
     });
 
     res.cookie("ref_jwt", refreshToken, refCookieOptions);
@@ -59,13 +57,16 @@ const refresh = asyncHandler(async (req, res) => {
         id: decoded.id,
     });
 
+    // Get target user
+    const user = await User.findById(decoded.id).lean();
+    console.log(user);
     // Send a successful response with the new access token
     res.status(200).json({
         access_token: accessToken,
         id: decoded.id,
-        username: decoded.username,
-        roles: decoded.roles,
-        active: decoded.active,
+        username: user.username,
+        roles: user.roles,
+        active: user.active,
     });
 });
 
