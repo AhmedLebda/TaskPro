@@ -6,10 +6,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import useUpdateNoteMutation from "../../hooks/notes/useUpdateNoteMutation";
-
+import useDeleteNoteMutation from "../../hooks/notes/useDeleteNoteMutation";
 const NoteCardAction = ({ noteId, completed }) => {
     const updateNoteMutation = useUpdateNoteMutation();
-
+    const deleteNoteMutation = useDeleteNoteMutation();
     const [anchorEl, setAnchorEl] = useState(null);
 
     const open = Boolean(anchorEl);
@@ -24,6 +24,12 @@ const NoteCardAction = ({ noteId, completed }) => {
 
     const handleChangeCompletedStatus = () => {
         updateNoteMutation.mutate({ id: noteId, completed: !completed });
+        handleClose();
+    };
+
+    const handleNoteDelete = () => {
+        console.log(noteId);
+        deleteNoteMutation.mutate({ id: noteId });
         handleClose();
     };
 
@@ -54,7 +60,7 @@ const NoteCardAction = ({ noteId, completed }) => {
                 >
                     Edit
                 </MenuItem>
-                <MenuItem onClick={handleClose}>Delete</MenuItem>
+                <MenuItem onClick={handleNoteDelete}>Delete</MenuItem>
             </Menu>
         </>
     );
