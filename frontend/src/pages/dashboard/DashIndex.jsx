@@ -2,10 +2,26 @@ import { Box, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import useAuthContext from "../../hooks/auth/useAuthContext";
 import BadgeIcon from "@mui/icons-material/Badge";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+
 const DashIndex = () => {
     const { getUserData } = useAuthContext();
-    const username = getUserData()?.username;
-    const roles = getUserData()?.roles;
+    const user = getUserData();
+    const username = user.username;
+    const roles = user.roles;
+    const active = user.active;
+
+    const roleChips = roles.map((role) => (
+        <Chip
+            key={role}
+            icon={<BadgeIcon />}
+            label={role}
+            color="secondary"
+            sx={{ p: 1, mb: 4, textTransform: "capitalize" }}
+        />
+    ));
+
     return (
         <Box>
             <Typography
@@ -18,12 +34,16 @@ const DashIndex = () => {
             >
                 Welcome {username}
             </Typography>
-            <Chip
-                icon={<BadgeIcon />}
-                label={roles}
-                color="secondary"
-                sx={{ p: 2, mb: 4 }}
-            />
+
+            <Box sx={{ display: "flex", gap: 2 }}>
+                {roleChips}
+                <Chip
+                    icon={active ? <CheckCircleIcon /> : <CancelIcon />}
+                    label={active ? "Active" : "Inactive"}
+                    color={active ? "success" : "error"}
+                    sx={{ p: 2, mb: 4 }}
+                />
+            </Box>
 
             <Typography paragraph color="text.secondary">
                 Today: {new Date().toLocaleString()}

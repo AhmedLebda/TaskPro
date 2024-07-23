@@ -3,6 +3,7 @@ import authContext from "./authContext";
 import { useEffect, useReducer, useState } from "react";
 import { Box } from "@mui/material";
 import Spinner from "../../components/Spinner";
+import AuthActionsCreator from "./authActions";
 
 const authReducer = (state, action) => {
     switch (action.type) {
@@ -21,7 +22,6 @@ const AuthContextProvider = ({ children }) => {
     const [user, dispatch] = useReducer(authReducer, null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
     useEffect(() => {
         const checkAuth = async () => {
             if (user) {
@@ -31,11 +31,11 @@ const AuthContextProvider = ({ children }) => {
             }
 
             try {
-                const token = await AuthServices.refreshToken();
-                if (!token.access_token) {
+                const user = await AuthServices.refreshToken();
+                if (!user.access_token) {
                     throw Error("Invalid token");
                 }
-                setIsAuthenticated(true);
+                dispatch(AuthActionsCreator.updateCredentials(user));
             } catch (error) {
                 setIsAuthenticated(false);
             } finally {

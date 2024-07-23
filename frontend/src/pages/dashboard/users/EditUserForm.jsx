@@ -19,12 +19,17 @@ import { useQueryClient } from "@tanstack/react-query";
 import useUpdateUserMutation from "../../../hooks/users/UseUpdateUserMutation";
 // React
 import { useState } from "react";
+import useAuthContext from "../../../hooks/auth/useAuthContext";
+
 const EditUserForm = () => {
     // Getting user id from the url params
     const { userId } = useParams();
 
     // navigate hook to redirect user after successful action
     const navigate = useNavigate();
+
+    // context hook to get the update credentials method
+    const { updateCredentials } = useAuthContext();
 
     // Getting query client to get cached user data
     const queryClient = useQueryClient();
@@ -43,7 +48,7 @@ const EditUserForm = () => {
 
     // Find the specific user with id from url parameters
     const user = cachedData?.find((user) => user._id === userId);
-
+    // console.log(user);
     // Function that checks if a role active
     const isRoleActive = (role) => user?.roles.includes(role);
 
@@ -75,11 +80,13 @@ const EditUserForm = () => {
             updates = { ...updates, password };
         }
         if (checkedRoles.length !== 0) {
-            updates = { ...updates, checkedRoles };
+            updates = { ...updates, roles: checkedRoles };
         }
 
         updateMutation.mutate(updates, {
-            onSuccess: () => {
+            onSuccess: (res) => {
+                const { username, active, roles } = res;
+                updateCredentials({ username, active, roles });
                 navigate("/dashboard/users");
             },
             onError: (error) => {
