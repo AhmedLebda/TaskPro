@@ -1,15 +1,21 @@
+import ProtectedRoute from "./components/ProtectedRoute";
 import MainLayout from "./pages/layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Error from "./pages/404";
 import Login from "./pages/login/Login";
+// Dashboard pages
 import DashboardLayout from "./pages/layouts/DashboardLayout";
-import Notes from "./pages/dashboard/Notes";
+// ==> index
+import DashIndex from "./pages/dashboard/index/DashIndex";
+// ==> Users
 import Users from "./pages/dashboard/users/Users";
-import DashIndex from "./pages/dashboard/DashIndex";
 import AddUserForm from "./pages/dashboard/users/AddUserForm";
 import EditUserForm from "./pages/dashboard/users/EditUserForm";
-import ProtectedRoute from "./components/ProtectedRoute";
+// ==> notes
+import Notes from "./pages/dashboard/notes/Notes";
+import CreateNoteForm from "./pages/dashboard/notes/CreateNoteForm";
+import EditNoteForm from "./pages/dashboard/notes/EditNoteForm";
 const routes = [
     {
         path: "/",
@@ -42,10 +48,6 @@ const routes = [
                         element: <DashIndex />,
                     },
                     {
-                        path: "notes",
-                        element: <Notes />,
-                    },
-                    {
                         path: "users",
                         element: <Users />,
                     },
@@ -57,6 +59,18 @@ const routes = [
                     {
                         path: "users/edit/:userId",
                         element: <EditUserForm />,
+                    },
+                    {
+                        path: "notes",
+                        element: <Notes />,
+                    },
+                    {
+                        path: "notes/create",
+                        element: <CreateNoteForm />,
+                    },
+                    {
+                        path: "notes/edit/:noteId",
+                        element: <EditNoteForm />,
                     },
                 ],
             },

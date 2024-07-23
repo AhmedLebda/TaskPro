@@ -8,11 +8,11 @@ import NoteCardSubHeader from "./NoteCardSubHeader";
 import NoteCardAction from "./NoteCardAction";
 // Icons
 
-const NoteCard = ({ title, createdAt, text, completed }) => {
+const NoteCard = ({ id, title, createdAt, text, completed }) => {
     return (
         <Card elevation={3}>
             <CardHeader
-                action={<NoteCardAction />}
+                action={<NoteCardAction noteId={id} />}
                 title={title}
                 subheader={
                     <NoteCardSubHeader

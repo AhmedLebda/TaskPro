@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
-import useAuthContext from "../../hooks/auth/useAuthContext";
+import useAuthContext from "../../../hooks/auth/useAuthContext";
 import BadgeIcon from "@mui/icons-material/Badge";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";

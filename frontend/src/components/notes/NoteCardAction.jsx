@@ -4,8 +4,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-const NoteCardAction = () => {
+const NoteCardAction = ({ noteId }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const open = Boolean(anchorEl);
@@ -35,8 +36,15 @@ const NoteCardAction = () => {
                     "aria-labelledby": "basic-button",
                 }}
             >
-                <MenuItem onClick={handleClose}>Delete</MenuItem>
                 <MenuItem onClick={handleClose}>Change status</MenuItem>
+                <MenuItem
+                    onClick={handleClose}
+                    component={RouterLink}
+                    to={`edit/${noteId}`}
+                >
+                    Edit
+                </MenuItem>
+                <MenuItem onClick={handleClose}>Delete</MenuItem>
             </Menu>
         </>
     );

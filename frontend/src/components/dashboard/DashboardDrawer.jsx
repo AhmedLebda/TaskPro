@@ -19,6 +19,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import CreateIcon from "@mui/icons-material/Create";
+
 const drawerWidth = 240;
 
 const DashboardDrawer = () => {
@@ -51,15 +53,21 @@ const DashboardDrawer = () => {
             path: "users",
             icon: <PeopleIcon />,
         },
+
+        {
+            title: "Add User",
+            path: "users/add",
+            icon: <PersonAddIcon />,
+        },
         {
             title: "Notes List",
             path: "notes",
             icon: <ChecklistIcon />,
         },
         {
-            title: "Add User",
-            path: "users/add",
-            icon: <PersonAddIcon />,
+            title: "Create Note",
+            path: "notes/Create",
+            icon: <CreateIcon />,
         },
     ];
 

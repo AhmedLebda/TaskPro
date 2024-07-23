@@ -1,7 +1,7 @@
-import useNotesQuery from "../../hooks/UseNotesQuery";
-import Spinner from "../../components/Spinner";
+import useNotesQuery from "../../../hooks/UseNotesQuery";
+import Spinner from "../../../components/Spinner";
 import Alert from "@mui/material/Alert";
-import NoteCard from "../../components/notes/NoteCard";
+import NoteCard from "../../../components/notes/NoteCard";
 import { Grid } from "@mui/material";
 
 const Notes = () => {
@@ -32,6 +32,7 @@ const Notes = () => {
                 {data.map((note) => (
                     <Grid item key={note._id}>
                         <NoteCard
+                            id={note._id}
                             title={note.title}
                             createdAt={note.createdAt}
                             text={note.text}
