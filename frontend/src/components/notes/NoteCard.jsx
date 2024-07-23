@@ -12,7 +12,7 @@ const NoteCard = ({ id, title, createdAt, text, completed }) => {
     return (
         <Card elevation={3}>
             <CardHeader
-                action={<NoteCardAction noteId={id} />}
+                action={<NoteCardAction noteId={id} completed={completed} />}
                 title={title}
                 subheader={
                     <NoteCardSubHeader

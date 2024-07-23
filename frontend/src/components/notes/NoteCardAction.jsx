@@ -5,8 +5,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import useUpdateNoteMutation from "../../hooks/notes/useUpdateNoteMutation";
 
-const NoteCardAction = ({ noteId }) => {
+const NoteCardAction = ({ noteId, completed }) => {
+    const updateNoteMutation = useUpdateNoteMutation();
+
     const [anchorEl, setAnchorEl] = useState(null);
 
     const open = Boolean(anchorEl);
@@ -17,6 +20,11 @@ const NoteCardAction = ({ noteId }) => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleChangeCompletedStatus = () => {
+        updateNoteMutation.mutate({ id: noteId, completed: !completed });
+        handleClose();
     };
 
     return (
@@ -36,7 +44,9 @@ const NoteCardAction = ({ noteId }) => {
                     "aria-labelledby": "basic-button",
                 }}
             >
-                <MenuItem onClick={handleClose}>Change status</MenuItem>
+                <MenuItem onClick={handleChangeCompletedStatus}>
+                    Change status
+                </MenuItem>
                 <MenuItem
                     onClick={handleClose}
                     component={RouterLink}
