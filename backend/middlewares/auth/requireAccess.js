@@ -1,27 +1,34 @@
 import AuthHelper from "../../utils/helpers/auth_helpers.js";
-import User from "../../models/User.js";
+import asyncHandler from "express-async-handler";
 
-// Checks For access token in Authorization as a Bearer token
-// Checks for user active status
-// if found: it adds the user id to the request (req.userId)
-
-const requireAccessToken = async (req, res, next) => {
+// Gives access only to authenticated active users (with a valid access token)
+const requireAccessToken = asyncHandler(async (req, res, next) => {
+    // get access token from Authorization
     const token = AuthHelper.getBearerToken(req);
 
+    // Verify access token
     const decodedToken = AuthHelper.verifyAccessToken(token);
 
+    // Throw error if token is invalid
     if (!decodedToken.id) {
-        return res.status(401).json({ error: "invalid token" });
+        return res.status(401).json({ error: "invalid token", isError: true });
     }
-    const user = await User.findById(decodedToken.id).lean();
 
-    if (!user.active) {
-        return res
-            .status(401)
-            .json({ error: "Your account is currently inactive" });
+    // Check if user is active
+    const isManager = await AuthHelper.isActiveUser(decodedToken.id);
+
+    // Throw error if user isn't active
+    if (!isManager) {
+        return res.status(401).json({
+            error: "Your account is currently inactive",
+            isError: true,
+        });
     }
+
+    // add the user id to the request object
     req.userId = decodedToken.id;
+
     next();
-};
+});
 
 export default requireAccessToken;

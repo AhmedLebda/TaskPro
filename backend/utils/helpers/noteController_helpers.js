@@ -46,7 +46,7 @@ export const validateNoteUpdateInput = async (
         updates = { ...updates, text };
     }
 
-    if (completed !== null || completed !== undefined) {
+    if (completed !== undefined) {
         if (typeof completed !== "boolean")
             throw Error("completed value can only be true or false");
         updates = { ...updates, completed };

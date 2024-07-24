@@ -57,6 +57,17 @@ const getBearerToken = (req) => {
     return null;
 };
 
+const isManagerUser = async (userId) => {
+    const user = await User.findById(userId).lean();
+    const roles = user.roles;
+    return roles.includes("manager" || "admin");
+};
+
+const isActiveUser = async (userId) => {
+    const user = await User.findById(userId).lean();
+    return user.active;
+};
+
 const AuthHelpers = {
     generateHashedPassword,
     createAccessToken,
@@ -65,6 +76,8 @@ const AuthHelpers = {
     getBearerToken,
     createRefreshToken,
     verifyRefreshToken,
+    isManagerUser,
+    isActiveUser,
 };
 
 export default AuthHelpers;
