@@ -6,11 +6,22 @@ import Typography from "@mui/material/Typography";
 // Custom Components
 import NoteCardSubHeader from "./NoteCardSubHeader";
 import NoteCardAction from "./NoteCardAction";
-// Icons
+import Paper from "@mui/material/Paper";
 
-const NoteCard = ({ id, title, createdAt, text, completed }) => {
+const NoteCard = ({ id, title, createdAt, text, completed, ticket }) => {
     return (
         <Card elevation={3}>
+            <Paper
+                elevation={0}
+                sx={{
+                    px: 2,
+                    pt: 1,
+                    color: "primary.main",
+                    fontWeight: 900,
+                }}
+            >
+                #{ticket}
+            </Paper>
             <CardHeader
                 action={<NoteCardAction noteId={id} completed={completed} />}
                 title={title}
@@ -20,6 +31,7 @@ const NoteCard = ({ id, title, createdAt, text, completed }) => {
                         completed={completed}
                     />
                 }
+                sx={{ pt: 1 }}
             />
             <Divider />
             <CardContent>

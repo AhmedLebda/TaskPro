@@ -3,9 +3,11 @@ import Spinner from "../../../components/Spinner";
 import Alert from "@mui/material/Alert";
 import NoteCard from "../../../components/notes/NoteCard";
 import { Grid } from "@mui/material";
+import Masonry from "@mui/lab/Masonry";
 
 const Notes = () => {
     const { data, isLoading, error } = useNotesQuery();
+    const sortedNotesData = data?.sort((note) => (note.completed ? 1 : -1));
 
     if (isLoading) {
         return <Spinner item="Notes" />;
@@ -20,26 +22,28 @@ const Notes = () => {
         <>
             <Grid
                 sx={{
-                    flexGrow: 1,
                     justifyContent: {
                         xs: "center",
                         sm: "start",
                     },
                 }}
                 container
-                spacing={2}
+                spacing={0}
             >
-                {data.map((note) => (
-                    <Grid item key={note._id}>
-                        <NoteCard
-                            id={note._id}
-                            title={note.title}
-                            createdAt={note.createdAt}
-                            text={note.text}
-                            completed={note.completed}
-                        />
-                    </Grid>
-                ))}
+                <Masonry columns={{ xs: 1, md: 2, lg: 3, xl: 4 }}>
+                    {sortedNotesData.map((note) => (
+                        <Grid item key={note._id}>
+                            <NoteCard
+                                id={note._id}
+                                title={note.title}
+                                createdAt={note.createdAt}
+                                text={note.text}
+                                completed={note.completed}
+                                ticket={note.ticket}
+                            />
+                        </Grid>
+                    ))}
+                </Masonry>
             </Grid>
         </>
     );
