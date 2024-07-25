@@ -11,9 +11,10 @@ const requireManagerialRole = asyncHandler(async (req, res, next) => {
 
     // If user isn't a manager or admin respond with an unauthorized error
     if (!isManager) {
-        return res
-            .status(401)
-            .json({ error: "Only Managers are authorized", isError: true });
+        return res.status(401).json({
+            error: "Access Denied: Only managers are permitted to perform this action.",
+            isError: true,
+        });
     }
 
     next();

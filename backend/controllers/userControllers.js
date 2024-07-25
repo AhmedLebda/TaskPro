@@ -24,6 +24,8 @@ const users_list = asyncHandler(async (req, res) => {
 // @desc: create new users in db
 // @route: POST /users
 // @access: Private
+// @permissions: Admin and Manager only
+// @permissions: Admin => create another admins
 const user_create = [
     // Validate the request username, password, role
     userValidation,
@@ -41,6 +43,19 @@ const user_create = [
         }
 
         const { username, password, roles } = req.body;
+
+        // Id of the user who made the request
+        const requesterUserId = req.userId;
+
+        // Throw an error if the requester is not an admin and attempts to create a user with an admin role.
+        const isAdmin = await AuthHelpers.isAdminUser(requesterUserId);
+
+        if (!isAdmin && roles.includes("admin")) {
+            return res.status(401).json({
+                error: "Access Denied: Only Admin are permitted to create users with admin permissions.",
+                isError: true,
+            });
+        }
 
         // Hash user password
         const hashedPassword = await AuthHelpers.generateHashedPassword(
@@ -78,11 +93,13 @@ const user_create = [
 // @desc: update a user in db
 // @route: PATCH /users
 // @access: Private
+// @permissions: Admin and Manager or account owner
+// @permissions: Admin and Manager => update roles
+// @permissions: Admin => update roles to admin
 const user_update = asyncHandler(async (req, res) => {
     const { id, username, password, roles, active } = req.body;
 
     let updates = await validateUserUpdateInput(
-        id,
         username,
         password,
         roles,
@@ -103,6 +120,10 @@ const user_update = asyncHandler(async (req, res) => {
 const user_delete = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
+    const requesterUserId = req.userId;
+
+    const isAdmin = await AuthHelpers.isAdminUser(requesterUserId);
+
     // Throw error if id is not provided or isn't a valid ObjectId
     if (!id || !mongoose.Types.ObjectId.isValid(id)) throw Error("invalid id");
 
@@ -111,6 +132,14 @@ const user_delete = asyncHandler(async (req, res) => {
 
     // Throw error if there isn't a user with the provided id in the db
     if (!user) throw Error("user doesn't exist");
+
+    // Throw error if non admin user tries to delete an admin user
+    if (user.roles.includes("admin") && !isAdmin) {
+        return res.status(401).json({
+            error: "Access Denied: Only admins are permitted to perform this action.",
+            isError: true,
+        });
+    }
 
     // Check if the user still have any notes associated to him
     const associatedNotes = await NoteModel.find({ user: id });

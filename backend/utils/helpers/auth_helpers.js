@@ -63,6 +63,12 @@ const isManagerUser = async (userId) => {
     return roles.includes("manager" || "admin");
 };
 
+const isAdminUser = async (userId) => {
+    const user = await User.findById(userId).lean();
+    const roles = user.roles;
+    return roles.includes("admin");
+};
+
 const isActiveUser = async (userId) => {
     const user = await User.findById(userId).lean();
     return user.active;
@@ -78,6 +84,7 @@ const AuthHelpers = {
     verifyRefreshToken,
     isManagerUser,
     isActiveUser,
+    isAdminUser,
 };
 
 export default AuthHelpers;
