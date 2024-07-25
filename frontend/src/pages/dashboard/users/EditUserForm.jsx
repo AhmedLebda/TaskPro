@@ -29,7 +29,10 @@ const EditUserForm = () => {
     const navigate = useNavigate();
 
     // context hook to get the update credentials method
-    const { updateCredentials } = useAuthContext();
+    const { updateCredentials, getUserData } = useAuthContext();
+
+    // Get the user id
+    const currentUserId = getUserData().id;
 
     // Getting query client to get cached user data
     const queryClient = useQueryClient();
@@ -85,8 +88,11 @@ const EditUserForm = () => {
 
         updateMutation.mutate(updates, {
             onSuccess: (res) => {
-                const { username, active, roles } = res;
-                updateCredentials({ username, active, roles });
+                const { id, username, active, roles } = res;
+                // Only update the user info. if the user is trying to update his own account info. so admins and managers don't update the user info. state with wrong info when they try to update another user info.
+                if (id === currentUserId) {
+                    updateCredentials({ username, active, roles });
+                }
                 navigate("/dashboard/users");
             },
             onError: (error) => {
