@@ -38,6 +38,15 @@ const useAuthContext = () => {
     };
 
     const getUserData = () => user;
+    const getUserRole = () => {
+        if (user.roles.includes("admin")) {
+            return "admin";
+        } else if (user.roles.includes("manager")) {
+            return "manager";
+        } else {
+            return "employee";
+        }
+    };
 
     const getAuthStatus = () => isAuthenticated;
 
@@ -48,6 +57,7 @@ const useAuthContext = () => {
         resetCredentials,
         getUserData,
         getAuthStatus,
+        getUserRole,
     };
 
     return AuthActions;

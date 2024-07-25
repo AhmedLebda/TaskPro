@@ -17,6 +17,8 @@ import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // React Query
 import useDeleteUserMutation from "../../hooks/users/UseDeleteUserMutation";
+// context
+import useAuthContext from "../../hooks/auth/useAuthContext";
 
 const tableHeaderCells = [
     "Username",
@@ -33,6 +35,8 @@ const UsersList = ({ data }) => {
 
     const deleteUser = useDeleteUserMutation();
 
+    const { getUserRole } = useAuthContext();
+
     const onUserDelete = (id) => {
         deleteUser.mutate(id, {
             onSuccess: () => {
@@ -48,6 +52,12 @@ const UsersList = ({ data }) => {
 
     const handleSnackbarClose = () => {
         setSnackbar({ ...snackbar, open: false });
+    };
+
+    const showOptions = (userRoles, currentUserRoles) => {
+        return userRoles.includes("admin") && currentUserRoles !== "admin"
+            ? false
+            : true;
     };
 
     return (
@@ -95,26 +105,29 @@ const UsersList = ({ data }) => {
                                     {new Date(user.createdAt).toLocaleString()}
                                 </TableCell>
                                 {/* Options */}
+
                                 <TableCell align="right">
-                                    <Stack spacing={2} direction="row">
-                                        <Button
-                                            variant="outlined"
-                                            color="error"
-                                            onClick={() =>
-                                                onUserDelete(user._id)
-                                            }
-                                        >
-                                            Delete
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            color="success"
-                                            component={RouterLink}
-                                            to={`edit/${user._id}`}
-                                        >
-                                            Edit
-                                        </Button>
-                                    </Stack>
+                                    {showOptions(user.roles, getUserRole()) && (
+                                        <Stack spacing={2} direction="row">
+                                            <Button
+                                                variant="outlined"
+                                                color="error"
+                                                onClick={() =>
+                                                    onUserDelete(user._id)
+                                                }
+                                            >
+                                                Delete
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                color="success"
+                                                component={RouterLink}
+                                                to={`edit/${user._id}`}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </Stack>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}

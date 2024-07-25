@@ -20,12 +20,15 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import CreateIcon from "@mui/icons-material/Create";
+import useAuthContext from "../../hooks/auth/useAuthContext";
 
 const drawerWidth = 240;
 
 const DashboardDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
+    const { getUserRole, getUserData } = useAuthContext();
+    const userId = getUserData().id;
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -49,19 +52,8 @@ const DashboardDrawer = () => {
             icon: <HomeIcon />,
         },
         {
-            title: "Users List",
-            path: "users",
-            icon: <PeopleIcon />,
-        },
-
-        {
-            title: "Add User",
-            path: "users/add",
-            icon: <PersonAddIcon />,
-        },
-        {
-            title: "Notes List",
-            path: "notes",
+            title: "My Notes",
+            path: `notes/${userId}`,
             icon: <ChecklistIcon />,
         },
         {
@@ -70,6 +62,28 @@ const DashboardDrawer = () => {
             icon: <CreateIcon />,
         },
     ];
+    if (getUserRole() === "admin" || getUserRole() === "manager") {
+        drawerLinks.push(
+            ...[
+                {
+                    title: "All Notes",
+                    path: "notes",
+                    icon: <ChecklistIcon />,
+                },
+                {
+                    title: "Users List",
+                    path: "users",
+                    icon: <PeopleIcon />,
+                },
+
+                {
+                    title: "Add User",
+                    path: "users/add",
+                    icon: <PersonAddIcon />,
+                },
+            ]
+        );
+    }
 
     const drawer = (
         <div>
