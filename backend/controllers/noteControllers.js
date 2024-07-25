@@ -9,6 +9,12 @@ import AuthHelpers from "../utils/helpers/auth_helpers.js";
 // @route: GET /api/notes
 // @access: Private
 const notes_list = asyncHandler(async (req, res) => {
+    // id of user who made the request
+    const requesterId = req.userId;
+
+    // Verify the role of the user who submitted the request.
+    const isManager = await AuthHelpers.isManagerUser(requesterId);
+
     // Get all notes from db with the user field populated with user data
     const notes = await NoteModel.find({})
         .populate({ path: "user", select: "username" })
@@ -17,7 +23,17 @@ const notes_list = asyncHandler(async (req, res) => {
     // Throw error if there aren't any notes in the db
     if (notes.length === 0) throw Error("There are no notes");
 
-    res.status(200).json(notes);
+    // Return all notes if the user is a manager
+    if (isManager) {
+        return res.status(200).json(notes);
+    }
+
+    // Filter notes to return only notes of the employee who made the request
+    const employeeNotes = notes.filter(
+        (note) => note.user._id.toString() === requesterId
+    );
+    console.log(employeeNotes);
+    return res.status(200).json(employeeNotes);
 });
 
 // @desc: Add a new note to db
