@@ -8,7 +8,15 @@ import NoteCardSubHeader from "./NoteCardSubHeader";
 import NoteCardAction from "./NoteCardAction";
 import Paper from "@mui/material/Paper";
 
-const NoteCard = ({ id, title, createdAt, text, completed, ticket }) => {
+const NoteCard = ({
+    id,
+    title,
+    createdAt,
+    text,
+    completed,
+    ticket,
+    username,
+}) => {
     return (
         <Card elevation={3}>
             <Paper
@@ -35,8 +43,23 @@ const NoteCard = ({ id, title, createdAt, text, completed, ticket }) => {
             />
             <Divider />
             <CardContent>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body1" color="text.secondary">
                     {text}
+                </Typography>
+            </CardContent>
+
+            <CardContent>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                        color: "primary.main",
+                        textAlign: "right",
+                        fontStyle: "italic",
+                        fontWeight: "bold",
+                    }}
+                >
+                    Assigned to: {username}
                 </Typography>
             </CardContent>
         </Card>

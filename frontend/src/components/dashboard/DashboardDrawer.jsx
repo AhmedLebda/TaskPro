@@ -27,8 +27,7 @@ const drawerWidth = 240;
 const DashboardDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const { getUserRole, getUserData } = useAuthContext();
-    const userId = getUserData().id;
+    const { getUserRole } = useAuthContext();
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -53,7 +52,7 @@ const DashboardDrawer = () => {
         },
         {
             title: "My Notes",
-            path: `notes/${userId}`,
+            path: "notes",
             icon: <ChecklistIcon />,
         },
         {
@@ -67,7 +66,7 @@ const DashboardDrawer = () => {
             ...[
                 {
                     title: "All Notes",
-                    path: "notes",
+                    path: "notes?view=all",
                     icon: <ChecklistIcon />,
                 },
                 {
