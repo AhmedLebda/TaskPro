@@ -2,8 +2,11 @@ import Box from "@mui/material/Box";
 import DashboardDrawer from "../../components/dashboard/DashboardDrawer";
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/Footer";
+import CustomSnackbar from "../../components/CustomSnackbar";
+import useSnackbar from "../../hooks/ui/useSnackbar";
 
 const DashboardLayout = () => {
+    const { snackbar, resetSnackbar } = useSnackbar();
     return (
         <Box
             sx={{
@@ -22,6 +25,11 @@ const DashboardLayout = () => {
                     flexDirection: "column",
                 }}
             >
+                <CustomSnackbar
+                    isOpen={snackbar.open}
+                    message={snackbar.message}
+                    onClose={resetSnackbar}
+                />
                 <Outlet></Outlet>
                 <Footer />
             </Box>

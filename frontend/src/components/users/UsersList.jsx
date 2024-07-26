@@ -8,17 +8,13 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import CustomSnackbar from "../CustomSnackbar";
-// MUI Hooks
-import { useTheme } from "@mui/material";
-// React
-import { useState } from "react";
 // React-router-dom
 import { Link as RouterLink } from "react-router-dom";
 // React Query
 import useDeleteUserMutation from "../../hooks/users/UseDeleteUserMutation";
 // context
 import useAuthContext from "../../hooks/auth/useAuthContext";
+import useSnackbar from "../../hooks/ui/useSnackbar";
 
 const tableHeaderCells = [
     "Username",
@@ -29,31 +25,26 @@ const tableHeaderCells = [
 ];
 
 const UsersList = ({ data }) => {
-    const [snackbar, setSnackbar] = useState({ open: false, msg: "" });
-
-    const theme = useTheme();
-
+    // Delete user mutation
     const deleteUser = useDeleteUserMutation();
 
+    // Getting the current user role
     const { getUserRole } = useAuthContext();
+    const currentUserRole = getUserRole();
 
+    // Show snackbar on successful actions
+    const { showSnackbar } = useSnackbar();
+
+    // Delete user handler
     const onUserDelete = (id) => {
         deleteUser.mutate(id, {
             onSuccess: () => {
-                console.log(`Deleted user: ${id}`);
-                setSnackbar({
-                    ...snackbar,
-                    open: true,
-                    msg: "User deleted successfully",
-                });
+                showSnackbar("User Deleted!");
             },
         });
     };
 
-    const handleSnackbarClose = () => {
-        setSnackbar({ ...snackbar, open: false });
-    };
-
+    // Only show options to delete or edit admin users if the current user is an admin
     const showOptions = (userRoles, currentUserRoles) => {
         return userRoles.includes("admin") && currentUserRoles !== "admin"
             ? false
@@ -62,11 +53,6 @@ const UsersList = ({ data }) => {
 
     return (
         <>
-            <CustomSnackbar
-                isOpen={snackbar.open}
-                onClose={handleSnackbarClose}
-                message={snackbar.msg}
-            />
             <TableContainer
                 component={Paper}
                 elevation={3}
@@ -80,10 +66,8 @@ const UsersList = ({ data }) => {
                                     align="left"
                                     key={cell}
                                     sx={{
-                                        backgroundColor:
-                                            theme.palette.secondary.main,
-                                        color: theme.palette.secondary
-                                            .contrastText,
+                                        bgcolor: "secondary.main",
+                                        color: "secondary.contrastText",
                                     }}
                                 >
                                     {cell}
@@ -107,7 +91,10 @@ const UsersList = ({ data }) => {
                                 {/* Options */}
 
                                 <TableCell align="right">
-                                    {showOptions(user.roles, getUserRole()) && (
+                                    {showOptions(
+                                        user.roles,
+                                        currentUserRole
+                                    ) && (
                                         <Stack spacing={2} direction="row">
                                             <Button
                                                 variant="outlined"

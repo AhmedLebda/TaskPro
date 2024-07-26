@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // Contexts
 import AuthContextProvider from "./contexts/auth/AuthContextProvider";
-
+import SnackbarContextProvider from "./contexts/ui/snackbar/SnackbarContextProvider";
 const router = createBrowserRouter(routes);
 // Create a client
 const queryClient = new QueryClient();
@@ -19,8 +19,10 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <AuthContextProvider>
-                <RouterProvider router={router} />
-                <ReactQueryDevtools initialIsOpen={false} />
+                <SnackbarContextProvider>
+                    <RouterProvider router={router} />
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </SnackbarContextProvider>
             </AuthContextProvider>
         </QueryClientProvider>
     );
