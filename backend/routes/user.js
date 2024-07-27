@@ -15,4 +15,5 @@ router
     .patch(checkUserUpdatePermissions, userController.user_update)
     .delete(requireManagerialRole, userController.user_delete);
 
+router.get("/:id", userController.user_details);
 export default router;

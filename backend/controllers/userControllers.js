@@ -156,6 +156,59 @@ const user_delete = asyncHandler(async (req, res) => {
     res.sendStatus(204);
 });
 
-const userController = { users_list, user_create, user_update, user_delete };
+// @desc: get a single user details by id
+// @route: GET /users/:id
+// @access: Private
+// @permissions: Admin, Manager, Account owner
+const user_details = asyncHandler(async (req, res) => {
+    // Id of user which we request to get his details
+    const targetUserId = req.params.id;
+
+    // Id of user who made the request
+    const requesterUserId = req.userId;
+
+    // Check requester roles
+    const isManagerOrAdmin = await AuthHelpers.isManagerUser(requesterUserId);
+    const isAdmin = await AuthHelpers.isAdminUser(requesterUserId);
+
+    // Throw error if id isn't provided or not a valid ObjectId
+    if (!targetUserId || !mongoose.Types.ObjectId.isValid(targetUserId)) {
+        throw Error("invalid id");
+    }
+
+    // Check user exists in the db
+    const user = await UserModel.findById(targetUserId)
+        .select("username active roles")
+        .lean();
+
+    if (!user) {
+        throw Error("user not found");
+    }
+
+    // Throw Error if user who made request isn't the account owner or an admin or manager
+    if (requesterUserId !== targetUserId && !isManagerOrAdmin) {
+        return res.status(401).json({
+            error: "Access Denied: Only managers are permitted to perform this action.",
+            isError: true,
+        });
+    }
+
+    // Throw error if user is not an admin and tries to update info of a user with admin role
+    if (user.roles.includes("admin") && !isAdmin) {
+        return res.status(401).json({
+            error: "Access Denied: Only admins are permitted to perform this action.",
+            isError: true,
+        });
+    }
+    res.status(200).json(user);
+});
+
+const userController = {
+    users_list,
+    user_create,
+    user_update,
+    user_delete,
+    user_details,
+};
 
 export default userController;
