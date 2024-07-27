@@ -12,7 +12,8 @@ import useAuthContext from "../hooks/auth/useAuthContext";
 const UserAvatar = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const logout = useAuthFetch("/auth/logout", "POST");
-    const { resetCredentials } = useAuthContext();
+    const { resetCredentials, getUserData } = useAuthContext();
+    const currentUserId = getUserData()?.id;
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -62,7 +63,7 @@ const UserAvatar = () => {
                 <MenuItem
                     onClick={handleCloseUserMenu}
                     component={RouterLink}
-                    to="/"
+                    to={`/dashboard/users/edit/${currentUserId}`}
                 >
                     <Typography textAlign="center">Edit profile</Typography>
                 </MenuItem>

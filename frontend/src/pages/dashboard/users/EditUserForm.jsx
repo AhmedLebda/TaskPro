@@ -12,14 +12,31 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormHelperText from "@mui/material/FormHelperText";
 import Alert from "@mui/material/Alert";
+// Custom Component
+import Spinner from "../../../components/Spinner";
 // React-router-dom
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 // React Query
-import { useQueryClient } from "@tanstack/react-query";
 import useUpdateUserMutation from "../../../hooks/users/UseUpdateUserMutation";
+import useUserDetailsQuery from "../../../hooks/users/useUserDetailsQuery";
 // React
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useAuthContext from "../../../hooks/auth/useAuthContext";
+
+// Initial Form state
+const initialFormData = {
+    username: "",
+    password: "",
+    active: false,
+    roles: {
+        employee: false,
+        manager: false,
+        admin: false,
+    },
+};
+
+// List of all available roles
+const roles = ["employee", "manager", "admin"];
 
 const EditUserForm = () => {
     // Getting user id from the url params
@@ -34,56 +51,93 @@ const EditUserForm = () => {
     // Get the user id
     const currentUserId = getUserData().id;
 
-    // Getting query client to get cached user data
-    const queryClient = useQueryClient();
+    // Get user data
+    const { data: user, isLoading, error: fetchError } = useUserDetailsQuery();
 
     // Custom hook to create an update user mutation
     const updateMutation = useUpdateUserMutation();
 
-    // Getting users Data from cache
-    const cachedData = queryClient.getQueryData(["users"]);
-
     // Error state to display errors
     const [error, setError] = useState(null);
 
-    // List of all available roles
-    const roles = ["employee", "manager", "admin"];
+    // Form fields state
+    const [formData, setFormData] = useState(initialFormData);
 
-    // Find the specific user with id from url parameters
-    const user = cachedData?.find((user) => user._id === userId);
-    // console.log(user);
-    // Function that checks if a role active
-    const isRoleActive = (role) => user?.roles.includes(role);
+    // Get the active roles when data comes from api
+    const getActiveRoles = useCallback(() => {
+        return user?.roles.reduce(
+            (acc, curr) => {
+                acc[curr] = true;
+                return acc;
+            },
+            { ...initialFormData.roles }
+        );
+    }, [user]);
 
-    // Form States
-    const [username, setUsername] = useState(user?.username);
-    const [password, setPassword] = useState("");
-    const [isActive, setIsActive] = useState(user?.active);
-    const [rolesState, setRolesState] = useState({
-        employee: isRoleActive("employee"),
-        manager: isRoleActive("manager"),
-        admin: isRoleActive("admin"),
-    });
+    useEffect(() => {
+        if (user) {
+            const userData = {
+                username: user.username,
+                active: user.active,
+                roles: { ...initialFormData.roles, ...getActiveRoles() },
+            };
 
-    const handleRolesStateChange = (e) =>
-        setRolesState({
-            ...rolesState,
-            [e.target.name]: e.target.checked,
-        });
+            setFormData({ ...initialFormData, ...userData });
+        }
+    }, [getActiveRoles, user]);
 
+    // Handles change in form data
+    const handleFormDataChange = (e) => {
+        if (e.target.name === "active") {
+            setFormData({ ...formData, [e.target.name]: e.target.checked });
+            return;
+        }
+
+        if (e.target.type === "checkbox") {
+            setFormData({
+                ...formData,
+                roles: { ...formData.roles, [e.target.name]: e.target.checked },
+            });
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        }
+    };
+
+    // Handles form submit
     const handleSubmit = (event) => {
         event.preventDefault();
-        let updates = { id: userId, active: isActive };
-        const checkedRoles = roles.filter((role) => rolesState[role]);
+        let updates = { id: userId };
 
-        if (username && username !== user.username) {
-            updates = { ...updates, username };
+        if (formData.username !== user.username) {
+            updates = { ...updates, username: formData.username };
         }
-        if (password) {
-            updates = { ...updates, password };
+
+        if (formData.password) {
+            updates = { ...updates, password: formData.password };
         }
-        if (checkedRoles.length !== 0) {
-            updates = { ...updates, roles: checkedRoles };
+
+        if (
+            JSON.stringify(formData.roles) !== JSON.stringify(getActiveRoles())
+        ) {
+            const rolesArray = [];
+
+            for (let [key, value] of Object.entries(formData.roles)) {
+                if (value) {
+                    rolesArray.push(key);
+                }
+            }
+            console.log(rolesArray);
+
+            updates = { ...updates, roles: rolesArray };
+        }
+
+        if (formData.active !== user.active) {
+            updates = { ...updates, active: formData.active };
+        }
+        console.log(updates);
+        if (Object.values(updates).length === 1) {
+            setError("You didn't provide new data to update");
+            return;
         }
 
         updateMutation.mutate(updates, {
@@ -101,9 +155,12 @@ const EditUserForm = () => {
         });
     };
 
-    // return to the users list in dashboard if the user can't be found in the cache
-    if (!user) {
-        return <Navigate to="/dashboard/users" />;
+    if (fetchError) {
+        setError(fetchError.message);
+    }
+
+    if (isLoading) {
+        return <Spinner />;
     }
 
     return (
@@ -139,8 +196,8 @@ const EditUserForm = () => {
                                 id="username"
                                 label="username"
                                 autoFocus
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={formData.username}
+                                onChange={handleFormDataChange}
                             />
                         </Grid>
                         {/* Password */}
@@ -152,8 +209,8 @@ const EditUserForm = () => {
                                 type="password"
                                 id="password"
                                 autoComplete="new-password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={formData.password}
+                                onChange={handleFormDataChange}
                             />
                         </Grid>
                         {/* Roles */}
@@ -170,10 +227,8 @@ const EditUserForm = () => {
                                     control={
                                         <Checkbox
                                             name="active"
-                                            checked={isActive}
-                                            onChange={(e) =>
-                                                setIsActive(e.target.checked)
-                                            }
+                                            checked={formData.active}
+                                            onChange={handleFormDataChange}
                                         />
                                     }
                                     label="Active"
@@ -198,9 +253,11 @@ const EditUserForm = () => {
                                             control={
                                                 <Checkbox
                                                     name={role}
-                                                    checked={rolesState[role]}
+                                                    checked={
+                                                        formData.roles[role]
+                                                    }
                                                     onChange={
-                                                        handleRolesStateChange
+                                                        handleFormDataChange
                                                     }
                                                 />
                                             }
