@@ -26,7 +26,7 @@ const NavBar = () => {
                             color: "inherit",
                         }}
                     >
-                        Notes
+                        TaskPro
                     </Typography>
                     {isAuth ? (
                         <Box sx={{ display: "flex", gap: 2 }}>
