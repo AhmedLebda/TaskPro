@@ -9,7 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 // List of all available roles
 const roles = ["employee", "manager", "admin"];
 
-const RolesFieldset = ({ isVisible, rolesValues, onChange }) => {
+const RolesFieldset = ({ isVisible = true, rolesValues, onChange }) => {
     return (
         <Grid item xs={12}>
             {isVisible && (
