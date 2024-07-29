@@ -1,6 +1,5 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
@@ -9,31 +8,29 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-// Custom hooks
-import useAuthContext from "../../hooks/auth/useAuthContext";
+import Alert from "@mui/material/Alert";
+// Custom Components
+import UsernameInput from "../../components/users/UsernameInput";
+import PasswordInput from "../../components/users/PasswordInput";
+// Custom Hooks
+import useLogin from "../../hooks/ui/login/useLogin";
+// React-router-dom
 import { Navigate } from "react-router-dom";
 
 const Login = () => {
-    const AuthActions = useAuthContext();
+    const {
+        formData,
+        isAuthenticated,
+        error,
+        handleSubmit,
+        handleFormDataChange,
+    } = useLogin();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(event.currentTarget);
-        const data = {
-            username: formData.get("username"),
-            password: formData.get("password"),
-        };
-
-        await AuthActions.login(data);
-    };
-
-    if (AuthActions.getAuthStatus()) {
-        return <Navigate to="/dashboard" />;
-    }
+    if (isAuthenticated) return <Navigate to="/dashboard" />;
 
     return (
         <Container component="main" maxWidth="xs">
+            {error && <Alert severity="error">{error}</Alert>}
             <Box
                 sx={{
                     marginTop: 8,
@@ -56,31 +53,30 @@ const Login = () => {
                     noValidate
                     sx={{ mt: 1 }}
                 >
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="username"
-                        name="username"
-                        autoComplete="username"
-                        autoFocus
-                    />
-                    <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                    />
+                    <Grid container spacing={2}>
+                        <UsernameInput
+                            value={formData.username}
+                            onChange={handleFormDataChange}
+                        />
 
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
+                        <PasswordInput
+                            value={formData.password}
+                            onChange={handleFormDataChange}
+                        />
+
+                        {/* Still not working */}
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        value="remember"
+                                        color="primary"
+                                    />
+                                }
+                                label="Remember me"
+                            />
+                        </Grid>
+                    </Grid>
 
                     <Button
                         type="submit"
@@ -91,6 +87,7 @@ const Login = () => {
                         Sign In
                     </Button>
 
+                    {/* Still not working */}
                     <Grid container>
                         <Grid item xs>
                             <Link href="#" variant="body2">

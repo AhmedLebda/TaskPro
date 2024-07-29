@@ -1,13 +1,9 @@
 import { useContext } from "react";
 import authContext from "../../contexts/auth/authContext";
 import AuthActionsCreator from "../../contexts/auth/authActions";
-import useLoginMutation from "./useLoginMutation";
-import { useNavigate } from "react-router-dom";
 
 const useAuthContext = () => {
     const context = useContext(authContext);
-    const loginMutation = useLoginMutation();
-    const navigate = useNavigate();
 
     if (!context)
         throw Error(
@@ -27,17 +23,8 @@ const useAuthContext = () => {
         dispatch(AuthActionsCreator.removeCredentials());
     };
 
-    const login = async (loginData) => {
-        loginMutation.mutate(loginData, {
-            onSuccess: (data) => {
-                setCredentials(data);
-                navigate("/dashboard");
-            },
-            onError: (error) => console.log(error.message),
-        });
-    };
-
     const getUserData = () => user;
+
     const getUserRole = () => {
         if (user.roles.includes("admin")) {
             return "admin";
@@ -51,13 +38,12 @@ const useAuthContext = () => {
     const getAuthStatus = () => isAuthenticated;
 
     const AuthActions = {
-        login,
-        updateCredentials,
         setCredentials,
+        updateCredentials,
         resetCredentials,
         getUserData,
-        getAuthStatus,
         getUserRole,
+        getAuthStatus,
     };
 
     return AuthActions;
