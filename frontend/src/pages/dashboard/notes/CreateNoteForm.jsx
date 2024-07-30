@@ -6,47 +6,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
+// Custom Components
+import UsersSelect from "../../../components/notes/UsersSelect";
 // Custom Hooks
-import useNoteCreateMutation from "../../../hooks/notes/useCreateNoteMutation";
-import useAuthContext from "../../../hooks/auth/useAuthContext";
-// React-router-dom
-import { useNavigate } from "react-router-dom";
-// React
-import { useState } from "react";
+import useCreateNote from "../../../hooks/ui/notes/useCreateNote";
 
 const CreateNoteForm = () => {
-    // Error state
-    const [error, setError] = useState(null);
-    // Getting user data from the global context
-    const { getUserData } = useAuthContext();
-    const user = getUserData();
-    // Note mutation to create new notes
-    const noteMutation = useNoteCreateMutation();
-    // navigate hook to redirect user after successful note creation
-    const navigate = useNavigate();
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(e.currentTarget);
-        const title = formData.get("title");
-        const text = formData.get("text");
-
-        // user must provide title and text for note
-        if (!title || !text) {
-            setError("not enough data to create a note");
-            return;
-        }
-
-        // Create a new note and redirect user to notes list in case of success or show alert of the error message in case of error
-        noteMutation.mutate(
-            { user: user.id, title, text },
-            {
-                onSuccess: () => navigate("/dashboard/notes"),
-                onError: (error) => setError(error.message),
-            }
-        );
-    };
+    const { error, formData, handleFormDataChange, handleSubmit } =
+        useCreateNote();
 
     return (
         <Container component="main" maxWidth="xs">
@@ -72,7 +39,7 @@ const CreateNoteForm = () => {
                     sx={{ mt: 3 }}
                 >
                     <Grid container spacing={2}>
-                        {/* Username */}
+                        {/* Title */}
                         <Grid item xs={12}>
                             <TextField
                                 autoComplete="given-name"
@@ -82,9 +49,12 @@ const CreateNoteForm = () => {
                                 id="title"
                                 label="title"
                                 autoFocus
+                                value={formData.title}
+                                onChange={handleFormDataChange}
                             />
                         </Grid>
-                        {/* Password */}
+
+                        {/* Text */}
                         <Grid item xs={12}>
                             <TextField
                                 required
@@ -94,6 +64,17 @@ const CreateNoteForm = () => {
                                 name="text"
                                 label="Text"
                                 id="text"
+                                value={formData.text}
+                                onChange={handleFormDataChange}
+                            />
+                        </Grid>
+
+                        {/* Assign note to a user (only for admins and managers) */}
+
+                        <Grid item xs={12}>
+                            <UsersSelect
+                                value={formData.user}
+                                onChange={handleFormDataChange}
                             />
                         </Grid>
                     </Grid>

@@ -10,81 +10,13 @@ import Checkbox from "@mui/material/Checkbox";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-// React
-import { useState } from "react";
-// React-router-dom
-import { useParams, useNavigate } from "react-router-dom";
-// React Query
-import { useQueryClient } from "@tanstack/react-query";
-import useUpdateNoteMutation from "../../../hooks/notes/useUpdateNoteMutation";
-
+// Custom Component
+import UsersSelect from "../../../components/notes/UsersSelect";
+// Custom Hooks
+import useEditNote from "../../../hooks/ui/notes/useEditNote";
 const EditNoteForm = () => {
-    // Error State
-    const [error, setError] = useState(null);
-
-    // Get query client to get cached notes data
-    const queryClient = useQueryClient();
-
-    // Get notes Data from cache
-    const cachedData = queryClient.getQueryData(["notes"]);
-
-    // Get note id from the url parameters
-    const { noteId } = useParams();
-
-    // find the target note
-    const note = cachedData && cachedData.find((note) => note._id === noteId);
-
-    // update mutation
-    const updateNoteMutation = useUpdateNoteMutation();
-
-    // Navigate user
-    const navigate = useNavigate();
-
-    // Form state
-    const [formData, setFormData] = useState({
-        title: note.title,
-        text: note.text,
-        completed: note.completed,
-    });
-
-    // Handling form data change
-    const handleFormDataChange = (e) => {
-        if (e.target.name === "completed") {
-            setFormData({ ...formData, [e.target.name]: e.target.checked });
-            return;
-        }
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    // Handling form submit
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const { title, text, completed } = formData;
-
-        // Creating the update object
-        let updates = { id: noteId };
-        if (title && title !== note.title) {
-            updates = { ...updates, title };
-        }
-        if (text && text !== note.text) {
-            updates = { ...updates, text };
-        }
-        if (completed !== note.completed) {
-            updates = { ...updates, completed };
-        }
-
-        // If the updates object doesn't contain title or text or completed status then there is nothing to update
-        if (!updates.title && !updates.text && !updates.completed) {
-            setError("not enough data to create a note");
-            return;
-        }
-
-        updateNoteMutation.mutate(updates, {
-            onSuccess: () => navigate("/dashboard/notes"),
-            onError: ({ message }) => setError(message),
-        });
-    };
+    const { error, formData, handleFormDataChange, handleSubmit } =
+        useEditNote();
 
     return (
         <Container component="main" maxWidth="xs">
@@ -110,7 +42,7 @@ const EditNoteForm = () => {
                     sx={{ mt: 3 }}
                 >
                     <Grid container spacing={2}>
-                        {/* Username */}
+                        {/* Title */}
                         <Grid item xs={12}>
                             <TextField
                                 autoComplete="given-name"
@@ -124,7 +56,8 @@ const EditNoteForm = () => {
                                 onChange={handleFormDataChange}
                             />
                         </Grid>
-                        {/* Password */}
+
+                        {/* Text */}
                         <Grid item xs={12}>
                             <TextField
                                 required
@@ -139,6 +72,7 @@ const EditNoteForm = () => {
                             />
                         </Grid>
 
+                        {/* Completed Status */}
                         <Grid item xs={12}>
                             <FormControl
                                 component="fieldset"
@@ -159,6 +93,13 @@ const EditNoteForm = () => {
                                     label="completed"
                                 />
                             </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <UsersSelect
+                                value={formData.user}
+                                onChange={handleFormDataChange}
+                            />
                         </Grid>
                     </Grid>
 
