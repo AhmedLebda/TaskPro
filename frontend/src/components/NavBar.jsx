@@ -28,6 +28,9 @@ const NavBar = () => {
                     >
                         TaskPro
                     </Typography>
+                    <Button color="inherit" component={RouterLink} to="/about">
+                        About
+                    </Button>
                     {isAuth ? (
                         <Box sx={{ display: "flex", gap: 2 }}>
                             <Button

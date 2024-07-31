@@ -2,7 +2,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MainLayout from "./pages/layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Error from "./pages/404";
+import PageNotFound from "./pages/PageNotFound";
 import Login from "./pages/login/Login";
 // Dashboard pages
 import DashboardLayout from "./pages/layouts/DashboardLayout";
@@ -20,7 +20,7 @@ const routes = [
     {
         path: "/",
         element: <MainLayout />,
-        errorElement: <Error />,
+        errorElement: <PageNotFound />,
         children: [
             {
                 index: true,
