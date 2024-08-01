@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-import { BASE_URL } from "../api/config";
 
+// Checks if a JWT (JSON Web Token) is expired.
 export function isJwtExpired(token) {
     // Decode the token
     const decodedToken = jwtDecode(token);
@@ -15,37 +15,3 @@ export function isJwtExpired(token) {
     // token isn't expired
     return false;
 }
-
-export const customFetch = async (
-    endpoint,
-    method,
-    token,
-    body,
-    credentials
-) => {
-    let options = {
-        mode: "cors",
-        method: method.toUpperCase(),
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        credentials: credentials,
-    };
-    if (method.toLowerCase() !== "get") {
-        options.body = JSON.stringify(body);
-    }
-
-    const response = await fetch(`${BASE_URL}${endpoint}`, options);
-
-    // handle delete requests which just return 204 no content status code
-    if (response.status === 204) {
-        return;
-    }
-
-    const data = await response.json();
-
-    if (!response.ok) throw Error(data.error);
-
-    return data;
-};

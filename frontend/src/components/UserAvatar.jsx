@@ -7,12 +7,15 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
-import useAuthFetch from "../hooks/auth/useAuthFetch";
+
 import useAuthContext from "../hooks/auth/useAuthContext";
+import useLogoutMutation from "../hooks/auth/useLogoutMutation";
 const UserAvatar = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
-    const logout = useAuthFetch("/auth/logout", "POST");
-    const { resetCredentials, getUserData } = useAuthContext();
+
+    const logoutMutation = useLogoutMutation();
+
+    const { getUserData } = useAuthContext();
     const currentUserId = getUserData()?.id;
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -21,10 +24,8 @@ const UserAvatar = () => {
         setAnchorElUser(null);
     };
     const handleLogout = async () => {
-        // Clear access token from the cookies
-        await logout({}, "include");
-        // reset the user global state
-        resetCredentials();
+        logoutMutation.mutate();
+
         // Close the menu
         handleCloseUserMenu();
     };

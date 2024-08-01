@@ -32,9 +32,6 @@ const AuthContextProvider = ({ children }) => {
 
             try {
                 const user = await AuthServices.refreshToken();
-                if (!user.access_token) {
-                    throw Error("Invalid token");
-                }
                 dispatch(AuthActionsCreator.updateCredentials(user));
             } catch (error) {
                 setIsAuthenticated(false);
