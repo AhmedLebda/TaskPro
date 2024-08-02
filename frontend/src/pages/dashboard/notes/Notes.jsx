@@ -1,37 +1,31 @@
-import useNotesQuery from "../../../hooks/notes/useNotesQuery";
+// MUI Components
 import Spinner from "../../../components/Spinner";
-import Alert from "@mui/material/Alert";
 import NoteCard from "../../../components/notes/NoteCard";
-import { Grid } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import Masonry from "@mui/lab/Masonry";
-import { useSearchParams } from "react-router-dom";
-import useAuthContext from "../../../hooks/auth/useAuthContext";
+import Alert from "@mui/material/Alert";
+// Custom Components
+import ErrorAlert from "../../../components/general/ErrorAlert";
+// Custom Hooks
+import useNotes from "../../../hooks/ui/notes/useNotes";
 
 const Notes = () => {
-    const { data, isLoading, error } = useNotesQuery();
-    const { getUserData } = useAuthContext();
-    const userId = getUserData().id;
-    const [searchParams] = useSearchParams();
-    const view = searchParams.get("view");
-    const sortedNotesData =
-        view === "all"
-            ? data?.sort((note) => (note.completed ? 1 : -1))
-            : data
-                  ?.filter((note) => note.user._id === userId)
-                  .sort((note) => (note.completed ? 1 : -1));
+    const { sortedNotes, isLoading, error } = useNotes();
 
     if (isLoading) {
         return <Spinner item="Notes" />;
     }
 
     if (error) {
-        return <Alert severity="error">Error: {error.message}</Alert>;
+        return (
+            <ErrorAlert error={{ isVisible: true, message: error.message }} />
+        );
     }
 
-    if (!sortedNotesData.length) {
+    if (!sortedNotes.length) {
         return <Alert severity="info">You don&apos;t have any notes</Alert>;
     }
-    console.log(data);
+
     return (
         <>
             <Grid
@@ -45,7 +39,7 @@ const Notes = () => {
                 spacing={0}
             >
                 <Masonry columns={{ xs: 1, md: 2, lg: 3, xl: 4 }} spacing={3}>
-                    {sortedNotesData.map((note) => (
+                    {sortedNotes.map((note) => (
                         <Grid item key={note._id}>
                             <NoteCard
                                 id={note._id}

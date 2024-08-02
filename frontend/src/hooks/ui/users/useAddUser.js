@@ -1,11 +1,12 @@
 import useCreateUserMutation from "../../users/UseCreateUserMutation";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 const useAddUser = () => {
     const createUser = useCreateUserMutation();
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
+    const [errorAlert, setErrorAlert] = useState(initialErrorState);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
@@ -43,7 +44,11 @@ const useAddUser = () => {
         }
 
         if ((!formData.username, !formData.password)) {
-            setError("Invalid username or password");
+            showError(
+                "Invalid username or password",
+                errorAlert,
+                setErrorAlert
+            );
         }
 
         if (roles.length === 0) {
@@ -64,18 +69,23 @@ const useAddUser = () => {
         createUser.mutate(userData, {
             onSuccess: (response) => {
                 console.log("user created!", response);
-                setError(null);
                 navigate("/dashboard/users");
             },
             onLoading: () => {
                 setIsLoading(true);
             },
-            onError: (error) => {
-                setError(error.message);
+            onError: ({ message }) => {
+                showError(message, errorAlert, setErrorAlert);
             },
         });
     };
-    return { formData, error, isLoading, handleFormDataChange, handleSubmit };
+    return {
+        formData,
+        errorAlert,
+        isLoading,
+        handleFormDataChange,
+        handleSubmit,
+    };
 };
 
 export default useAddUser;

@@ -8,10 +8,10 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
 // Custom Components
 import UsernameInput from "../../components/users/UsernameInput";
 import PasswordInput from "../../components/users/PasswordInput";
+import ErrorAlert from "../../components/general/ErrorAlert";
 // Custom Hooks
 import useLogin from "../../hooks/ui/login/useLogin";
 // React-router-dom
@@ -21,7 +21,7 @@ const Login = () => {
     const {
         formData,
         isAuthenticated,
-        error,
+        errorAlert,
         handleSubmit,
         handleFormDataChange,
     } = useLogin();
@@ -30,7 +30,7 @@ const Login = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            {error && <Alert severity="error">{error}</Alert>}
+            <ErrorAlert error={errorAlert} />
             <Box
                 sx={{
                     marginTop: 8,

@@ -3,6 +3,7 @@ import useAuthContext from "../../auth/useAuthContext";
 import useUserDetailsQuery from "../../users/useUserDetailsQuery";
 import useUpdateUserMutation from "../../users/UseUpdateUserMutation";
 import { useState, useEffect, useCallback } from "react";
+import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 // Initial Form state
 const initialFormData = {
@@ -36,7 +37,7 @@ const useEditUser = () => {
     const updateMutation = useUpdateUserMutation();
 
     // Error state to display errors
-    const [error, setError] = useState(null);
+    const [errorAlert, setErrorAlert] = useState(initialErrorState);
 
     // Form fields state
     const [formData, setFormData] = useState(initialFormData);
@@ -58,7 +59,7 @@ const useEditUser = () => {
     // Update the form data state when user data arrives from api
     useEffect(() => {
         if (fetchError) {
-            setError(fetchError.message);
+            showError(fetchError.message, errorAlert, setErrorAlert);
         }
         if (user) {
             const userData = {
@@ -69,7 +70,7 @@ const useEditUser = () => {
 
             setFormData({ ...initialFormData, ...userData });
         }
-    }, [fetchError, getActiveRoles, user]);
+    }, [errorAlert, fetchError, getActiveRoles, user]);
 
     // Handles change in form data
     const handleFormDataChange = (e) => {
@@ -123,7 +124,11 @@ const useEditUser = () => {
 
         // just return if there are no updates to send
         if (Object.values(updates).length === 1) {
-            setError("You didn't provide new data to update");
+            showError(
+                "You didn't provide new data to update",
+                errorAlert,
+                setErrorAlert
+            );
             return;
         }
 
@@ -136,8 +141,8 @@ const useEditUser = () => {
                 }
                 navigate("/dashboard/users");
             },
-            onError: (error) => {
-                setError(error.message);
+            onError: ({ message }) => {
+                showError(message, errorAlert, setErrorAlert);
             },
         });
     };
@@ -145,7 +150,7 @@ const useEditUser = () => {
     return {
         formData,
         isLoading,
-        error,
+        errorAlert,
         handleFormDataChange,
         handleSubmit,
         isShowRolesFieldset,

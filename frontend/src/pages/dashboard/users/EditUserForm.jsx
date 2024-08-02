@@ -5,13 +5,13 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import FormHelperText from "@mui/material/FormHelperText";
-import Alert from "@mui/material/Alert";
 // Custom Component
 import Spinner from "../../../components/Spinner";
 import RolesFieldset from "../../../components/users/RolesFieldset";
 import ActiveStatusFieldset from "../../../components/users/ActiveStatusFieldset";
 import UsernameInput from "../../../components/users/UsernameInput";
 import PasswordInput from "../../../components/users/PasswordInput";
+import ErrorAlert from "../../../components/general/ErrorAlert";
 // Custom Hooks
 import useEditUser from "../../../hooks/ui/users/useEditUser";
 
@@ -19,7 +19,7 @@ const EditUserForm = () => {
     const {
         formData,
         isLoading,
-        error,
+        errorAlert,
         handleFormDataChange,
         handleSubmit,
         isShowRolesFieldset,
@@ -31,8 +31,7 @@ const EditUserForm = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            {error && <Alert severity="error">{error}</Alert>}
-
+            <ErrorAlert error={errorAlert} />
             <Box
                 sx={{
                     marginTop: 8,

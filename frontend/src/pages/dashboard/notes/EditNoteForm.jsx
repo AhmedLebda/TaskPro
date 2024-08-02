@@ -5,22 +5,22 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
 import Checkbox from "@mui/material/Checkbox";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 // Custom Component
 import UsersSelect from "../../../components/notes/UsersSelect";
+import ErrorAlert from "../../../components/general/ErrorAlert";
 // Custom Hooks
 import useEditNote from "../../../hooks/ui/notes/useEditNote";
 const EditNoteForm = () => {
-    const { error, formData, handleFormDataChange, handleSubmit } =
+    const { errorAlert, formData, handleFormDataChange, handleSubmit } =
         useEditNote();
 
     return (
         <Container component="main" maxWidth="xs">
-            {error && <Alert severity="error">{error}</Alert>}
+            <ErrorAlert error={errorAlert} />
 
             <Box
                 sx={{

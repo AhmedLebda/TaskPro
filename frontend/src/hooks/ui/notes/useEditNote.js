@@ -5,10 +5,12 @@ import { useParams, useNavigate } from "react-router-dom";
 // React Query
 import { useQueryClient } from "@tanstack/react-query";
 import useUpdateNoteMutation from "../../notes/useUpdateNoteMutation";
+// Helpers
+import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 const useEditNote = () => {
     // Error State
-    const [error, setError] = useState(null);
+    const [errorAlert, setErrorAlert] = useState(initialErrorState);
 
     // Get query client to get cached notes data
     const queryClient = useQueryClient();
@@ -69,17 +71,22 @@ const useEditNote = () => {
         // If the updates object includes only the note's ID, return immediately without making an API request, as there are no changes to the note.
         if (Object.entries(updates).length === 1) {
             console.log("nothing to update");
-            setError("You didn't change anything to update");
+            showError(
+                "You didn't change anything to update",
+                errorAlert,
+                setErrorAlert
+            );
             return;
         }
 
         updateNoteMutation.mutate(updates, {
             onSuccess: () => navigate("/dashboard/notes"),
-            onError: ({ message }) => setError(message),
+            onError: ({ message }) =>
+                showError(message, errorAlert, setErrorAlert),
         });
     };
 
-    return { error, formData, handleFormDataChange, handleSubmit };
+    return { errorAlert, formData, handleFormDataChange, handleSubmit };
 };
 
 export default useEditNote;

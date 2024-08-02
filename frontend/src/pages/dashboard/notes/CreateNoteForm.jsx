@@ -5,20 +5,19 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
 // Custom Components
 import UsersSelect from "../../../components/notes/UsersSelect";
+import ErrorAlert from "../../../components/general/ErrorAlert";
 // Custom Hooks
 import useCreateNote from "../../../hooks/ui/notes/useCreateNote";
 
 const CreateNoteForm = () => {
-    const { error, formData, handleFormDataChange, handleSubmit } =
+    const { errorAlert, formData, handleFormDataChange, handleSubmit } =
         useCreateNote();
 
     return (
         <Container component="main" maxWidth="xs">
-            {error && <Alert severity="error">{error}</Alert>}
-
+            <ErrorAlert error={errorAlert} />
             <Box
                 sx={{
                     marginTop: 8,

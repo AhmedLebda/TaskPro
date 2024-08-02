@@ -5,10 +5,12 @@ import useAuthContext from "../../auth/useAuthContext";
 import { useNavigate } from "react-router-dom";
 // React
 import { useState } from "react";
+// Helpers
+import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 const useCreateNote = () => {
     // Error state
-    const [error, setError] = useState(null);
+    const [errorAlert, setErrorAlert] = useState(initialErrorState);
 
     // Getting user data from the global context
     const { getUserData } = useAuthContext();
@@ -36,7 +38,11 @@ const useCreateNote = () => {
 
         // user must provide title and text for note
         if (!formData.title || !formData.text) {
-            setError("not enough data to create a note");
+            showError(
+                "not enough data to create a note",
+                errorAlert,
+                setErrorAlert
+            );
             return;
         }
         // Default case for employees the note is assigned to the current user
@@ -49,12 +55,13 @@ const useCreateNote = () => {
         // Create a new note and redirect user to notes list in case of success or show alert of the error message in case of error
         noteMutation.mutate(noteData, {
             onSuccess: () => navigate("/dashboard/notes"),
-            onError: (error) => setError(error.message),
+            onError: (error) =>
+                showError(error.message, errorAlert, setErrorAlert),
         });
     };
 
     return {
-        error,
+        errorAlert,
         formData,
         handleFormDataChange,
         handleSubmit,

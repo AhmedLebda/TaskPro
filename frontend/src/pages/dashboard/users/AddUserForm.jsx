@@ -6,21 +6,26 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 // MUI Components
 import Container from "@mui/material/Container";
-import Alert from "@mui/material/Alert";
 // Custom Components
 import RolesFieldset from "../../../components/users/RolesFieldset";
 import UsernameInput from "../../../components/users/UsernameInput";
 import PasswordInput from "../../../components/users/PasswordInput";
+import ErrorAlert from "../../../components/general/ErrorAlert";
 // Custom Hooks
 import useAddUser from "../../../hooks/ui/users/useAddUser";
 
 const AddUserForm = () => {
-    const { error, isLoading, handleFormDataChange, handleSubmit, formData } =
-        useAddUser();
+    const {
+        errorAlert,
+        isLoading,
+        handleFormDataChange,
+        handleSubmit,
+        formData,
+    } = useAddUser();
 
     return (
         <Container component="main" maxWidth="xs">
-            {error && <Alert severity="error">{error}</Alert>}
+            <ErrorAlert error={errorAlert} />
 
             <Box
                 sx={{
