@@ -27,7 +27,8 @@ const drawerWidth = 240;
 const DashboardDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const { getUserRole } = useAuthContext();
+    const { getUserRole, getUserData } = useAuthContext();
+    const { active: isUserActive } = getUserData();
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -44,7 +45,7 @@ const DashboardDrawer = () => {
         }
     };
 
-    const drawerLinks = [
+    let drawerLinks = [
         {
             title: "Dashboard",
             path: "/dashboard",
@@ -82,6 +83,17 @@ const DashboardDrawer = () => {
                 },
             ]
         );
+    }
+
+    // if user status is 'Inactive', then just show the dashboard home page
+    if (!isUserActive) {
+        drawerLinks = [
+            {
+                title: "Dashboard",
+                path: "/dashboard",
+                icon: <HomeIcon />,
+            },
+        ];
     }
 
     const drawer = (

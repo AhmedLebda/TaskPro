@@ -4,13 +4,11 @@ import useAuthContext from "../../../hooks/auth/useAuthContext";
 import BadgeIcon from "@mui/icons-material/Badge";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Alert from "@mui/material/Alert";
 
 const DashIndex = () => {
     const { getUserData } = useAuthContext();
-    const user = getUserData();
-    const username = user.username;
-    const roles = user.roles;
-    const active = user.active;
+    const { username, roles, active } = getUserData();
 
     const roleChips = roles.map((role) => (
         <Chip
@@ -48,6 +46,14 @@ const DashIndex = () => {
             <Typography paragraph color="text.secondary">
                 Today: {new Date().toLocaleString()}
             </Typography>
+
+            {!active && (
+                <Alert severity="info">
+                    <b>Notice:</b> If your account appears inactive, please
+                    reach out to your manager to request reactivation. They will
+                    assist you with the process.
+                </Alert>
+            )}
         </Box>
     );
 };
