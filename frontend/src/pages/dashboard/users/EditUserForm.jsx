@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import FormHelperText from "@mui/material/FormHelperText";
 // Custom Component
-import Spinner from "../../../components/Spinner";
+import Spinner from "../../../components/general/Spinner";
 import RolesFieldset from "../../../components/users/RolesFieldset";
 import ActiveStatusFieldset from "../../../components/users/ActiveStatusFieldset";
 import UsernameInput from "../../../components/users/UsernameInput";

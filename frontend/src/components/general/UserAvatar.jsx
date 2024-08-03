@@ -8,8 +8,8 @@ import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
 
-import useAuthContext from "../hooks/auth/useAuthContext";
-import useLogoutMutation from "../hooks/auth/useLogoutMutation";
+import useAuthContext from "../../hooks/auth/useAuthContext";
+import useLogoutMutation from "../../hooks/auth/useLogoutMutation";
 const UserAvatar = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 

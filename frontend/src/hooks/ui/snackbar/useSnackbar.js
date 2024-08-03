@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import snackbarContext from "../../contexts/ui/snackbar/snackbarContext";
-import snackbarActionsCreator from "../../contexts/ui/snackbar/snackbarActions";
+import snackbarContext from "../../../contexts/ui/snackbar/snackbarContext";
+import snackbarActionsCreator from "../../../contexts/ui/snackbar/snackbarActions";
 
 const useSnackbar = () => {
     const context = useContext(snackbarContext);

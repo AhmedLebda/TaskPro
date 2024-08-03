@@ -11,10 +11,10 @@ import Button from "@mui/material/Button";
 // React-router-dom
 import { Link as RouterLink } from "react-router-dom";
 // React Query
-import useDeleteUserMutation from "../../hooks/users/UseDeleteUserMutation";
+import useDeleteUserMutation from "../../hooks/users/useDeleteUserMutation";
 // context
 import useAuthContext from "../../hooks/auth/useAuthContext";
-import useSnackbar from "../../hooks/ui/useSnackbar";
+import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
 
 const tableHeaderCells = [
     "Username",

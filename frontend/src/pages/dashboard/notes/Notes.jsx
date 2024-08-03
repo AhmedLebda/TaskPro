@@ -1,5 +1,5 @@
 // MUI Components
-import Spinner from "../../../components/Spinner";
+import Spinner from "../../../components/general/Spinner";
 import NoteCard from "../../../components/notes/NoteCard";
 import Grid from "@mui/material/Grid";
 import Masonry from "@mui/lab/Masonry";

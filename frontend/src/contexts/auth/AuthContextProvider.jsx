@@ -2,7 +2,7 @@ import AuthServices from "../../api/auth";
 import authContext from "./authContext";
 import { useEffect, useReducer, useState } from "react";
 import { Box } from "@mui/material";
-import Spinner from "../../components/Spinner";
+import Spinner from "../../components/general/Spinner";
 import AuthActionsCreator from "./authActions";
 
 const authReducer = (state, action) => {

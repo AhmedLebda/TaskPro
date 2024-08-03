@@ -1,5 +1,5 @@
 import useUsersQuery from "../../../hooks/users/UseUsersQuery";
-import Spinner from "../../../components/Spinner";
+import Spinner from "../../../components/general/Spinner";
 import Alert from "@mui/material/Alert";
 import UsersList from "../../../components/users/UsersList";
 const Users = () => {

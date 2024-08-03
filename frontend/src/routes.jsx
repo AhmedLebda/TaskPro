@@ -1,4 +1,4 @@
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/general/ProtectedRoute";
 import MainLayout from "./pages/layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";

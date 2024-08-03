@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 // Custom Components
-import LinearLoading from "../LinearLoading";
+import LinearLoading from "../general/LinearLoading";
 // Custom Hook
 import useUsersSelect from "../../hooks/ui/notes/useUsersSelect";
 

@@ -13,7 +13,7 @@ import { Link as RouterLink } from "react-router-dom";
 import useUpdateNoteMutation from "../../hooks/notes/useUpdateNoteMutation";
 import useDeleteNoteMutation from "../../hooks/notes/useDeleteNoteMutation";
 // ==> Contexts
-import useSnackbar from "../../hooks/ui/useSnackbar";
+import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
 
 const NoteCardAction = ({ noteId, completed }) => {
     // React Query Mutations

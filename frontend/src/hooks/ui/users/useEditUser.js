@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useAuthContext from "../../auth/useAuthContext";
 import useUserDetailsQuery from "../../users/useUserDetailsQuery";
-import useUpdateUserMutation from "../../users/UseUpdateUserMutation";
+import useUpdateUserMutation from "../../users/useUpdateUserMutation";
 import { useState, useEffect, useCallback } from "react";
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 

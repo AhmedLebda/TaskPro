@@ -1,4 +1,4 @@
-import useCreateUserMutation from "../../users/UseCreateUserMutation";
+import useCreateUserMutation from "../../users/useCreateUserMutation";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";

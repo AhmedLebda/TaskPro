@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Container } from "@mui/material";
-import useAuthContext from "../hooks/auth/useAuthContext";
+import useAuthContext from "../../hooks/auth/useAuthContext";
 import UserAvatar from "./UserAvatar";
 const NavBar = () => {
     const { getAuthStatus } = useAuthContext();

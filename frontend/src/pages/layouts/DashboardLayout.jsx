@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import DashboardDrawer from "../../components/dashboard/DashboardDrawer";
 import { Outlet } from "react-router-dom";
-import Footer from "../../components/Footer";
-import CustomSnackbar from "../../components/CustomSnackbar";
-import useSnackbar from "../../hooks/ui/useSnackbar";
+import Footer from "../../components/general/Footer";
+import CustomSnackbar from "../../components/general/CustomSnackbar";
+import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
 
 const DashboardLayout = () => {
     const { snackbar, resetSnackbar } = useSnackbar();
