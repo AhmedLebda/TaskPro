@@ -1,6 +1,7 @@
 // Custom Hooks
 import useNoteCreateMutation from "../../notes/useCreateNoteMutation";
 import useAuthContext from "../../auth/useAuthContext";
+import useSnackbar from "../snackbar/useSnackbar";
 // React-router-dom
 import { useNavigate } from "react-router-dom";
 // React
@@ -29,6 +30,9 @@ const useCreateNote = () => {
     // navigate hook to redirect user after successful note creation
     const navigate = useNavigate();
 
+    // Show success message on task creation
+    const { showSnackbar } = useSnackbar();
+
     const handleFormDataChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -54,7 +58,10 @@ const useCreateNote = () => {
 
         // Create a new note and redirect user to notes list in case of success or show alert of the error message in case of error
         noteMutation.mutate(noteData, {
-            onSuccess: () => navigate("/dashboard/notes"),
+            onSuccess: () => {
+                showSnackbar("Success! The task has been added.");
+                navigate("/dashboard/notes");
+            },
             onError: (error) =>
                 showError(error.message, errorAlert, setErrorAlert),
         });

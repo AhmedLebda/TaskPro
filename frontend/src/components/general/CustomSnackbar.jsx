@@ -1,16 +1,22 @@
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
 
-const CustomSnackbar = ({ isOpen, onClose, message }) => {
+const CustomSnackbar = () => {
+    const { snackbar, resetSnackbar } = useSnackbar();
     return (
-        <Snackbar open={isOpen} autoHideDuration={6000} onClose={onClose}>
+        <Snackbar
+            open={snackbar.open}
+            autoHideDuration={6000}
+            onClose={resetSnackbar}
+        >
             <Alert
-                onClose={onClose}
+                onClose={resetSnackbar}
                 severity="success"
                 variant="filled"
                 sx={{ width: "100%" }}
             >
-                {message}
+                {snackbar.message}
             </Alert>
         </Snackbar>
     );

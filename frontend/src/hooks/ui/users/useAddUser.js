@@ -1,8 +1,11 @@
-import useCreateUserMutation from "../../users/useCreateUserMutation";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+// React-router-dom
+import { useNavigate } from "react-router-dom";
+// Custom hooks
+import useCreateUserMutation from "../../users/useCreateUserMutation";
+import useSnackbar from "../snackbar/useSnackbar";
+// Utils
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
-
 const useAddUser = () => {
     const createUser = useCreateUserMutation();
     const navigate = useNavigate();
@@ -18,6 +21,9 @@ const useAddUser = () => {
         },
     });
     const roles = [];
+
+    // Show successful message on user creation
+    const { showSnackbar } = useSnackbar();
 
     // Handles change in form data
     const handleFormDataChange = (e) => {
@@ -69,6 +75,7 @@ const useAddUser = () => {
         createUser.mutate(userData, {
             onSuccess: (response) => {
                 console.log("user created!", response);
+                showSnackbar("Success! The user account has been set up.");
                 navigate("/dashboard/users");
             },
             onLoading: () => {

@@ -4,7 +4,7 @@ import useUserDetailsQuery from "../../users/useUserDetailsQuery";
 import useUpdateUserMutation from "../../users/useUpdateUserMutation";
 import { useState, useEffect, useCallback } from "react";
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
-
+import useSnackbar from "../snackbar/useSnackbar";
 // Initial Form state
 const initialFormData = {
     username: "",
@@ -41,6 +41,9 @@ const useEditUser = () => {
 
     // Form fields state
     const [formData, setFormData] = useState(initialFormData);
+
+    // Show successful message on user edit
+    const { showSnackbar } = useSnackbar();
 
     // Get the active roles and transform to object when data comes from api
     const getActiveRoles = useCallback(() => {
@@ -139,6 +142,7 @@ const useEditUser = () => {
                 if (id === currentUserId) {
                     updateCredentials({ username, active, roles });
                 }
+                showSnackbar("Edit Successful! Your changes have been saved.");
                 navigate("/dashboard/users");
             },
             onError: ({ message }) => {
