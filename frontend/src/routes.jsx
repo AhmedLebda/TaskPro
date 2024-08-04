@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import PageNotFound from "./pages/PageNotFound";
 import Login from "./pages/login/Login";
+import UserActiveCheck from "./components/general/UserActiveCheck";
 // Dashboard pages
 import DashboardLayout from "./pages/layouts/DashboardLayout";
 // ==> index
@@ -49,29 +50,34 @@ const routes = [
                         element: <DashIndex />,
                     },
                     {
-                        path: "users",
-                        element: <Users />,
-                    },
+                        element: <UserActiveCheck />,
+                        children: [
+                            {
+                                path: "users",
+                                element: <Users />,
+                            },
 
-                    {
-                        path: "users/add",
-                        element: <AddUserForm />,
-                    },
-                    {
-                        path: "users/edit/:userId",
-                        element: <EditUserForm />,
-                    },
-                    {
-                        path: "notes",
-                        element: <Notes />,
-                    },
-                    {
-                        path: "notes/create",
-                        element: <CreateNoteForm />,
-                    },
-                    {
-                        path: "notes/edit/:noteId",
-                        element: <EditNoteForm />,
+                            {
+                                path: "users/add",
+                                element: <AddUserForm />,
+                            },
+                            {
+                                path: "users/edit/:userId",
+                                element: <EditUserForm />,
+                            },
+                            {
+                                path: "notes",
+                                element: <Notes />,
+                            },
+                            {
+                                path: "notes/create",
+                                element: <CreateNoteForm />,
+                            },
+                            {
+                                path: "notes/edit/:noteId",
+                                element: <EditNoteForm />,
+                            },
+                        ],
                     },
                 ],
             },

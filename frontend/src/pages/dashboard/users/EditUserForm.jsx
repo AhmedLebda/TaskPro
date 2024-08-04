@@ -59,7 +59,7 @@ const EditUserForm = () => {
 
                         <PasswordInput
                             value={formData.password}
-                            onchange={handleFormDataChange}
+                            onChange={handleFormDataChange}
                         />
 
                         {/* Active Status Checkbox */}
