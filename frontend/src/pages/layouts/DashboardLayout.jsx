@@ -3,10 +3,8 @@ import DashboardDrawer from "../../components/dashboard/DashboardDrawer";
 import { Outlet } from "react-router-dom";
 import Footer from "../../components/general/Footer";
 import CustomSnackbar from "../../components/general/CustomSnackbar";
-import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
 
 const DashboardLayout = () => {
-    const { snackbar, resetSnackbar } = useSnackbar();
     return (
         <Box
             sx={{
@@ -25,11 +23,7 @@ const DashboardLayout = () => {
                     flexDirection: "column",
                 }}
             >
-                <CustomSnackbar
-                    isOpen={snackbar.open}
-                    message={snackbar.message}
-                    onClose={resetSnackbar}
-                />
+                <CustomSnackbar />
                 <Outlet></Outlet>
                 <Footer />
             </Box>

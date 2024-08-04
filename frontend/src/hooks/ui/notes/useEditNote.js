@@ -7,7 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import useUpdateNoteMutation from "../../notes/useUpdateNoteMutation";
 // Helpers
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
-
+// Custom Hooks
+import useSnackbar from "../snackbar/useSnackbar";
 const useEditNote = () => {
     // Error State
     const [errorAlert, setErrorAlert] = useState(initialErrorState);
@@ -37,6 +38,9 @@ const useEditNote = () => {
         text: note.text,
         completed: note.completed,
     });
+
+    // Show successful message on task update
+    const { showSnackbar } = useSnackbar();
 
     // Handling form data change
     const handleFormDataChange = (e) => {
@@ -80,7 +84,10 @@ const useEditNote = () => {
         }
 
         updateNoteMutation.mutate(updates, {
-            onSuccess: () => navigate("/dashboard/notes"),
+            onSuccess: () => {
+                showSnackbar("Success! The task changes have been saved.");
+                navigate("/dashboard/notes");
+            },
             onError: ({ message }) =>
                 showError(message, errorAlert, setErrorAlert),
         });
