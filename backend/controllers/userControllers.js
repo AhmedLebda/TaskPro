@@ -73,15 +73,8 @@ const user_create = [
         const user = new UserModel(userObj);
         const savedUser = await user.save();
 
-        // Create an access token with username and id
-        const token = AuthHelpers.createAccessToken({
-            username: savedUser.username,
-            id: savedUser._id,
-        });
-
         // Send response with user data
         res.status(201).json({
-            access_token: token,
             id: savedUser.id,
             username: savedUser.username,
             roles: savedUser.roles,
