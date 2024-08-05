@@ -60,7 +60,7 @@ const getBearerToken = (req) => {
 const isManagerUser = async (userId) => {
     const user = await User.findById(userId).lean();
     const roles = user.roles;
-    return roles.includes("manager" || "admin");
+    return roles.includes("admin") || roles.includes("manager");
 };
 
 const isAdminUser = async (userId) => {

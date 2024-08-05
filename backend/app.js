@@ -12,14 +12,9 @@ import errorHandler from "./middlewares/error_handler/errorHandler.js";
 import requestLogger from "./middlewares/logger/successLogger.js";
 import errorLogger from "./middlewares/logger/errorLogger.js";
 import logCorsError from "./middlewares/logger/corsLogger.js";
-// db
-import dbConnection from "./config/dbConnection.js";
 
 // Init express app
 const app = express();
-
-// db connection
-dbConnection();
 
 // middlewares
 app.use(express.static("public"));
