@@ -44,15 +44,10 @@ const user_create = [
 
         const { username, password, roles } = req.body;
 
-        // Id of the user who made the request
-        const requesterUserId = req.userId;
-
-        // Throw an error if the requester is not an admin and attempts to create a user with an admin role.
-        const isAdmin = await AuthHelpers.isAdminUser(requesterUserId);
-
-        if (!isAdmin && roles.includes("admin")) {
+        // throw if request tries to create a user with admin role
+        if (roles.includes("admin")) {
             return res.status(401).json({
-                error: "Access Denied: Only Admin are permitted to create users with admin permissions.",
+                error: "Access Denied",
                 isError: true,
             });
         }
@@ -113,10 +108,6 @@ const user_update = asyncHandler(async (req, res) => {
 const user_delete = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
-    const requesterUserId = req.userId;
-
-    const isAdmin = await AuthHelpers.isAdminUser(requesterUserId);
-
     // Throw error if id is not provided or isn't a valid ObjectId
     if (!id || !mongoose.Types.ObjectId.isValid(id)) throw Error("invalid id");
 
@@ -126,8 +117,8 @@ const user_delete = asyncHandler(async (req, res) => {
     // Throw error if there isn't a user with the provided id in the db
     if (!user) throw Error("user doesn't exist");
 
-    // Throw error if non admin user tries to delete an admin user
-    if (user.roles.includes("admin") && !isAdmin) {
+    // Throw error if request tries to delete an admin user
+    if (user.roles.includes("admin")) {
         return res.status(401).json({
             error: "Access Denied: Only admins are permitted to perform this action.",
             isError: true,
@@ -186,7 +177,7 @@ const user_details = asyncHandler(async (req, res) => {
         });
     }
 
-    // Throw error if user is not an admin and tries to update info of a user with admin role
+    // Throw error if user is not an admin and tries to get info of a user with admin role
     if (user.roles.includes("admin") && !isAdmin) {
         return res.status(401).json({
             error: "Access Denied: Only admins are permitted to perform this action.",

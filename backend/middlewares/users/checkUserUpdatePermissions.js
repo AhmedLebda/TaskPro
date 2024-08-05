@@ -51,10 +51,10 @@ const checkUserUpdatePermissions = asyncHandler(async (req, res, next) => {
         });
     }
 
-    // Throw error if the user is not an admin and tries to update a user to have admin role
-    if (roles?.includes("admin") && !isAdmin) {
+    // Throw error if the request tries to update user to have admin role
+    if (roles?.includes("admin")) {
         return res.status(401).json({
-            error: "Access Denied: Only admins are permitted to perform this action.",
+            error: "Access Denied",
             isError: true,
         });
     }
