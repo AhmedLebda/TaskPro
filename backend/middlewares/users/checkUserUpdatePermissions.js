@@ -20,7 +20,9 @@ const checkUserUpdatePermissions = asyncHandler(async (req, res, next) => {
     const requesterUserId = req.userId;
 
     // Check requester roles
-    const isManagerOrAdmin = await AuthHelpers.isManagerUser(requesterUserId);
+    const isManagerOrAdmin = await AuthHelpers.isManagerOrAdminUser(
+        requesterUserId
+    );
     const isAdmin = await AuthHelpers.isAdminUser(requesterUserId);
 
     // Throw error if id isn't provided or not a valid ObjectId

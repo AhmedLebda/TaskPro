@@ -2,7 +2,6 @@ import NoteModel from "../models/Note.js";
 import asyncHandler from "express-async-handler";
 import { validateNoteUpdateInput } from "../utils/helpers/noteController_helpers.js";
 import mongoose from "mongoose";
-import UserModel from "../models/User.js";
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 
 // @desc: Get all notes from db
@@ -10,10 +9,13 @@ import AuthHelpers from "../utils/helpers/auth_helpers.js";
 // @access: Private
 const notes_list = asyncHandler(async (req, res) => {
     // id of user who made the request
-    const requesterId = req.userId;
+    const requestingUser = req.user;
+    const { _id: requesterId } = requestingUser;
 
     // Verify the role of the user who submitted the request.
-    const isManager = await AuthHelpers.isManagerUser(requesterId);
+    const isManagerOrAdmin = await AuthHelpers.isManagerOrAdminUser(
+        requesterId
+    );
 
     // Get all notes from db with the user field populated with user data
     const notes = await NoteModel.find({})
@@ -24,7 +26,7 @@ const notes_list = asyncHandler(async (req, res) => {
     if (notes.length === 0) throw Error("There are no notes");
 
     // Return all notes if the user is a manager
-    if (isManager) {
+    if (isManagerOrAdmin) {
         return res.status(200).json(notes);
     }
 
@@ -39,28 +41,11 @@ const notes_list = asyncHandler(async (req, res) => {
 // @desc: Add a new note to db
 // @route: POST /api/notes
 // @access: Private
-// @permissions: Admin, Manager => assign notes to users
 const note_create = asyncHandler(async (req, res) => {
-    const { user, title, text } = req.body;
-    const userId = req.userId;
-
-    // Check if user have manager role
-    const isManager = await AuthHelpers.isManagerUser(userId);
-
-    // check if the user is a valid objectId
-    if (mongoose.Types.ObjectId.isValid(user)) {
-        // Throw error if the user doesn't exist in the db
-        const userExists = await UserModel.findById(user);
-        if (!userExists) throw Error("This user doesn't exist");
-    }
-
-    //  Throw an error if the requester is neither the owner of the note nor a manager.
-    // Only managers can assign notes to other users.
-    if (userId !== user && !isManager)
-        throw Error("You aren't authorized to assign notes to another user");
+    const { user: assignedUserId, title, text } = req.body;
 
     // Creating note object with provided note data
-    const noteObject = { user, title, text };
+    const noteObject = { user: assignedUserId, title, text };
     const note = new NoteModel(noteObject);
 
     // Save the note to db
@@ -78,7 +63,9 @@ const note_update = asyncHandler(async (req, res) => {
     const { id, user, title, text, completed } = req.body;
 
     // The id of the user who made the request
-    const userId = req.userId;
+    const requestingUser = req.user;
+
+    const { _id: requestingUserId } = requestingUser;
 
     // create the updates Object
     const updates = await validateNoteUpdateInput(
@@ -92,15 +79,17 @@ const note_update = asyncHandler(async (req, res) => {
     // Find the target note
     const note = await NoteModel.findById(id);
 
-    // Check if user have manager role
-    const isManager = await AuthHelpers.isManagerUser(userId);
+    // Check if requesting user have manager or admin role
+    const isRequesterAdmin = requestingUser.roles.includes("admin");
+    const isRequesterManager = requestingUser.roles.includes("manager");
+    const isRequesterManagerOrAdmin = isRequesterAdmin || isRequesterManager;
 
-    // The note can only be edited by either a manager or the user to whom it is assigned.
-    if (userId !== note.user.toString() && !isManager)
+    // The note can only be edited by either a Admin/Manager or the user to whom it is assigned.
+    if (requestingUserId !== note.user.toString() && !isRequesterManagerOrAdmin)
         throw Error("You can't Edit this note");
 
-    // Editing the assignment of notes should only be permitted for managers.
-    if (user && !isManager)
+    // Editing the note assigned user should only be permitted for admins and managers.
+    if (user && !isRequesterManagerOrAdmin)
         throw Error("You aren't authorized to assign notes to another user");
 
     const updatedNote = await note.updateOne(updates);

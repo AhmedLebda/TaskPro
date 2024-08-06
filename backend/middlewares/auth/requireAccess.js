@@ -1,5 +1,6 @@
 import AuthHelper from "../../utils/helpers/auth_helpers.js";
 import asyncHandler from "express-async-handler";
+import UserModel from "../../models/User.js";
 
 // Gives access only to authenticated active users (with a valid access token)
 const requireAccessToken = asyncHandler(async (req, res, next) => {
@@ -14,19 +15,27 @@ const requireAccessToken = asyncHandler(async (req, res, next) => {
         return res.status(401).json({ error: "invalid token", isError: true });
     }
 
+    // Find the user in the db by the id in the token
+    const currentUser = await UserModel.findById(decodedToken.id)
+        .select("username active roles")
+        .lean();
+
     // Check if user is active
-    const isManager = await AuthHelper.isActiveUser(decodedToken.id);
+    const isActive = currentUser.active;
 
     // Throw error if user isn't active
-    if (!isManager) {
+    if (!isActive) {
         return res.status(401).json({
             error: "Your account is currently inactive",
             isError: true,
         });
     }
 
-    // add the user id to the request object
-    req.userId = decodedToken.id;
+    // add the user data to the request object
+    req.user = currentUser;
+
+    //! Should be deleted after completion of controllers refactoring to user "req.user" instead
+    req.userId = currentUser._id;
 
     next();
 });
