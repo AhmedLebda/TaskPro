@@ -1,7 +1,5 @@
 import NoteModel from "../models/Note.js";
 import asyncHandler from "express-async-handler";
-import { validateNoteUpdateInput } from "../utils/helpers/noteController_helpers.js";
-import mongoose from "mongoose";
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 
 // @desc: Get all notes from db
@@ -58,21 +56,9 @@ const note_create = asyncHandler(async (req, res) => {
 // @route: PATCH /api/notes
 // @access: Private
 const note_update = asyncHandler(async (req, res) => {
-    const {
-        id: targetNoteId,
-        user: assignedUser,
-        title,
-        text,
-        completed,
-    } = req.body;
+    const { id: targetNoteId } = req.body;
 
-    // create the updates Object
-    const updates = await validateNoteUpdateInput(
-        assignedUser,
-        title,
-        text,
-        completed
-    );
+    const { updates } = req;
 
     // Find the target note and update
     const note = await NoteModel.findById(targetNoteId);
@@ -85,21 +71,11 @@ const note_update = asyncHandler(async (req, res) => {
 // @desc: delete a note
 // @route: DELETE /api/notes
 // @access: Private
-// @permissions: Admin and Manager only
 const note_delete = asyncHandler(async (req, res) => {
     // get the note id from request body
-    const { id } = req.body;
+    const { id: targetNoteId } = req.body;
 
-    // check if the id exists and a valid object id
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) throw Error("invalid id");
-
-    // Check if a note with the provided id exists in the db
-    const noteExists = await NoteModel.findById(id);
-
-    if (!noteExists) throw Error("This note doesn't exist");
-
-    // find note and delete
-    await noteExists.deleteOne();
+    await NoteModel.findByIdAndDelete(targetNoteId);
 
     // return a deleted status
     res.sendStatus(204);

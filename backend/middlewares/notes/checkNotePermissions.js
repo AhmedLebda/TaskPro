@@ -3,15 +3,15 @@ import NoteModel from "../../models/Note.js";
 
 /* Permissions:
 - Employee: Edit his own tasks only
-- Manager: Edit tasks assigned to his employees and himself
-- Admin: Edit tasks assigned to any user
+- Manager: Modify tasks assigned to his employees and himself
+- Admin: Modify tasks assigned to any user
 
 */
 
 /* Checks:
-- Target note to update doesn't exist
+- Target note0 doesn't exist
 - Employee trying to edit another user task
-- Manager trying to edit a task assigned to another manager or admin
+- Manager trying to Modify a task assigned to another manager or admin
 */
 const checkNotePermission = asyncHandler(async (req, res, next) => {
     const { id: targetNoteId } = req.body;
@@ -45,16 +45,20 @@ const checkNotePermission = asyncHandler(async (req, res, next) => {
 
     // Employee trying to edit another user task
     if (!isRequesterManagerOrAdmin && !isRequestingUserCurrentNoteOwner) {
-        throw Error("You can't Edit this note");
+        throw Error(
+            "You do not have the necessary permissions to perform this action."
+        );
     }
 
-    // Manager trying to edit a task assigned to another manager or admin
+    // Manager trying to modify a task assigned to another manager or admin
     if (
         isRequesterManager &&
         isCurrentNoteOwnerAdminOrManager &&
         !isRequestingUserCurrentNoteOwner
     ) {
-        throw Error("You can't edit this note");
+        throw Error(
+            "You do not have the necessary permissions to perform this action."
+        );
     }
 
     next();
