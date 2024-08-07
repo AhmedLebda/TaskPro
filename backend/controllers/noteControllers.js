@@ -1,39 +1,31 @@
 import NoteModel from "../models/Note.js";
 import asyncHandler from "express-async-handler";
-import AuthHelpers from "../utils/helpers/auth_helpers.js";
 
 // @desc: Get all notes from db
 // @route: GET /api/notes
 // @access: Private
 const notes_list = asyncHandler(async (req, res) => {
-    // id of user who made the request
-    const requestingUser = req.user;
-    const { _id: requesterId } = requestingUser;
-
-    // Verify the role of the user who submitted the request.
-    const isManagerOrAdmin = await AuthHelpers.isManagerOrAdminUser(
-        requesterId
-    );
+    const { sortBy, page, limit } = req.paginationOptions;
 
     // Get all notes from db with the user field populated with user data
     const notes = await NoteModel.find({})
         .populate({ path: "user", select: "username" })
+        .sort(sortBy)
+        .skip(page * limit)
+        .limit(limit)
         .lean();
 
-    // Throw error if there aren't any notes in the db
-    if (notes.length === 0) throw Error("There are no notes");
+    if (notes.length === 0) throw Error("No Notes Found");
 
-    // Return all notes if the user is a manager
-    if (isManagerOrAdmin) {
-        return res.status(200).json(notes);
-    }
+    const totalNotes = await NoteModel.countDocuments();
+    const totalPages = Math.ceil(totalNotes / limit);
 
-    // Filter notes to return only notes of the employee who made the request
-    const employeeNotes = notes.filter(
-        (note) => note.user._id.toString() === requesterId.toString()
-    );
-    console.log(employeeNotes);
-    return res.status(200).json(employeeNotes);
+    const response = {
+        data: notes,
+        totalPages: totalPages,
+    };
+
+    return res.status(200).json(response);
 });
 
 // @desc: Add a new note to db
@@ -81,4 +73,50 @@ const note_delete = asyncHandler(async (req, res) => {
     res.sendStatus(204);
 });
 
-export default { notes_list, note_create, note_update, note_delete };
+// @desc: Get the notes assigned to the requesting user
+// @routes: GET /api/notes/:targetUserId
+// @access: Private
+const user_notes = asyncHandler(async (req, res) => {
+    const { _id: requestingUserId, roles: requestingUserRoles } = req.user;
+    const { targetUserId } = req.params;
+    const { sortBy, page, limit } = req.paginationOptions;
+    const isRequesterAdminOrManager = requestingUserRoles.some(
+        (role) => role === "admin" || role === "manager"
+    );
+    // Employee attempts to get another user notes
+    if (
+        !isRequesterAdminOrManager &&
+        requestingUserId.toString() !== targetUserId
+    )
+        throw Error("Access denied");
+
+    const userNotes = await NoteModel.find({ user: targetUserId })
+        .populate({ path: "user", select: "username" })
+        .sort(sortBy)
+        .skip(page * limit)
+        .limit(limit)
+        .lean();
+
+    if (userNotes.length === 0) throw Error("No Notes Found");
+
+    const totalUserNotes = await NoteModel.find({
+        user: targetUserId,
+    }).countDocuments();
+
+    const totalPages = Math.ceil(totalUserNotes / limit);
+
+    const response = {
+        data: userNotes,
+        totalPages: totalPages,
+    };
+
+    res.status(200).json(response);
+});
+
+export default {
+    notes_list,
+    note_create,
+    note_update,
+    note_delete,
+    user_notes,
+};
