@@ -32,7 +32,7 @@ const notes_list = asyncHandler(async (req, res) => {
 
     // Filter notes to return only notes of the employee who made the request
     const employeeNotes = notes.filter(
-        (note) => note.user._id.toString() === requesterId
+        (note) => note.user._id.toString() === requesterId.toString()
     );
     console.log(employeeNotes);
     return res.status(200).json(employeeNotes);
@@ -57,41 +57,25 @@ const note_create = asyncHandler(async (req, res) => {
 // @desc: Edit a note
 // @route: PATCH /api/notes
 // @access: Private
-// @permissions:  Admin, Manager or note owner => update note
-// @permissions:  Admin, Manager => update note assignment
 const note_update = asyncHandler(async (req, res) => {
-    const { id, user, title, text, completed } = req.body;
-
-    // The id of the user who made the request
-    const requestingUser = req.user;
-
-    const { _id: requestingUserId } = requestingUser;
+    const {
+        id: targetNoteId,
+        user: assignedUser,
+        title,
+        text,
+        completed,
+    } = req.body;
 
     // create the updates Object
     const updates = await validateNoteUpdateInput(
-        id,
-        user,
+        assignedUser,
         title,
         text,
         completed
     );
 
-    // Find the target note
-    const note = await NoteModel.findById(id);
-
-    // Check if requesting user have manager or admin role
-    const isRequesterAdmin = requestingUser.roles.includes("admin");
-    const isRequesterManager = requestingUser.roles.includes("manager");
-    const isRequesterManagerOrAdmin = isRequesterAdmin || isRequesterManager;
-
-    // The note can only be edited by either a Admin/Manager or the user to whom it is assigned.
-    if (requestingUserId !== note.user.toString() && !isRequesterManagerOrAdmin)
-        throw Error("You can't Edit this note");
-
-    // Editing the note assigned user should only be permitted for admins and managers.
-    if (user && !isRequesterManagerOrAdmin)
-        throw Error("You aren't authorized to assign notes to another user");
-
+    // Find the target note and update
+    const note = await NoteModel.findById(targetNoteId);
     const updatedNote = await note.updateOne(updates);
 
     // return the updated user

@@ -4,39 +4,12 @@ import UserModel from "../../models/User.js";
 
 //@desc: Validate the note input and return an object with the updates if they are provided
 
-export const validateNoteUpdateInput = async (
-    id,
-    user,
-    title,
-    text,
-    completed
-) => {
-    // Check if there is an id provided and the id is a valid ObjectId
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-        throw Error("invalid id");
-    }
-
-    // Check if the note exists in the db
-    const note = await NoteModel.findById(id);
-
-    if (!note) {
-        throw Error("note not found");
-    }
-
+export const validateNoteUpdateInput = async (user, title, text, completed) => {
     let updates = null;
 
     // Check that user exists
     if (user) {
-        // the user is a valid object id
-        if (mongoose.Types.ObjectId.isValid(user)) {
-            // Check if user exists in the db
-            const userExists = await UserModel.findById(user);
-            if (!userExists) throw Error("This user doesn't exist");
-
-            updates = { user };
-        } else {
-            throw Error("invalid user id");
-        }
+        updates = { user };
     }
 
     if (title) {
