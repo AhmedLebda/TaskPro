@@ -34,9 +34,6 @@ const requireAccessToken = asyncHandler(async (req, res, next) => {
     // add the user data to the request object
     req.user = currentUser;
 
-    //! Should be deleted after completion of controllers refactoring to user "req.user" instead
-    req.userId = currentUser._id;
-
     next();
 });
 
