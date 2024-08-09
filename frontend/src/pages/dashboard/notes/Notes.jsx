@@ -38,7 +38,7 @@ const Notes = () => {
                         text={note.text}
                         completed={note.completed}
                         ticket={note.ticket}
-                        username={note.user.username}
+                        user={note.user}
                     />
                 ))}
             </Masonry>

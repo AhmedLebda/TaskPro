@@ -3,20 +3,15 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 // Custom Components
 import NoteCardSubHeader from "./NoteCardSubHeader";
 import NoteCardAction from "./NoteCardAction";
 import Paper from "@mui/material/Paper";
+import { getUserRole } from "../../utils/AuthHelpers";
+const NoteCard = ({ id, title, createdAt, text, completed, ticket, user }) => {
+    const noteOwnerRole = getUserRole(user.roles);
 
-const NoteCard = ({
-    id,
-    title,
-    createdAt,
-    text,
-    completed,
-    ticket,
-    username,
-}) => {
     return (
         <Card elevation={3}>
             <Paper
@@ -31,7 +26,13 @@ const NoteCard = ({
                 #{ticket}
             </Paper>
             <CardHeader
-                action={<NoteCardAction noteId={id} completed={completed} />}
+                action={
+                    <NoteCardAction
+                        noteId={id}
+                        completed={completed}
+                        user={user}
+                    />
+                }
                 title={title}
                 subheader={
                     <NoteCardSubHeader
@@ -55,11 +56,13 @@ const NoteCard = ({
                     sx={{
                         color: "primary.main",
                         textAlign: "right",
-                        fontStyle: "italic",
                         fontWeight: "bold",
                     }}
                 >
-                    Assigned to: {username}
+                    Assigned to: {user.username}
+                    <Box component="span" color="secondary.main" ml={1}>
+                        ( {noteOwnerRole} )
+                    </Box>
                 </Typography>
             </CardContent>
         </Card>
