@@ -15,3 +15,13 @@ export function isJwtExpired(token) {
     // token isn't expired
     return false;
 }
+
+export const getUserRole = (roles) => {
+    if (roles.includes("admin")) {
+        return "admin";
+    } else if (roles.includes("manager")) {
+        return "manager";
+    } else {
+        return "employee";
+    }
+};

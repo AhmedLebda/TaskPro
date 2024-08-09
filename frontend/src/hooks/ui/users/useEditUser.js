@@ -25,7 +25,8 @@ const useEditUser = () => {
     const navigate = useNavigate();
 
     // context hook to get the update credentials method
-    const { updateCredentials, getUserData, getUserRole } = useAuthContext();
+    const { updateCredentials, getUserData, getCurrentUserRole } =
+        useAuthContext();
 
     // Get the user id
     const currentUserId = getUserData().id;
@@ -57,7 +58,8 @@ const useEditUser = () => {
     }, [user]);
 
     // Get the user role
-    const isShowRolesFieldset = getUserRole() === "employee" ? false : true;
+    const isShowRolesFieldset =
+        getCurrentUserRole() === "employee" ? false : true;
 
     // Update the form data state when user data arrives from api
     useEffect(() => {

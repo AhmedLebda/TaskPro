@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import authContext from "../../contexts/auth/authContext";
 import AuthActionsCreator from "../../contexts/auth/authActions";
-
+import { getUserRole } from "../../utils/AuthHelpers";
 const useAuthContext = () => {
     const context = useContext(authContext);
 
@@ -25,15 +25,7 @@ const useAuthContext = () => {
 
     const getUserData = () => user;
 
-    const getUserRole = () => {
-        if (user.roles.includes("admin")) {
-            return "admin";
-        } else if (user.roles.includes("manager")) {
-            return "manager";
-        } else {
-            return "employee";
-        }
-    };
+    const getCurrentUserRole = () => getUserRole(user.roles);
 
     const getAuthStatus = () => isAuthenticated;
 
@@ -42,7 +34,7 @@ const useAuthContext = () => {
         updateCredentials,
         resetCredentials,
         getUserData,
-        getUserRole,
+        getCurrentUserRole,
         getAuthStatus,
     };
 

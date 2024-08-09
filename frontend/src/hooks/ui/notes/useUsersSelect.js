@@ -6,10 +6,10 @@ import useAuthContext from "../../auth/useAuthContext";
 const useUsersSelect = () => {
     const { data, isLoading } = useUsersQuery();
 
-    const { getUserRole } = useAuthContext();
+    const { getCurrentUserRole } = useAuthContext();
 
     // Get the role of the current user
-    const currentUserRole = getUserRole();
+    const currentUserRole = getCurrentUserRole();
 
     // determines if the "Assign note to user" dropdown is visible
     const isUsersSelectVisible =

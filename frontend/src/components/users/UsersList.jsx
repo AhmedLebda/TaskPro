@@ -29,8 +29,8 @@ const UsersList = ({ data }) => {
     const deleteUser = useDeleteUserMutation();
 
     // Getting the current user role
-    const { getUserRole } = useAuthContext();
-    const currentUserRole = getUserRole();
+    const { getCurrentUserRole } = useAuthContext();
+    const currentUserRole = getCurrentUserRole();
 
     // Show snackbar on successful actions
     const { showSnackbar } = useSnackbar();

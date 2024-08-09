@@ -27,7 +27,7 @@ const drawerWidth = 240;
 const DashboardDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
-    const { getUserRole, getUserData } = useAuthContext();
+    const { getCurrentUserRole, getUserData } = useAuthContext();
     const { active: isUserActive, username } = getUserData();
 
     const handleDrawerClose = () => {
@@ -62,7 +62,10 @@ const DashboardDrawer = () => {
             icon: <CreateIcon />,
         },
     ];
-    if (getUserRole() === "admin" || getUserRole() === "manager") {
+    if (
+        getCurrentUserRole() === "admin" ||
+        getCurrentUserRole() === "manager"
+    ) {
         drawerLinks.push(
             ...[
                 {

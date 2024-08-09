@@ -28,7 +28,7 @@ const Notes = () => {
 
     return (
         <>
-            <Masonry columns={{ sm: 1, md: 2, xl: 3 }} spacing={4}>
+            <Masonry columns={{ sm: 1, lg: 2, xl: 3 }} spacing={4}>
                 {allNotes.map((note) => (
                     <NoteCard
                         key={note._id}
