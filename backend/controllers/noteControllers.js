@@ -9,7 +9,7 @@ const notes_list = asyncHandler(async (req, res) => {
 
     // Get all notes from db with the user field populated with user data
     const notes = await NoteModel.find({})
-        .populate({ path: "user", select: "username" })
+        .populate({ path: "user", select: "username roles" })
         .sort(sortBy)
         .skip(page * limit)
         .limit(limit)
@@ -91,7 +91,7 @@ const user_notes = asyncHandler(async (req, res) => {
         throw Error("Access denied");
 
     const userNotes = await NoteModel.find({ user: targetUserId })
-        .populate({ path: "user", select: "username" })
+        .populate({ path: "user", select: "username roles" })
         .sort(sortBy)
         .skip(page * limit)
         .limit(limit)
