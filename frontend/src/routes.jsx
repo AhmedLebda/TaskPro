@@ -17,6 +17,7 @@ import EditUserForm from "./pages/dashboard/users/EditUserForm";
 import Notes from "./pages/dashboard/notes/Notes";
 import CreateNoteForm from "./pages/dashboard/notes/CreateNoteForm";
 import EditNoteForm from "./pages/dashboard/notes/EditNoteForm";
+import UserNotes from "./pages/dashboard/notes/UserNotes";
 const routes = [
     {
         path: "/",
@@ -68,6 +69,10 @@ const routes = [
                             {
                                 path: "notes",
                                 element: <Notes />,
+                            },
+                            {
+                                path: "notes/:username",
+                                element: <UserNotes />,
                             },
                             {
                                 path: "notes/create",

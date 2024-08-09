@@ -28,7 +28,7 @@ const DashboardDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const { getUserRole, getUserData } = useAuthContext();
-    const { active: isUserActive } = getUserData();
+    const { active: isUserActive, username } = getUserData();
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -53,7 +53,7 @@ const DashboardDrawer = () => {
         },
         {
             title: "My Notes",
-            path: "notes",
+            path: `notes/${username}`,
             icon: <ChecklistIcon />,
         },
         {
@@ -67,7 +67,7 @@ const DashboardDrawer = () => {
             ...[
                 {
                     title: "All Notes",
-                    path: "notes?view=all",
+                    path: "notes?page=1",
                     icon: <ChecklistIcon />,
                 },
                 {
