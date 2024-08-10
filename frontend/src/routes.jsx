@@ -71,7 +71,7 @@ const routes = [
                                 element: <Notes />,
                             },
                             {
-                                path: "notes/:username",
+                                path: "notes/:userId",
                                 element: <UserNotes />,
                             },
                             {
