@@ -75,7 +75,7 @@ const DashboardDrawer = () => {
                 },
                 {
                     title: "Users List",
-                    path: "users",
+                    path: "users?page=1",
                     icon: <PeopleIcon />,
                 },
 

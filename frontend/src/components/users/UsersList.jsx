@@ -15,6 +15,7 @@ import useDeleteUserMutation from "../../hooks/users/useDeleteUserMutation";
 // context
 import useAuthContext from "../../hooks/auth/useAuthContext";
 import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
+import { havePermissions } from "../../utils/AuthHelpers";
 
 const tableHeaderCells = [
     "Username",
@@ -29,9 +30,8 @@ const UsersList = ({ data }) => {
     const deleteUser = useDeleteUserMutation();
 
     // Getting the current user role
-    const { getCurrentUserRole } = useAuthContext();
-    const currentUserRole = getCurrentUserRole();
-
+    const { getUserData } = useAuthContext();
+    const CurrentUserData = getUserData();
     // Show snackbar on successful actions
     const { showSnackbar } = useSnackbar();
 
@@ -44,18 +44,11 @@ const UsersList = ({ data }) => {
         });
     };
 
-    // Only show options to delete or edit admin users if the current user is an admin
-    const showOptions = (userRoles, currentUserRoles) => {
-        return userRoles.includes("admin") && currentUserRoles !== "admin"
-            ? false
-            : true;
-    };
-
     return (
         <>
             <TableContainer
                 component={Paper}
-                elevation={3}
+                elevation={0}
                 style={{ overflow: "auto", maxHeight: "65vh" }}
             >
                 <Table aria-label="users table">
@@ -91,20 +84,24 @@ const UsersList = ({ data }) => {
                                 {/* Options */}
 
                                 <TableCell align="right">
-                                    {showOptions(
-                                        user.roles,
-                                        currentUserRole
-                                    ) && (
-                                        <Stack spacing={2} direction="row">
-                                            <Button
-                                                variant="outlined"
-                                                color="error"
-                                                onClick={() =>
-                                                    onUserDelete(user._id)
-                                                }
-                                            >
-                                                Delete
-                                            </Button>
+                                    {havePermissions(CurrentUserData, user) && (
+                                        <Stack
+                                            spacing={2}
+                                            direction="row"
+                                            justifyContent="flex-end"
+                                        >
+                                            {CurrentUserData.id !==
+                                                user._id && (
+                                                <Button
+                                                    variant="outlined"
+                                                    color="error"
+                                                    onClick={() =>
+                                                        onUserDelete(user._id)
+                                                    }
+                                                >
+                                                    Delete
+                                                </Button>
+                                            )}
                                             <Button
                                                 variant="outlined"
                                                 color="success"
