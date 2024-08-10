@@ -30,7 +30,7 @@ const users_list = asyncHandler(async (req, res) => {
             },
         },
         {
-            $sort: { sortOrder: 1 },
+            $sort: { sortOrder: 1, _id: 1 },
         },
         {
             $skip: page * limit,
@@ -41,6 +41,8 @@ const users_list = asyncHandler(async (req, res) => {
         {
             $project: {
                 sortOrder: 0,
+                password: 0,
+                __v: 0,
             },
         },
     ]);
