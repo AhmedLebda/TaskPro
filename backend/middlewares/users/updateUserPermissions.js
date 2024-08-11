@@ -34,7 +34,12 @@ import asyncHandler from "express-async-handler";
  */
 
 const updateUserPermissions = asyncHandler(async (req, res, next) => {
-    const { roles: providedRoles, active: providedActiveStatus } = req.body;
+    const {
+        roles: providedRoles,
+        active: providedActiveStatus,
+        username: providedUsername,
+        password: providedPassword,
+    } = req.body;
     // Target User Data
     const { targetUser } = req;
     const { _id: targetUserId } = targetUser;
@@ -97,6 +102,27 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
         isRequesterManager &&
         isTargetUserAdminOrManager &&
         !isRequesterTheAccountOwner
+    ) {
+        return res.status(401).json({
+            error: "Access Denied: You do not have permission to perform this action.",
+            isError: true,
+        });
+    }
+
+    // User can't change his own active status
+    if (isRequesterTheAccountOwner && providedActiveStatus !== undefined) {
+        return res.status(401).json({
+            error: "Access Denied: You do not have permission to perform this action.",
+            isError: true,
+        });
+    }
+
+    // Only Admin or account owner can change username and password
+    console.log(isRequesterTheAccountOwner);
+    if (
+        !isRequesterAdmin &&
+        !isRequesterTheAccountOwner &&
+        (providedUsername || providedPassword)
     ) {
         return res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",

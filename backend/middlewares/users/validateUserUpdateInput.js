@@ -29,34 +29,32 @@ import asyncHandler from "express-async-handler";
 
 const validateUserUpdateInput = asyncHandler(async (req, res, next) => {
     const { username, password, roles, active } = req.body;
-    const { user: requestingUser } = req;
-    const isRequesterAdmin = requestingUser.roles.includes("admin");
+    // const { user: requestingUser } = req;
+    // const isRequesterAdmin = requestingUser.roles.includes("admin");
 
     const ACCEPTED_ROLES = ["employee", "manager"];
 
     let updates = null;
 
-    if (isRequesterAdmin) {
-        if (username) {
-            updates = { username };
-        }
+    if (username) {
+        updates = { username };
+    }
 
-        if (password) {
-            updates = { ...updates, password };
-        }
+    if (password) {
+        updates = { ...updates, password };
+    }
 
-        // Throw error if roles exist but not an array or an  empty array
-        if (roles) {
-            if (!Array.isArray(roles) || roles.length === 0)
-                throw Error(
-                    "user roles must be an array and contains one value or more"
-                );
-
-            const filteredRoles = roles.filter((role) =>
-                ACCEPTED_ROLES.includes(role)
+    // Throw error if roles exist but not an array or an  empty array
+    if (roles) {
+        if (!Array.isArray(roles) || roles.length === 0)
+            throw Error(
+                "user roles must be an array and contains one value or more"
             );
-            updates = { ...updates, roles: filteredRoles };
-        }
+
+        const filteredRoles = roles.filter((role) =>
+            ACCEPTED_ROLES.includes(role)
+        );
+        updates = { ...updates, roles: filteredRoles };
     }
 
     // Throw error if active status exist but not a boolean value
