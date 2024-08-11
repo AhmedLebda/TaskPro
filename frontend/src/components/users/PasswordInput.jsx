@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
-const PasswordInput = ({ value, onChange }) => {
+const PasswordInput = ({ value, onChange, disabled }) => {
     return (
         <Grid item xs={12}>
             <TextField
@@ -13,6 +13,7 @@ const PasswordInput = ({ value, onChange }) => {
                 autoComplete="new-password"
                 value={value}
                 onChange={onChange}
+                disabled={disabled}
             />
         </Grid>
     );

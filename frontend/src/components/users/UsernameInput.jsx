@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
-const UsernameInput = ({ value, onChange }) => {
+const UsernameInput = ({ value, onChange, disabled }) => {
     return (
         <Grid item xs={12}>
             <TextField
@@ -13,6 +13,7 @@ const UsernameInput = ({ value, onChange }) => {
                 autoFocus
                 value={value}
                 onChange={onChange}
+                disabled={disabled}
             />
         </Grid>
     );

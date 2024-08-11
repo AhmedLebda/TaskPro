@@ -5,7 +5,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 
-const ActiveStatusFieldset = ({ value, onChange }) => {
+const ActiveStatusFieldset = ({ value, onChange, disabled }) => {
     return (
         <Grid item xs={12}>
             <FormControl component="fieldset" variant="standard">
@@ -17,6 +17,7 @@ const ActiveStatusFieldset = ({ value, onChange }) => {
                             name="active"
                             checked={value}
                             onChange={onChange}
+                            disabled={disabled}
                         />
                     }
                     label="Active"

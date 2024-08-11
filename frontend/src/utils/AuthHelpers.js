@@ -17,12 +17,14 @@ export function isJwtExpired(token) {
 }
 
 export const getUserRole = (roles) => {
-    if (roles.includes("admin")) {
-        return "admin";
-    } else if (roles.includes("manager")) {
-        return "manager";
-    } else {
-        return "employee";
+    if (roles) {
+        if (roles.includes("admin")) {
+            return "admin";
+        } else if (roles.includes("manager")) {
+            return "manager";
+        } else {
+            return "employee";
+        }
     }
 };
 

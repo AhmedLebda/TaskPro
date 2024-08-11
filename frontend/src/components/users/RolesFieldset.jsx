@@ -9,34 +9,33 @@ import Checkbox from "@mui/material/Checkbox";
 // List of all available roles
 const roles = ["employee", "manager", "admin"];
 
-const RolesFieldset = ({ isVisible = true, rolesValues, onChange }) => {
+const RolesFieldset = ({ disabled, rolesValues, onChange }) => {
     return (
         <Grid item xs={12}>
-            {isVisible && (
-                <FormControl component="fieldset" variant="standard">
-                    <FormLabel component="legend">Employee Role</FormLabel>
-                    <FormGroup
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                        }}
-                    >
-                        {roles.map((role) => (
-                            <FormControlLabel
-                                key={role}
-                                control={
-                                    <Checkbox
-                                        name={role}
-                                        checked={rolesValues[role]}
-                                        onChange={onChange}
-                                    />
-                                }
-                                label={role}
-                            />
-                        ))}
-                    </FormGroup>
-                </FormControl>
-            )}
+            <FormControl component="fieldset" variant="standard">
+                <FormLabel component="legend">Employee Role</FormLabel>
+                <FormGroup
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                    }}
+                >
+                    {roles.map((role) => (
+                        <FormControlLabel
+                            key={role}
+                            control={
+                                <Checkbox
+                                    name={role}
+                                    checked={rolesValues[role]}
+                                    onChange={onChange}
+                                    disabled={role === "admin" || disabled}
+                                />
+                            }
+                            label={role}
+                        />
+                    ))}
+                </FormGroup>
+            </FormControl>
         </Grid>
     );
 };

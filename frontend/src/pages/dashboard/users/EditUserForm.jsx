@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import FormHelperText from "@mui/material/FormHelperText";
 // Custom Component
 import Spinner from "../../../components/general/Spinner";
 import RolesFieldset from "../../../components/users/RolesFieldset";
@@ -12,6 +11,7 @@ import ActiveStatusFieldset from "../../../components/users/ActiveStatusFieldset
 import UsernameInput from "../../../components/users/UsernameInput";
 import PasswordInput from "../../../components/users/PasswordInput";
 import ErrorAlert from "../../../components/general/ErrorAlert";
+
 // Custom Hooks
 import useEditUser from "../../../hooks/ui/users/useEditUser";
 
@@ -22,7 +22,9 @@ const EditUserForm = () => {
         errorAlert,
         handleFormDataChange,
         handleSubmit,
-        isShowRolesFieldset,
+        isRolesFieldsetEnabled,
+        isDataInputsEnabled,
+        isActiveCheckboxEnabled,
     } = useEditUser();
 
     if (isLoading) {
@@ -55,31 +57,29 @@ const EditUserForm = () => {
                         <UsernameInput
                             value={formData.username}
                             onChange={handleFormDataChange}
+                            disabled={!isDataInputsEnabled}
                         />
 
                         <PasswordInput
                             value={formData.password}
                             onChange={handleFormDataChange}
+                            disabled={!isDataInputsEnabled}
                         />
 
                         {/* Active Status Checkbox */}
+
                         <ActiveStatusFieldset
                             value={formData.active}
                             onChange={handleFormDataChange}
+                            disabled={!isActiveCheckboxEnabled}
                         />
 
                         {/* Roles Checkboxes*/}
                         <RolesFieldset
-                            isVisible={isShowRolesFieldset}
+                            disabled={!isRolesFieldsetEnabled}
                             rolesValues={formData.roles}
                             onChange={handleFormDataChange}
                         />
-
-                        <Grid item xs={12}>
-                            <FormHelperText>
-                                Password field can be left empty
-                            </FormHelperText>
-                        </Grid>
                     </Grid>
 
                     <Button
@@ -88,7 +88,7 @@ const EditUserForm = () => {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Add
+                        Edit
                     </Button>
                 </Box>
             </Box>

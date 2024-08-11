@@ -5,6 +5,8 @@ import useUpdateUserMutation from "../../users/useUpdateUserMutation";
 import { useState, useEffect, useCallback } from "react";
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 import useSnackbar from "../snackbar/useSnackbar";
+import usePermissions from "../../auth/usePermissions";
+
 // Initial Form state
 const initialFormData = {
     username: "",
@@ -19,14 +21,13 @@ const initialFormData = {
 
 const useEditUser = () => {
     // Getting user id from the url params
-    const { userId } = useParams();
+    const { userId: targetUserId } = useParams();
 
     // navigate hook to redirect user after successful action
     const navigate = useNavigate();
 
     // context hook to get the update credentials method
-    const { updateCredentials, getUserData, getCurrentUserRole } =
-        useAuthContext();
+    const { updateCredentials, getUserData } = useAuthContext();
 
     // Get the user id
     const currentUserId = getUserData().id;
@@ -46,7 +47,13 @@ const useEditUser = () => {
     // Show successful message on user edit
     const { showSnackbar } = useSnackbar();
 
-    // Get the active roles and transform to object when data comes from api
+    const {
+        haveAdminPermissions,
+        haveOwnerPermissions,
+        haveManagerPermissions,
+    } = usePermissions(user?.roles);
+
+    // Transform active roles to object when data comes from api
     const getActiveRoles = useCallback(() => {
         return user?.roles.reduce(
             (acc, curr) => {
@@ -57,9 +64,11 @@ const useEditUser = () => {
         );
     }, [user]);
 
-    // Get the user role
-    const isShowRolesFieldset =
-        getCurrentUserRole() === "employee" ? false : true;
+    // permissions to update fields:
+    const isRolesFieldsetEnabled = haveAdminPermissions;
+    const isDataInputsEnabled = haveAdminPermissions || haveOwnerPermissions;
+    const isActiveCheckboxEnabled =
+        haveAdminPermissions || haveManagerPermissions;
 
     // Update the form data state when user data arrives from api
     useEffect(() => {
@@ -97,7 +106,7 @@ const useEditUser = () => {
     // Handles form submit
     const handleSubmit = (event) => {
         event.preventDefault();
-        let updates = { id: userId };
+        let updates = { id: targetUserId };
 
         if (formData.username !== user.username) {
             updates = { ...updates, username: formData.username };
@@ -118,7 +127,6 @@ const useEditUser = () => {
                     rolesArray.push(key);
                 }
             }
-            console.log(rolesArray);
 
             updates = { ...updates, roles: rolesArray };
         }
@@ -145,7 +153,7 @@ const useEditUser = () => {
                     updateCredentials({ username, active, roles });
                 }
                 showSnackbar("Edit Successful! Your changes have been saved.");
-                navigate("/dashboard/users");
+                navigate("/dashboard");
             },
             onError: ({ message }) => {
                 showError(message, errorAlert, setErrorAlert);
@@ -159,7 +167,10 @@ const useEditUser = () => {
         errorAlert,
         handleFormDataChange,
         handleSubmit,
-        isShowRolesFieldset,
+        isRolesFieldsetEnabled,
+        isDataInputsEnabled,
+        isActiveCheckboxEnabled,
+        fetchError,
     };
 };
 
