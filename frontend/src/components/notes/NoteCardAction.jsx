@@ -43,7 +43,7 @@ const NoteCardAction = ({ noteId, completed, user }) => {
                     <MenuItem
                         onClick={handleClose}
                         component={RouterLink}
-                        to={`edit/${noteId}`}
+                        to={`/dashboard/notes/edit/${noteId}`}
                     >
                         Edit
                     </MenuItem>
