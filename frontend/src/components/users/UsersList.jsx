@@ -15,7 +15,8 @@ import useDeleteUserMutation from "../../hooks/users/useDeleteUserMutation";
 // context
 import useAuthContext from "../../hooks/auth/useAuthContext";
 import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
-import { havePermissions } from "../../utils/AuthHelpers";
+// Utils
+import permissions from "../../utils/permissions";
 
 const tableHeaderCells = [
     "Username",
@@ -24,6 +25,11 @@ const tableHeaderCells = [
     "Join Date",
     "Options",
 ];
+
+function showUserOptions(currentUser, targetUser) {
+    const Permissions = permissions(currentUser, targetUser);
+    return Permissions.completeAdminManagerOwner;
+}
 
 const UsersList = ({ data }) => {
     // Delete user mutation
@@ -84,7 +90,7 @@ const UsersList = ({ data }) => {
                                 {/* Options */}
 
                                 <TableCell align="right">
-                                    {havePermissions(CurrentUserData, user) && (
+                                    {showUserOptions(CurrentUserData, user) && (
                                         <Stack
                                             spacing={2}
                                             direction="row"

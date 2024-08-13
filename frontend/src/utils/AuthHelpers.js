@@ -27,20 +27,3 @@ export const getUserRole = (roles) => {
         }
     }
 };
-
-export const havePermissions = (currentUser, targetUser) => {
-    const { id: currentUserId, roles: currentUserRoles } = currentUser;
-    const { _id: targetUserId, roles: targetUserRoles } = targetUser;
-
-    const currentUserRole = getUserRole(currentUserRoles);
-    const targetUserRole = getUserRole(targetUserRoles);
-
-    if (currentUserRole == "admin") return true;
-
-    if (currentUserRole == "manager" && currentUserId === targetUserId)
-        return true;
-
-    if (targetUserRole === "employee") return true;
-
-    return false;
-};

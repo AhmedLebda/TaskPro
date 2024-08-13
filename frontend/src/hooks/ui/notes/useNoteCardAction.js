@@ -8,7 +8,7 @@ import useDeleteNoteMutation from "../../notes/useDeleteNoteMutation";
 import useSnackbar from "../snackbar/useSnackbar";
 import useAuthContext from "../../auth/useAuthContext";
 // utils
-import { havePermissions } from "../../../utils/AuthHelpers";
+import permissions from "../../../utils/permissions";
 
 const useNoteCardAction = (noteId, completed, user) => {
     // React Query Mutations
@@ -24,6 +24,9 @@ const useNoteCardAction = (noteId, completed, user) => {
     // UserData
     const { getUserData } = useAuthContext();
     const currentUser = getUserData();
+
+    const Permissions = permissions(currentUser, user);
+    const showOptions = Permissions.completeAdminManagerOwner;
 
     const open = Boolean(anchorEl);
 
@@ -52,8 +55,6 @@ const useNoteCardAction = (noteId, completed, user) => {
         );
         handleClose();
     };
-
-    const showOptions = havePermissions(currentUser, user);
 
     return {
         showOptions,

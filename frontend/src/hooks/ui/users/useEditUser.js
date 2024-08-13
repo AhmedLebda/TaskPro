@@ -5,7 +5,8 @@ import useUpdateUserMutation from "../../users/useUpdateUserMutation";
 import { useState, useEffect, useCallback } from "react";
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 import useSnackbar from "../snackbar/useSnackbar";
-import usePermissions from "../../auth/usePermissions";
+
+import permissions from "../../../utils/permissions";
 
 // Initial Form state
 const initialFormData = {
@@ -47,12 +48,6 @@ const useEditUser = () => {
     // Show successful message on user edit
     const { showSnackbar } = useSnackbar();
 
-    const {
-        haveAdminPermissions,
-        haveOwnerPermissions,
-        haveManagerPermissions,
-    } = usePermissions(user?.roles);
-
     // Transform active roles to object when data comes from api
     const getActiveRoles = useCallback(() => {
         return user?.roles.reduce(
@@ -64,11 +59,13 @@ const useEditUser = () => {
         );
     }, [user]);
 
+    // Permissions
+    const Permissions = permissions(getUserData, user);
+
     // permissions to update fields:
-    const isRolesFieldsetEnabled = haveAdminPermissions;
-    const isDataInputsEnabled = haveAdminPermissions || haveOwnerPermissions;
-    const isActiveCheckboxEnabled =
-        haveAdminPermissions || haveManagerPermissions;
+    const isRolesFieldsetEnabled = Permissions.strictAdmin;
+    const isDataInputsEnabled = Permissions.strictAdminOwner;
+    const isActiveCheckboxEnabled = Permissions.strictAdminManager;
 
     // Update the form data state when user data arrives from api
     useEffect(() => {
