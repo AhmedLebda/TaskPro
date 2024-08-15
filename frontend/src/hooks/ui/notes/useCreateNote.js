@@ -6,12 +6,16 @@ import useSnackbar from "../snackbar/useSnackbar";
 import { useNavigate } from "react-router-dom";
 // React
 import { useState } from "react";
+// React-query
+import { useIsMutating } from "@tanstack/react-query";
 // Helpers
 import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 const useCreateNote = () => {
     // Error state
     const [errorAlert, setErrorAlert] = useState(initialErrorState);
+
+    const isMutating = Boolean(useIsMutating());
 
     // Getting user data from the global context
     const { getUserData } = useAuthContext();
@@ -60,7 +64,7 @@ const useCreateNote = () => {
         noteMutation.mutate(noteData, {
             onSuccess: () => {
                 showSnackbar("Success! The task has been added.");
-                navigate("/dashboard/notes");
+                navigate(`/dashboard/notes/${user.id}`);
             },
             onError: (error) =>
                 showError(error.message, errorAlert, setErrorAlert),
@@ -72,6 +76,7 @@ const useCreateNote = () => {
         formData,
         handleFormDataChange,
         handleSubmit,
+        isMutating,
     };
 };
 

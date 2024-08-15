@@ -12,8 +12,13 @@ import ErrorAlert from "../../../components/general/ErrorAlert";
 import useCreateNote from "../../../hooks/ui/notes/useCreateNote";
 
 const CreateNoteForm = () => {
-    const { errorAlert, formData, handleFormDataChange, handleSubmit } =
-        useCreateNote();
+    const {
+        errorAlert,
+        formData,
+        isMutating,
+        handleFormDataChange,
+        handleSubmit,
+    } = useCreateNote();
 
     return (
         <Container component="main" maxWidth="xs">
@@ -83,6 +88,7 @@ const CreateNoteForm = () => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        disabled={isMutating}
                     >
                         Create
                     </Button>
