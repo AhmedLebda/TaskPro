@@ -59,7 +59,7 @@ const useEditUser = () => {
     }, [user]);
 
     // Permissions
-    const Permissions = permissions(getUserData, user);
+    const Permissions = permissions(getUserData(), user);
 
     // permissions to update fields:
     const isRolesFieldsetEnabled = Permissions.strictAdmin;

@@ -11,8 +11,8 @@ const permissions = (currentUser, targetUser) => {
     const currentUserId = currentUser.id;
     const currentUserRole = getUserRole(currentUser.roles);
 
-    const targetUserId = targetUser._id;
-    const targetUserRole = getUserRole(targetUser.roles);
+    const targetUserId = targetUser?._id;
+    const targetUserRole = getUserRole(targetUser?.roles);
 
     const haveStrictAdminPermissions =
         currentUserRole === "admin" && targetUserRole !== "admin";
