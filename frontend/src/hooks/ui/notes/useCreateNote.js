@@ -8,12 +8,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 // React-query
 import { useIsMutating } from "@tanstack/react-query";
-// Helpers
-import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 const useCreateNote = () => {
     // Error state
-    const [errorAlert, setErrorAlert] = useState(initialErrorState);
+    const [errorAlert, setErrorAlert] = useState("");
 
     const isMutating = Boolean(useIsMutating());
 
@@ -46,11 +44,7 @@ const useCreateNote = () => {
 
         // user must provide title and text for note
         if (!formData.title || !formData.text) {
-            showError(
-                "not enough data to create a note",
-                errorAlert,
-                setErrorAlert
-            );
+            setErrorAlert("not enough data to create a note");
             return;
         }
         // Default case for employees the note is assigned to the current user
@@ -66,8 +60,7 @@ const useCreateNote = () => {
                 showSnackbar("Success! The task has been added.");
                 navigate(`/dashboard/notes/${user.id}`);
             },
-            onError: (error) =>
-                showError(error.message, errorAlert, setErrorAlert),
+            onError: (error) => setErrorAlert(error.message),
         });
     };
 

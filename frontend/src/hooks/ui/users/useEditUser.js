@@ -3,7 +3,6 @@ import useAuthContext from "../../auth/useAuthContext";
 import useUserDetailsQuery from "../../users/useUserDetailsQuery";
 import useUpdateUserMutation from "../../users/useUpdateUserMutation";
 import { useState, useEffect, useCallback } from "react";
-import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 import useSnackbar from "../snackbar/useSnackbar";
 
 import permissions from "../../../utils/permissions";
@@ -40,7 +39,7 @@ const useEditUser = () => {
     const updateMutation = useUpdateUserMutation();
 
     // Error state to display errors
-    const [errorAlert, setErrorAlert] = useState(initialErrorState);
+    const [errorAlert, setErrorAlert] = useState("");
 
     // Form fields state
     const [formData, setFormData] = useState(initialFormData);
@@ -70,7 +69,7 @@ const useEditUser = () => {
     // Update the form data state when user data arrives from api
     useEffect(() => {
         if (fetchError) {
-            showError(fetchError.message, errorAlert, setErrorAlert);
+            setErrorAlert(fetchError.message);
         }
         if (user) {
             const userData = {
@@ -81,7 +80,7 @@ const useEditUser = () => {
 
             setFormData({ ...initialFormData, ...userData });
         }
-    }, [errorAlert, fetchError, getActiveRoles, user]);
+    }, [fetchError, getActiveRoles, user]);
 
     // Handles change in form data
     const handleFormDataChange = (e) => {
@@ -134,11 +133,7 @@ const useEditUser = () => {
 
         // just return if there are no updates to send
         if (Object.values(updates).length === 1) {
-            showError(
-                "You didn't provide new data to update",
-                errorAlert,
-                setErrorAlert
-            );
+            setErrorAlert("You didn't provide new data to update");
             return;
         }
 
@@ -153,7 +148,7 @@ const useEditUser = () => {
                 navigate("/dashboard");
             },
             onError: ({ message }) => {
-                showError(message, errorAlert, setErrorAlert);
+                setErrorAlert(message);
             },
         });
     };

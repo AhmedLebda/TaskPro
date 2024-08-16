@@ -33,7 +33,7 @@ const EditUserForm = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            <ErrorAlert error={errorAlert} />
+            <ErrorAlert errorMessage={errorAlert} />
             <Box
                 sx={{
                     marginTop: 8,

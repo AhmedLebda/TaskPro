@@ -3,14 +3,12 @@ import { useState } from "react";
 // Custom hooks
 import useAuthContext from "../../auth/useAuthContext";
 import useLoginMutation from "../../auth/useLoginMutation";
-// Helpers
-import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 
 const useLogin = () => {
     const loginMutation = useLoginMutation();
     const { setCredentials, getAuthStatus } = useAuthContext();
     const [formData, setFormData] = useState({ username: "", password: "" });
-    const [errorAlert, setErrorAlert] = useState(initialErrorState);
+    const [errorAlert, setErrorAlert] = useState("");
 
     // Handle form input change event and update form data state.
     const handleFormDataChange = (e) => {
@@ -25,7 +23,7 @@ const useLogin = () => {
                 setCredentials(data);
             },
             onError: (error) => {
-                showError(error.message, errorAlert, setErrorAlert);
+                setErrorAlert(error.message);
             },
         });
     };

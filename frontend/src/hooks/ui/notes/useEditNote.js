@@ -5,13 +5,11 @@ import { useParams, useNavigate } from "react-router-dom";
 // React Query
 import { useQueryClient } from "@tanstack/react-query";
 import useUpdateNoteMutation from "../../notes/useUpdateNoteMutation";
-// Helpers
-import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
 // Custom Hooks
 import useSnackbar from "../snackbar/useSnackbar";
 const useEditNote = () => {
     // Error State
-    const [errorAlert, setErrorAlert] = useState(initialErrorState);
+    const [errorAlert, setErrorAlert] = useState("");
 
     // Get query client to get cached notes data
     const queryClient = useQueryClient();
@@ -74,12 +72,7 @@ const useEditNote = () => {
 
         // If the updates object includes only the note's ID, return immediately without making an API request, as there are no changes to the note.
         if (Object.entries(updates).length === 1) {
-            console.log("nothing to update");
-            showError(
-                "You didn't change anything to update",
-                errorAlert,
-                setErrorAlert
-            );
+            setErrorAlert("You didn't change anything to update");
             return;
         }
 
@@ -88,8 +81,7 @@ const useEditNote = () => {
                 showSnackbar("Success! The task changes have been saved.");
                 navigate("/dashboard/notes");
             },
-            onError: ({ message }) =>
-                showError(message, errorAlert, setErrorAlert),
+            onError: ({ message }) => setErrorAlert(message),
         });
     };
 

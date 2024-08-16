@@ -17,9 +17,7 @@ const Notes = () => {
     }
 
     if (error) {
-        return (
-            <ErrorAlert error={{ isVisible: true, message: error.message }} />
-        );
+        return <ErrorAlert errorMessage={error.message} />;
     }
 
     if (!allNotes.length) {

@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 // Custom hooks
 import useCreateUserMutation from "../../users/useCreateUserMutation";
 import useSnackbar from "../snackbar/useSnackbar";
-// Utils
-import { initialErrorState, showError } from "../../../utils/ErrorHelpers";
+
 const useAddUser = () => {
     const createUser = useCreateUserMutation();
     const navigate = useNavigate();
-    const [errorAlert, setErrorAlert] = useState(initialErrorState);
+    const [errorAlert, setErrorAlert] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
@@ -50,11 +49,7 @@ const useAddUser = () => {
         }
 
         if ((!formData.username, !formData.password)) {
-            showError(
-                "Invalid username or password",
-                errorAlert,
-                setErrorAlert
-            );
+            setErrorAlert("Invalid username or password");
         }
 
         if (roles.length === 0) {
@@ -82,7 +77,7 @@ const useAddUser = () => {
                 setIsLoading(true);
             },
             onError: ({ message }) => {
-                showError(message, errorAlert, setErrorAlert);
+                setErrorAlert(message);
             },
         });
     };

@@ -1,8 +1,7 @@
 import Alert from "@mui/material/Alert";
 
-const ErrorAlert = ({ error }) => {
-    const { isVisible, message } = error;
-    return isVisible && <Alert severity="error">{message}</Alert>;
+const ErrorAlert = ({ errorMessage }) => {
+    return errorMessage && <Alert severity="error">{errorMessage}</Alert>;
 };
 
 export default ErrorAlert;
