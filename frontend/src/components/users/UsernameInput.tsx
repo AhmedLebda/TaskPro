@@ -1,7 +1,13 @@
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
-const UsernameInput = ({ value, onChange, disabled }) => {
+interface props {
+    value: string | number;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean;
+}
+
+const UsernameInput = ({ value, onChange, disabled }: props) => {
     return (
         <Grid item xs={12}>
             <TextField

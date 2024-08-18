@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Divider } from "@mui/material";
+
 const About = () => {
     return (
         <Box>
