@@ -35,7 +35,7 @@ const useLogin = () => {
         });
     };
 
-    const isAuthenticated: boolean | undefined = getAuthStatus();
+    const isAuthenticated = getAuthStatus();
 
     return {
         formData,

@@ -2,6 +2,8 @@ import { useContext } from "react";
 import authContext from "../../contexts/auth/authContext";
 import AuthActionsCreator from "../../contexts/auth/authActions";
 import { getUserRole } from "../../utils/AuthHelpers";
+import { User } from "../../config/types";
+
 const useAuthContext = () => {
     const context = useContext(authContext);
 
@@ -12,10 +14,10 @@ const useAuthContext = () => {
 
     const { user, dispatch, isAuthenticated } = context;
 
-    const setCredentials = (credentials) =>
+    const setCredentials = (credentials: User) =>
         dispatch(AuthActionsCreator.setCredentials(credentials));
 
-    const updateCredentials = (updates) => {
+    const updateCredentials = (updates: User) => {
         dispatch(AuthActionsCreator.updateCredentials(updates));
     };
 
@@ -25,7 +27,11 @@ const useAuthContext = () => {
 
     const getUserData = () => user;
 
-    const getCurrentUserRole = () => getUserRole(user.roles);
+    const getCurrentUserRole = () => {
+        if (!user) throw Error("User isn't logged in");
+
+        return getUserRole(user.roles);
+    };
 
     const getAuthStatus = () => isAuthenticated;
 

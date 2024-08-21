@@ -1,11 +1,12 @@
 import AuthServices from "../../api/auth";
 import authContext from "./authContext";
-import { useEffect, useReducer, useState } from "react";
-import { Box } from "@mui/material";
+import { PropsWithChildren, useEffect, useReducer, useState } from "react";
+import Box from "@mui/material/Box";
 import Spinner from "../../components/general/Spinner";
 import AuthActionsCreator from "./authActions";
+import { AuthAction, User } from "../../config/types";
 
-const authReducer = (state, action) => {
+const authReducer = (state: User | null, action: AuthAction): User | null => {
     switch (action.type) {
         case "auth/setCredentials":
             return action.payload;
@@ -18,10 +19,11 @@ const authReducer = (state, action) => {
     }
 };
 
-const AuthContextProvider = ({ children }) => {
+const AuthContextProvider = ({ children }: PropsWithChildren) => {
     const [user, dispatch] = useReducer(authReducer, null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         const checkAuth = async () => {
             if (user) {
