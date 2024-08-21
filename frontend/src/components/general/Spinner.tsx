@@ -2,7 +2,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Spinner = ({ item = "Data" }) => {
+interface SpinnerProps {
+    item?: string; // Optional prop for customizing the loading message. Default is "Data"
+}
+
+const Spinner = ({ item = "Data" }: SpinnerProps) => {
     return (
         <Box
             component="main"

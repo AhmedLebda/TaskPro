@@ -1,6 +1,10 @@
 import Alert from "@mui/material/Alert";
 
-const ErrorAlert = ({ errorMessage }) => {
+interface ErrorAlertProps {
+    errorMessage: string | null;
+}
+
+const ErrorAlert = ({ errorMessage }: ErrorAlertProps) => {
     return errorMessage && <Alert severity="error">{errorMessage}</Alert>;
 };
 
