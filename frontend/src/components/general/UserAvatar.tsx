@@ -4,25 +4,30 @@ import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
 
 import useAuthContext from "../../hooks/auth/useAuthContext";
 import useLogoutMutation from "../../hooks/auth/useLogoutMutation";
 const UserAvatar = () => {
-    const [anchorElUser, setAnchorElUser] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState<HTMLButtonElement | null>(
+        null
+    );
 
     const logoutMutation = useLogoutMutation();
 
     const { getUserData } = useAuthContext();
     const currentUserId = getUserData()?.id;
-    const handleOpenUserMenu = (event) => {
+
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorElUser(event.currentTarget);
     };
+
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+
     const handleLogout = async () => {
         logoutMutation.mutate();
 
@@ -44,7 +49,7 @@ const UserAvatar = () => {
 
             <Menu
                 sx={{ mt: "45px" }}
-                id="menu-appbar"
+                id="menu"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
                     vertical: "top",

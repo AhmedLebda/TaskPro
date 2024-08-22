@@ -21,3 +21,22 @@ export interface User {
     roles: string[];
     username: string;
 }
+
+// ** Snackbar **
+
+export interface DefaultSnackbar {
+    open: boolean;
+    message: string;
+}
+
+export interface SnackbarActionWithPayload {
+    type: "snackbar/setSnackbar";
+    payload: { open: boolean; message: string };
+}
+export interface SnackbarActionWithoutPayload {
+    type: "snackbar/resetSnackbar";
+}
+
+export type SnackbarAction =
+    | SnackbarActionWithPayload
+    | SnackbarActionWithoutPayload;

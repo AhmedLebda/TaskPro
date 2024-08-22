@@ -4,7 +4,9 @@ import { Navigate } from "react-router-dom";
 
 const UserActiveCheck = () => {
     const { getUserData } = useAuthContext();
-    const { active } = getUserData();
+
+    const active = getUserData()?.active;
+
     if (!active) {
         return <Navigate to="/dashboard" />;
     }

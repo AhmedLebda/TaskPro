@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import snackbarContext from "../../../contexts/ui/snackbar/snackbarContext";
 import snackbarActionsCreator from "../../../contexts/ui/snackbar/snackbarActions";
+import { snackbarContext } from "../../../contexts/ui/snackbar/SnackbarContextProvider";
 
 const useSnackbar = () => {
     const context = useContext(snackbarContext);
@@ -12,7 +12,7 @@ const useSnackbar = () => {
 
     const { snackbar, dispatch } = context;
 
-    const showSnackbar = (message) => {
+    const showSnackbar = (message: string) => {
         dispatch(
             snackbarActionsCreator.setSnackbar({ open: true, message: message })
         );
