@@ -8,7 +8,7 @@ import Alert from "@mui/material/Alert";
 
 const DashIndex = () => {
     const { getUserData } = useAuthContext();
-    const { username, roles, active } = getUserData();
+    const { username, roles, active } = getUserData()!;
 
     const roleChips = roles.map((role) => (
         <Chip

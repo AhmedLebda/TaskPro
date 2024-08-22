@@ -6,11 +6,13 @@ import useUsersQuery from "../../../hooks/users/UseUsersQuery";
 // Custom Components
 import UsersList from "../../../components/users/UsersList";
 import CustomPagination from "../../../components/general/CustomPagination";
+
 const Users = () => {
     const { data, isLoading, error } = useUsersQuery();
 
-    const users = data?.data;
-    const totalPages = data?.totalPages;
+    const users = data?.data ?? [];
+
+    const totalPages = data?.totalPages ?? 0;
 
     if (isLoading) {
         return <Spinner item="Users" />;
@@ -22,7 +24,11 @@ const Users = () => {
 
     return (
         <>
-            <UsersList data={users} />
+            {users.length > 0 ? (
+                <UsersList data={users} />
+            ) : (
+                <p>No users available</p>
+            )}
 
             <CustomPagination totalPages={totalPages} />
         </>

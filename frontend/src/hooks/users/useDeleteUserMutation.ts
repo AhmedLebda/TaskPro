@@ -7,9 +7,9 @@ const useDeleteUserMutation = () => {
     const queryClient = useQueryClient();
     const deleteUser = useAuthFetch("/users", "DELETE");
     return useMutation({
-        mutationFn: (id) => deleteUser({ id }),
+        mutationFn: (id: string) => deleteUser({ id }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
-        mutationKey: "deleteUser",
+        mutationKey: ["deleteUser"],
     });
 };
 export default useDeleteUserMutation;

@@ -1,20 +1,11 @@
 import { getUserRole } from "./AuthHelpers";
+import { RequestedUser, User } from "../config/types";
 /* Permissions
  * strict Admin: admin user can perform actions on all users except
  * complete Admin: admin user can perform actions on all users (including himself)
  * Manager: manager user perform actions on all employees
  * owner: the current user perform action on himself
  */
-
-interface CurrentUser {
-    id: string;
-    roles: string[];
-}
-
-interface targetUser {
-    _id: string;
-    roles: string[];
-}
 
 interface PermissionsReturn {
     strictAdmin: boolean;
@@ -25,8 +16,8 @@ interface PermissionsReturn {
 }
 
 const permissions = (
-    currentUser: CurrentUser,
-    targetUser: targetUser
+    currentUser: User,
+    targetUser: RequestedUser
 ): PermissionsReturn => {
     const currentUserId = currentUser.id;
     const currentUserRole = getUserRole(currentUser.roles);

@@ -20,7 +20,10 @@ export interface User {
     id: string;
     roles: string[];
     username: string;
+    createdAt: number;
 }
+
+export type RequestedUser = Omit<User, "id"> & { _id: string };
 
 // ** Snackbar **
 
@@ -40,3 +43,19 @@ export interface SnackbarActionWithoutPayload {
 export type SnackbarAction =
     | SnackbarActionWithPayload
     | SnackbarActionWithoutPayload;
+
+// ** API  **
+// export enum FetchMethods {
+//     GET = "GET",
+//     POST = "POST",
+//     PUT = "PUT",
+//     PATCH = "PATCH",
+//     DELETE = "DELETE",
+// }
+
+// export enum FetchCredentials {
+//     OMIT = "omit",
+//     INCLUDE = "include",
+// }
+export type FetchMethods = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+export type FetchCredentials = "omit" | "include";

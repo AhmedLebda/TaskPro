@@ -17,6 +17,11 @@ import useAuthContext from "../../hooks/auth/useAuthContext";
 import useSnackbar from "../../hooks/ui/snackbar/useSnackbar";
 // Utils
 import permissions from "../../utils/permissions";
+import { User, RequestedUser } from "../../config/types";
+
+interface UsersListProps {
+    data: RequestedUser[];
+}
 
 const tableHeaderCells = [
     "Username",
@@ -26,23 +31,24 @@ const tableHeaderCells = [
     "Options",
 ];
 
-function showUserOptions(currentUser, targetUser) {
+function showUserOptions(currentUser: User, targetUser: RequestedUser) {
     const Permissions = permissions(currentUser, targetUser);
     return Permissions.completeAdminManagerOwner;
 }
 
-const UsersList = ({ data }) => {
+const UsersList = ({ data }: UsersListProps) => {
     // Delete user mutation
     const deleteUser = useDeleteUserMutation();
 
     // Getting the current user role
     const { getUserData } = useAuthContext();
-    const CurrentUserData = getUserData();
+    const CurrentUserData = getUserData()!;
+
     // Show snackbar on successful actions
     const { showSnackbar } = useSnackbar();
 
     // Delete user handler
-    const onUserDelete = (id) => {
+    const onUserDelete = (id: string) => {
         deleteUser.mutate(id, {
             onSuccess: () => {
                 showSnackbar("User Deleted!");
