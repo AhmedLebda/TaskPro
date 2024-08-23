@@ -20,9 +20,12 @@ const useUsersQuery = () => {
     const isAuthorized =
         getCurrentUserRole() === "admin" || getCurrentUserRole() === "manager";
 
-    const getUsers = useAuthFetch(`/users?page=${page}`, "GET");
+    const getUsers: () => Promise<UsersQuery> = useAuthFetch(
+        `/users?page=${page}`,
+        "GET"
+    );
 
-    return useQuery<UsersQuery>({
+    return useQuery({
         queryKey: ["users", page],
         queryFn: getUsers,
         enabled: isActive && isAuthorized,

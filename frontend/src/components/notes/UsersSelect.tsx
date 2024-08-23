@@ -3,15 +3,24 @@ import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 // Custom Components
 import LinearLoading from "../general/LinearLoading";
 import CustomPagination from "../general/CustomPagination";
 // Custom Hook
 import useUsersSelect from "../../hooks/ui/notes/useUsersSelect";
 import { Divider } from "@mui/material";
+import { ReactNode } from "react";
 
-const UsersSelect = ({ value, onChange }) => {
+interface UsersSelectProps {
+    value: string;
+    onChange: (
+        event: SelectChangeEvent<string | null>,
+        child: ReactNode
+    ) => void;
+}
+
+const UsersSelect = ({ value, onChange }: UsersSelectProps) => {
     const { selectOptions, totalPages, isLoading, isUsersSelectVisible } =
         useUsersSelect();
 
@@ -21,6 +30,7 @@ const UsersSelect = ({ value, onChange }) => {
         : selectOptions && selectOptions[0]._id;
 
     if (isLoading) return <LinearLoading />;
+
     return (
         isUsersSelectVisible && (
             <Box sx={{ minWidth: 120 }}>
@@ -34,11 +44,12 @@ const UsersSelect = ({ value, onChange }) => {
                         onChange={onChange}
                         name="user"
                     >
-                        {selectOptions.map((user) => (
-                            <MenuItem key={user._id} value={user._id}>
-                                {user.username} ({user.roles.join(" , ")})
-                            </MenuItem>
-                        ))}
+                        {selectOptions &&
+                            selectOptions.map((user) => (
+                                <MenuItem key={user._id} value={user._id}>
+                                    {user.username} ({user.roles.join(" , ")})
+                                </MenuItem>
+                            ))}
                         <Divider />
                         <CustomPagination
                             totalPages={totalPages}

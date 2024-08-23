@@ -88,3 +88,9 @@ export interface Note {
     ticket: number;
     createdAt: number;
 }
+
+export interface NewNote {
+    title: string;
+    text: string;
+    user: string;
+}

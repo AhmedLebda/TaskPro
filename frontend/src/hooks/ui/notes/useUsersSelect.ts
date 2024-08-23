@@ -4,12 +4,14 @@ import useUsersQuery from "../../users/UseUsersQuery";
 import useAuthContext from "../../auth/useAuthContext";
 // utils
 import { getUserRole } from "../../../utils/AuthHelpers";
+import { RequestedUser } from "../../../config/types";
 const useUsersSelect = () => {
     const { data, isLoading } = useUsersQuery();
     const { getCurrentUserRole, getUserData } = useAuthContext();
-    const { id: currentUserId } = getUserData();
+    const { id: currentUserId } = getUserData()!;
 
-    const totalPages = data?.totalPages;
+    const totalPages = data?.totalPages ?? 0;
+
     // Get the role of the current user
     const currentUserRole = getCurrentUserRole();
 
@@ -17,7 +19,8 @@ const useUsersSelect = () => {
     const isUsersSelectVisible =
         currentUserRole === "admin" || currentUserRole === "manager";
 
-    let selectOptions = null;
+    let selectOptions: RequestedUser[] | null = null;
+
     if (data) {
         selectOptions =
             currentUserRole === "admin"
