@@ -8,7 +8,7 @@ const setCredentials = (payload: User): AuthActionWithPayload => ({
     type: "auth/setCredentials",
     payload,
 });
-const updateCredentials = (payload: User): AuthActionWithPayload => ({
+const updateCredentials = (payload: Partial<User>): AuthActionWithPayload => ({
     type: "auth/updateCredentials",
     payload,
 });

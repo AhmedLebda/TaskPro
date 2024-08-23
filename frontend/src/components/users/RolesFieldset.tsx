@@ -5,11 +5,24 @@ import FormControl from "@mui/material/FormControl";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { InitialAddUserFormData, Role } from "../../config/types";
+
+type RolesValues = InitialAddUserFormData["roles"];
+
+interface RolesFieldsetProps {
+    disabled?: boolean;
+    rolesValues: RolesValues;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 // List of all available roles
-const roles = ["employee", "manager", "admin"];
+const roles: Role[] = ["employee", "manager", "admin"];
 
-const RolesFieldset = ({ disabled, rolesValues, onChange }) => {
+const RolesFieldset = ({
+    disabled,
+    rolesValues,
+    onChange,
+}: RolesFieldsetProps) => {
     return (
         <Grid item xs={12}>
             <FormControl component="fieldset" variant="standard">

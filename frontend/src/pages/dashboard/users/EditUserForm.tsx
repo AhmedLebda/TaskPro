@@ -19,6 +19,7 @@ const EditUserForm = () => {
     const {
         formData,
         isLoading,
+        isMutating,
         errorAlert,
         handleFormDataChange,
         handleSubmit,
@@ -87,6 +88,7 @@ const EditUserForm = () => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        disabled={isMutating}
                     >
                         Edit
                     </Button>

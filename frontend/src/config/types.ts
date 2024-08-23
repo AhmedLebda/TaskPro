@@ -14,17 +14,6 @@ export interface AuthActionWithPayload {
 }
 export type AuthAction = AuthActionWithoutPayload | AuthActionWithPayload;
 
-export interface User {
-    access_token: string;
-    active: boolean;
-    id: string;
-    roles: string[];
-    username: string;
-    createdAt: number;
-}
-
-export type RequestedUser = Omit<User, "id"> & { _id: string };
-
 // ** Snackbar **
 
 export interface DefaultSnackbar {
@@ -45,17 +34,45 @@ export type SnackbarAction =
     | SnackbarActionWithoutPayload;
 
 // ** API  **
-// export enum FetchMethods {
-//     GET = "GET",
-//     POST = "POST",
-//     PUT = "PUT",
-//     PATCH = "PATCH",
-//     DELETE = "DELETE",
-// }
-
-// export enum FetchCredentials {
-//     OMIT = "omit",
-//     INCLUDE = "include",
-// }
 export type FetchMethods = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 export type FetchCredentials = "omit" | "include";
+
+// ** Users **
+
+export type Role = "employee" | "manager" | "admin";
+
+export interface User {
+    access_token: string;
+    active: boolean;
+    id: string;
+    roles: Role[];
+    username: string;
+    createdAt: number;
+}
+
+export type RequestedUser = Omit<User, "id"> & { _id: string };
+
+export interface InitialAddUserFormData {
+    username: string;
+    password: string;
+    roles: {
+        employee: boolean;
+        manager: boolean;
+        admin: boolean;
+    };
+}
+
+export interface AddUserRequestBody {
+    username: string;
+    password: string;
+    roles: Role[];
+}
+
+// ** Permissions **
+export interface PermissionsReturn {
+    strictAdmin: boolean;
+    strictAdminOwner: boolean;
+    strictAdminManager: boolean;
+    completeAdminManagerOwner: boolean;
+    strictAdminManagerOwner: boolean;
+}

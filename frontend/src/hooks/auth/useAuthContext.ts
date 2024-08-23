@@ -17,7 +17,7 @@ const useAuthContext = () => {
     const setCredentials = (credentials: User) =>
         dispatch(AuthActionsCreator.setCredentials(credentials));
 
-    const updateCredentials = (updates: User) => {
+    const updateCredentials = (updates: Partial<User>) => {
         dispatch(AuthActionsCreator.updateCredentials(updates));
     };
 

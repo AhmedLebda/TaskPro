@@ -1,31 +1,34 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 // React-router-dom
 import { useNavigate } from "react-router-dom";
 // Custom hooks
 import useCreateUserMutation from "../../users/useCreateUserMutation";
 import useSnackbar from "../snackbar/useSnackbar";
+import { InitialAddUserFormData, Role } from "../../../config/types";
+
+const InitialState = {
+    username: "",
+    password: "",
+    roles: {
+        employee: false,
+        manager: false,
+        admin: false,
+    },
+};
 
 const useAddUser = () => {
     const createUser = useCreateUserMutation();
+
     const navigate = useNavigate();
     const [errorAlert, setErrorAlert] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        username: "",
-        password: "",
-        roles: {
-            employee: false,
-            manager: false,
-            admin: false,
-        },
-    });
-    const roles = [];
+    const [formData, setFormData] =
+        useState<InitialAddUserFormData>(InitialState);
 
     // Show successful message on user creation
     const { showSnackbar } = useSnackbar();
 
     // Handles change in form data
-    const handleFormDataChange = (e) => {
+    const handleFormDataChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.type === "checkbox") {
             setFormData({
                 ...formData,
@@ -39,16 +42,18 @@ const useAddUser = () => {
         }
     };
 
+    const roles: Role[] = [];
+
     // Validates the form data
     const validateForm = () => {
         // Collect all checked roles into an array
         for (let [key, value] of Object.entries(formData.roles)) {
             if (value) {
-                roles.push(key);
+                roles.push(key as Role);
             }
         }
 
-        if ((!formData.username, !formData.password)) {
+        if (!formData.username || !formData.password) {
             setErrorAlert("Invalid username or password");
         }
 
@@ -58,9 +63,11 @@ const useAddUser = () => {
     };
 
     // Handles form submission
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         validateForm();
+
         const userData = {
             username: formData.username,
             password: formData.password,
@@ -73,18 +80,17 @@ const useAddUser = () => {
                 showSnackbar("Success! The user account has been set up.");
                 navigate("/dashboard/users");
             },
-            onLoading: () => {
-                setIsLoading(true);
-            },
-            onError: ({ message }) => {
-                setErrorAlert(message);
+            onError: (error) => {
+                console.error("Error creating user:", error);
+                setErrorAlert(error.message);
             },
         });
     };
+
     return {
         formData,
-        errorAlert,
-        isLoading,
+        errorMessage: errorAlert,
+        isLoading: createUser.isPending,
         handleFormDataChange,
         handleSubmit,
     };

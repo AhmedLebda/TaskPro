@@ -7,7 +7,7 @@ const useLogoutMutation = () => {
     const logout = useAuthFetch("/auth/logout", "POST");
 
     return useMutation({
-        mutationKey: "logout",
+        mutationKey: ["logout"],
         mutationFn: () => logout({}, "include"),
         onSuccess: resetCredentials,
     });

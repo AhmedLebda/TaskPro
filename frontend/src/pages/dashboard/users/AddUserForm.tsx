@@ -16,7 +16,7 @@ import useAddUser from "../../../hooks/ui/users/useAddUser";
 
 const AddUserForm = () => {
     const {
-        errorAlert,
+        errorMessage,
         isLoading,
         handleFormDataChange,
         handleSubmit,
@@ -25,7 +25,7 @@ const AddUserForm = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            <ErrorAlert errorMessage={errorAlert} />
+            {errorMessage && <ErrorAlert errorMessage={errorMessage} />}
 
             <Box
                 sx={{
