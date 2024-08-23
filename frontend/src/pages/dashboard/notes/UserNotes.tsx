@@ -17,7 +17,7 @@ const UserNotes = () => {
     }
 
     if (error) {
-        return <ErrorAlert error={error.message} />;
+        return <ErrorAlert errorMessage={error.message} />;
     }
 
     if (!allNotes.length) {

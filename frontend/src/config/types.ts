@@ -76,3 +76,15 @@ export interface PermissionsReturn {
     completeAdminManagerOwner: boolean;
     strictAdminManagerOwner: boolean;
 }
+
+// ** Notes **
+
+export interface Note {
+    _id: string;
+    user: Pick<User, "username" | "roles">;
+    title: string;
+    text: string;
+    completed: boolean;
+    ticket: number;
+    createdAt: number;
+}

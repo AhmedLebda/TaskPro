@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import useAuthFetch from "../auth/useAuthFetch";
 import { useSearchParams } from "react-router-dom";
+import { Note } from "../../config/types";
+
+interface NotesQuery {
+    data: Note[];
+    totalPages: number;
+}
 
 const useNotesQuery = () => {
     const [searchParams] = useSearchParams();
@@ -11,7 +17,7 @@ const useNotesQuery = () => {
         `/notes?page=${page}&sortBy=${sortBy}`,
         "GET"
     );
-    return useQuery({
+    return useQuery<NotesQuery>({
         queryKey: ["notes", page, sortBy],
         queryFn: getNotes,
     });
