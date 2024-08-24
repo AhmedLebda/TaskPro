@@ -1,5 +1,5 @@
 // React
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 // React-router-dom
 import { useParams, useNavigate } from "react-router-dom";
 // React Query
@@ -7,6 +7,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import useUpdateNoteMutation from "../../notes/useUpdateNoteMutation";
 // Custom Hooks
 import useSnackbar from "../snackbar/useSnackbar";
+import { Note, NoteUpdates } from "../../../config/types";
+import { SelectChangeEvent } from "@mui/material";
+
 const useEditNote = () => {
     // Error State
     const [errorAlert, setErrorAlert] = useState("");
@@ -15,7 +18,7 @@ const useEditNote = () => {
     const queryClient = useQueryClient();
 
     // Get notes Data from cache
-    const cachedData = queryClient.getQueryData(["notes"]);
+    const cachedData = queryClient.getQueryData(["notes"]) as Note[] | null;
 
     // Get note id from the url parameters
     const { noteId } = useParams();
@@ -31,32 +34,48 @@ const useEditNote = () => {
 
     // Form state
     const [formData, setFormData] = useState({
-        user: note.user._id,
-        title: note.title,
-        text: note.text,
-        completed: note.completed,
+        user: note?.user._id || "",
+        title: note?.title || "",
+        text: note?.text || "",
+        completed: note?.completed || false,
     });
 
     // Show successful message on task update
     const { showSnackbar } = useSnackbar();
 
     // Handling form data change
-    const handleFormDataChange = (e) => {
-        if (e.target.name === "completed") {
-            setFormData({ ...formData, [e.target.name]: e.target.checked });
-            return;
+    const handleFormDataChange = (
+        e:
+            | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            | SelectChangeEvent<string | null>
+    ) => {
+        if (e.target instanceof HTMLInputElement) {
+            if (e.target.type === "checkbox") {
+                setFormData({ ...formData, [e.target.name]: e.target.checked });
+            } else {
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+            }
+        } else if (e.target instanceof HTMLTextAreaElement) {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        } else if (e instanceof HTMLSelectElement) {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
         }
-        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     // Handling form submit
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!note || !noteId) {
+            setErrorAlert("note enough note data");
+            return;
+        }
 
         const { title, text, completed, user } = formData;
 
         // Creating the update object
-        let updates = { id: noteId };
+        let updates: NoteUpdates = { id: noteId };
+
         if (title && title !== note.title) {
             updates = { ...updates, title };
         }

@@ -81,7 +81,7 @@ export interface PermissionsReturn {
 
 export interface Note {
     _id: string;
-    user: Pick<User, "username" | "roles">;
+    user: Pick<RequestedUser, "_id" | "username" | "roles">;
     title: string;
     text: string;
     completed: boolean;
@@ -93,4 +93,12 @@ export interface NewNote {
     title: string;
     text: string;
     user: string;
+}
+
+export interface NoteUpdates {
+    id: string;
+    title?: string;
+    text?: string;
+    completed?: boolean;
+    user?: string;
 }

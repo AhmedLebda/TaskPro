@@ -2,7 +2,15 @@ import { Box, Chip, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingIcon from "@mui/icons-material/Pending";
 
-const NoteCardSubHeader = ({ completed, createdAt }) => {
+interface NoteCardSubHeaderProps {
+    completed: boolean;
+    createdAt: string;
+}
+
+const NoteCardSubHeader = ({
+    completed,
+    createdAt,
+}: NoteCardSubHeaderProps) => {
     return (
         <Box
             sx={{

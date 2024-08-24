@@ -8,7 +8,15 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link as RouterLink } from "react-router-dom";
 // Custom Hooks
 import useNoteCardAction from "../../hooks/ui/notes/useNoteCardAction";
-const NoteCardAction = ({ noteId, completed, user }) => {
+import { RequestedUser } from "../../config/types";
+
+interface NoteCardActionProps {
+    noteId: string;
+    completed: boolean;
+    user: RequestedUser;
+}
+
+const NoteCardAction = ({ noteId, completed, user }: NoteCardActionProps) => {
     const {
         showOptions,
         anchorEl,

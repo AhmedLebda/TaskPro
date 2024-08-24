@@ -6,8 +6,8 @@ const useDeleteNoteMutation = () => {
     const deleteNote = useAuthFetch("/notes", "DELETE");
 
     return useMutation({
-        mutationKey: "deleteNote",
-        mutationFn: (id) => deleteNote(id),
+        mutationKey: ["deleteNote"],
+        mutationFn: (id: { id: string }) => deleteNote(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }),
         onError: ({ message }) => console.log(message),
     });

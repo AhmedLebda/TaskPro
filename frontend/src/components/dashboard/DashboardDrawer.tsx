@@ -28,7 +28,8 @@ const DashboardDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const { getCurrentUserRole, getUserData } = useAuthContext();
-    const { active: isUserActive, id: currentUserId } = getUserData();
+
+    const { active: isUserActive, id: currentUserId } = getUserData()!;
 
     const handleDrawerClose = () => {
         setIsClosing(true);

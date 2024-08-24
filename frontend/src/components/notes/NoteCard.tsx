@@ -9,7 +9,27 @@ import NoteCardSubHeader from "./NoteCardSubHeader";
 import NoteCardAction from "./NoteCardAction";
 import Paper from "@mui/material/Paper";
 import { getUserRole } from "../../utils/AuthHelpers";
-const NoteCard = ({ id, title, createdAt, text, completed, ticket, user }) => {
+import { RequestedUser } from "../../config/types";
+
+interface NoteCardProps {
+    id: string;
+    title: string;
+    createdAt: string;
+    text: string;
+    completed: boolean;
+    ticket: number;
+    user: RequestedUser;
+}
+
+const NoteCard = ({
+    id,
+    title,
+    createdAt,
+    text,
+    completed,
+    ticket,
+    user,
+}: NoteCardProps) => {
     const noteOwnerRole = getUserRole(user.roles);
 
     return (
