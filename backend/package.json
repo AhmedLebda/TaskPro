@@ -3,10 +3,10 @@
   "version": "1.1.0",
   "description": "This is a starter template for node/express REST API backend with basic configuration and packages",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./index.js",
-    "dev": "cross-env NODE_ENV=development node --env-file=.env --watch ./index.js",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --env-file=.env ./index.ts",
+    "build": "tsc",
     "test": "cross-env NODE_ENV=test node --env-file=.env --test --test-concurrency=1",
     "build:ui": "rm -rf public && cd ../frontend && npm run build && cp -r dist ../backend/public"
   },
@@ -34,6 +34,10 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "supertest": "^7.0.0"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "supertest": "^7.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.4"
   }
 }

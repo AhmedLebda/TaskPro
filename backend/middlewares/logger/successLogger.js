@@ -3,10 +3,10 @@ import path from "path";
 import morgan from "morgan";
 
 // Define __dirname for ES modules
-const __dirname = path.resolve();
+const _dirname = path.resolve();
 
 // Ensure logs directory exists
-const logsDirectory = path.join(__dirname, "logs");
+const logsDirectory = path.join(_dirname, "logs");
 fs.existsSync(logsDirectory) || fs.mkdirSync(logsDirectory);
 
 // Create a write stream (in append mode) for request logs in logs/req.log

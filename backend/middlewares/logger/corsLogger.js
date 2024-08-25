@@ -2,10 +2,10 @@ import fs from "fs";
 import path from "path";
 
 // Define __dirname for ES modules
-const __dirname = path.resolve();
+const _dirname = path.resolve();
 
 // Ensure logs directory exists
-const logsDirectory = path.join(__dirname, "logs");
+const logsDirectory = path.join(_dirname, "logs");
 fs.existsSync(logsDirectory) || fs.mkdirSync(logsDirectory);
 
 // Custom middleware to log CORS errors
