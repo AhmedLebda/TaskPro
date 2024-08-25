@@ -1,7 +1,7 @@
 import UserModel from "../models/User.js";
 import AuthHelpers from "../utils/helpers/auth_helpers.js";
 
-const createAdmin = async () => {
+const createAdmin = async (): Promise<void> => {
     try {
         // Check if there is a user with admin role exists in the db
         const adminExists = await UserModel.findOne({
@@ -28,7 +28,9 @@ const createAdmin = async () => {
 
         console.log("Admin user created successfully");
     } catch (error) {
-        console.error("Error creating admin user:", error);
+        if (error instanceof Error) {
+            console.error("Error creating admin user:", error.message);
+        }
     }
 };
 

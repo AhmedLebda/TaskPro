@@ -1,9 +1,14 @@
 import { Schema, model } from "mongoose";
-// import Inc from "mongoose-sequence";
-import mongoose from "mongoose";
-import AutoIncrementFactory from "mongoose-sequence";
+import Inc from "mongoose-sequence";
 
-const noteSchema = new Schema(
+interface NoteSchema {
+    user: { type: Schema.Types.ObjectId; ref: "User"; required: true };
+    title: { type: string; required: [true, string] };
+    text: { type: string; require: [true, string] };
+    completed: { type: boolean; default: boolean };
+}
+
+const noteSchema = new Schema<NoteSchema>(
     {
         user: {
             type: Schema.Types.ObjectId,
@@ -28,16 +33,17 @@ const noteSchema = new Schema(
 
 // transform _id to id and remove __v, password, confirmPassword from json return
 noteSchema.set("toJSON", {
-    transform: (document, returnedObject) => {
+    transform: (_document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
     },
 });
 
-const AutoIncrement = AutoIncrementFactory(mongoose);
+// const AutoIncrement = AutoIncrementFactory(noteSchema);
+const AutoIncrement = Inc(noteSchema);
 
-noteSchema.plugin(AutoIncrement, {
+noteSchema.plugin(AutoIncrement as any, {
     inc_field: "ticket",
     id: "ticketNumbers",
     start_seq: 500,

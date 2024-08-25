@@ -34,7 +34,7 @@ app.use("/api/users", user_Routes);
 app.use("/api/auth", auth_Routes);
 
 // Unknown endpoint
-app.use((req, res) => {
+app.use((_req, res) => {
     res.status(404).json({ error: "unknown endpoint" });
 });
 

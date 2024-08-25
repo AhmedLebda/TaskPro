@@ -1,8 +1,8 @@
-import config from "./config/config.js";
-import app from "./app.js";
+import config from "./config/config";
+import app from "./app";
 import mongoose from "mongoose";
-import createAdmin from "./config/initialAdmin.js";
-import dbConnection from "./config/dbConnection.js";
+import createAdmin from "./config/initialAdmin";
+import dbConnection from "./config/dbConnection";
 
 // Connecting to db
 dbConnection();

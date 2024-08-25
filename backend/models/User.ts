@@ -1,13 +1,20 @@
 import { Schema, model } from "mongoose";
 
-const userSchema = new Schema(
+interface UserSchema {
+    username: string;
+    password: string;
+    roles: string[];
+    active: boolean;
+}
+
+const userSchema = new Schema<UserSchema>(
     {
         username: {
             type: String,
             minLength: [3, "username is too short"],
             maxLength: [30, "username is too long"],
             required: [true, "Please enter a username"],
-            unique: [true, "This username already exists"],
+            unique: true,
             trim: true,
         },
         password: {
@@ -22,7 +29,7 @@ const userSchema = new Schema(
 
 // transform _id to id and remove __v, password, confirmPassword from json return
 userSchema.set("toJSON", {
-    transform: (document, returnedObject) => {
+    transform: (_document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
