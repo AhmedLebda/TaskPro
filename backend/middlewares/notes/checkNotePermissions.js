@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import NoteModel from "../../models/Note.js";
+import NoteModel from "../../models/Note";
 
 /* Permissions:
 - Employee: Edit his own tasks only

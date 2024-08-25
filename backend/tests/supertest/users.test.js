@@ -2,10 +2,10 @@ import { test, describe, after, beforeEach } from "node:test";
 import assert from "node:assert";
 import mongoose from "mongoose";
 import supertest from "supertest";
-import app from "../../app.js";
-import User from "../../models/User.js";
-import { usersInDb } from "../../utils/test_helpers/user_helpers.js";
-import AuthHelpers from "../../utils/helpers/auth_helpers.js";
+import app from "../../app";
+import User from "../../models/User";
+import { usersInDb } from "../../utils/test_helpers/user_helpers";
+import AuthHelpers from "../../utils/helpers/auth_helpers";
 
 const api = supertest(app);
 

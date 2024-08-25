@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
-interface UserSchema {
+interface UserSchema extends Document {
     username: string;
     password: string;
     roles: string[];
@@ -38,4 +38,4 @@ userSchema.set("toJSON", {
     },
 });
 
-export default model("User", userSchema);
+export default model<UserSchema>("User", userSchema);

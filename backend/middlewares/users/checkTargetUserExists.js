@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 // Models
-import UserModel from "../../models/User.js";
+import UserModel from "../../models/User";
 // Utils
 import asyncHandler from "express-async-handler";
 

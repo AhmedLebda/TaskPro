@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import NoteModel from "../../models/Note.js";
+import NoteModel from "../../models/Note";
 
 /**
  * ! Must be used after 'checkTargetUserExists' middleware

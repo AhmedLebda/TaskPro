@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import config from "../../config/config.js";
-import User from "../../models/User.js";
+import config from "../../config/config";
+import User from "../../models/User";
 
 const generateHashedPassword = async (password) => {
     const salt = await bcrypt.genSalt();

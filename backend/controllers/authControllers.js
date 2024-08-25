@@ -1,8 +1,8 @@
 // Utils
-import AuthHelpers from "../utils/helpers/auth_helpers.js";
+import AuthHelpers from "../utils/helpers/auth_helpers";
 import asyncHandler from "express-async-handler";
-import config from "../config/config.js";
-import User from "../models/User.js";
+import config from "../config/config";
+import User from "../models/User";
 
 const refCookieOptions = {
     httpOnly: true,

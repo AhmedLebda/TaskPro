@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import config from "./config.js";
+import config from "./config";
 
 async function dbConnection() {
     if (!config.MONGO_URI) throw new Error("No db uri provided");

@@ -1,11 +1,11 @@
 import { Router } from "express";
-import NoteControllers from "../controllers/noteControllers.js";
-import requireAccessToken from "../middlewares/auth/requireAccess.js";
-import requireManagerialRole from "../middlewares/auth/requireManagerialAccess.js";
-import checkNotePermission from "../middlewares/notes/checkNotePermissions.js";
-import checkUserAssignPermissions from "../middlewares/notes/checkUserAssignPermissions.js";
-import validateNoteUpdateInput from "../middlewares/notes/validateNoteUpdateInput.js";
-import paginationSorting from "../middlewares/notes/paginationSorting.js";
+import NoteControllers from "../controllers/noteControllers";
+import requireAccessToken from "../middlewares/auth/requireAccess";
+import requireManagerialRole from "../middlewares/auth/requireManagerialAccess";
+import checkNotePermission from "../middlewares/notes/checkNotePermissions";
+import checkUserAssignPermissions from "../middlewares/notes/checkUserAssignPermissions";
+import validateNoteUpdateInput from "../middlewares/notes/validateNoteUpdateInput";
+import paginationSorting from "../middlewares/notes/paginationSorting";
 
 const router = Router();
 

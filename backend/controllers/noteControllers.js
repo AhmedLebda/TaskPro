@@ -1,4 +1,4 @@
-import NoteModel from "../models/Note.js";
+import NoteModel from "../models/Note";
 import asyncHandler from "express-async-handler";
 
 // @desc: Get all notes from db

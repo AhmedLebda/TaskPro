@@ -1,5 +1,5 @@
-import UserModel from "../models/User.js";
-import AuthHelpers from "../utils/helpers/auth_helpers.js";
+import UserModel from "../models/User";
+import AuthHelpers from "../utils/helpers/auth_helpers";
 
 const createAdmin = async (): Promise<void> => {
     try {

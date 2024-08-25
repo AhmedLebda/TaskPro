@@ -1,15 +1,15 @@
 import { Router } from "express";
-import userController from "../controllers/userControllers.js";
-import requireAccessToken from "../middlewares/auth/requireAccess.js";
-import requireManagerialRole from "../middlewares/auth/requireManagerialAccess.js";
-import userValidation from "../middlewares/users/userValidation.js";
-import paginationSorting from "../middlewares/notes/paginationSorting.js";
-import checkTargetUserExists from "../middlewares/users/checkTargetUserExists.js";
-import createUserPermissions from "../middlewares/users/createUserPermissions.js";
-import updateUserPermissions from "../middlewares/users/updateUserPermissions.js";
-import deleteUserPermissions from "../middlewares/users/deleteUserPermissions.js";
-import validateUserUpdateInput from "../middlewares/users/validateUserUpdateInput.js";
-import usersPaginationSorting from "../middlewares/users/usersPaginationSorting.js";
+import userController from "../controllers/userControllers";
+import requireAccessToken from "../middlewares/auth/requireAccess";
+import requireManagerialRole from "../middlewares/auth/requireManagerialAccess";
+import userValidation from "../middlewares/users/userValidation";
+import paginationSorting from "../middlewares/notes/paginationSorting";
+import checkTargetUserExists from "../middlewares/users/checkTargetUserExists";
+import createUserPermissions from "../middlewares/users/createUserPermissions";
+import updateUserPermissions from "../middlewares/users/updateUserPermissions";
+import deleteUserPermissions from "../middlewares/users/deleteUserPermissions";
+import validateUserUpdateInput from "../middlewares/users/validateUserUpdateInput";
+import usersPaginationSorting from "../middlewares/users/usersPaginationSorting";
 const router = Router();
 
 const usersListMiddlewares = [usersPaginationSorting];

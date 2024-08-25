@@ -1,6 +1,6 @@
-import AuthHelper from "../../utils/helpers/auth_helpers.js";
+import AuthHelper from "../../utils/helpers/auth_helpers";
 import asyncHandler from "express-async-handler";
-import UserModel from "../../models/User.js";
+import UserModel from "../../models/User";
 
 // Gives access only to authenticated active users (with a valid access token)
 const requireAccessToken = asyncHandler(async (req, res, next) => {

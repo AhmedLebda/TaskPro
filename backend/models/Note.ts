@@ -1,11 +1,12 @@
-import { Schema, model } from "mongoose";
-import Inc from "mongoose-sequence";
-
-interface NoteSchema {
+import { Schema, Document, model } from "mongoose";
+// import AutoIncrementFactory from "mongoose-sequence";
+// import AutoIncrement from "mongoose-sequence";
+interface NoteSchema extends Document {
     user: { type: Schema.Types.ObjectId; ref: "User"; required: true };
-    title: { type: string; required: [true, string] };
-    text: { type: string; require: [true, string] };
-    completed: { type: boolean; default: boolean };
+    title: string;
+    text: string;
+    completed: boolean;
+    ticket: number;
 }
 
 const noteSchema = new Schema<NoteSchema>(
@@ -41,12 +42,13 @@ noteSchema.set("toJSON", {
 });
 
 // const AutoIncrement = AutoIncrementFactory(noteSchema);
-const AutoIncrement = Inc(noteSchema);
+// const AutoIncrement = Inc(noteSchema);
+// const AutoIncrementSequence = AutoIncrement(noteSchema);
 
-noteSchema.plugin(AutoIncrement as any, {
-    inc_field: "ticket",
-    id: "ticketNumbers",
-    start_seq: 500,
-});
+// noteSchema.plugin(AutoIncrementSequence, {
+//     inc_field: "ticket",
+//     id: "ticketNumbers",
+//     start_seq: 500,
+// });
 
-export default model("Note", noteSchema);
+export default model<NoteSchema>("Note", noteSchema);

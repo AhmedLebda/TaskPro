@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import { getSortQuery } from "../../utils/helpers/notesController_helpers.js";
+import { getSortQuery } from "../../utils/helpers/notesController_helpers";
 
 /**
  * Middleware to handle pagination and sorting for query operations.

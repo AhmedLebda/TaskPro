@@ -1,9 +1,9 @@
 // Validation
 import { validationResult } from "express-validator";
 // Models
-import UserModel from "../models/User.js";
+import UserModel from "../models/User";
 // Utils
-import AuthHelpers from "../utils/helpers/auth_helpers.js";
+import AuthHelpers from "../utils/helpers/auth_helpers";
 import asyncHandler from "express-async-handler";
 
 // @desc: get all users

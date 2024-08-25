@@ -1,17 +1,17 @@
 import express from "express";
-import corsOptions from "./config/corsOptions.js";
+import corsOptions from "./config/corsOptions";
 // routes
-import note_Routes from "./routes/note.js";
-import user_Routes from "./routes/user.js";
-import auth_Routes from "./routes/auth.js";
+import note_Routes from "./routes/note";
+import user_Routes from "./routes/user";
+import auth_Routes from "./routes/auth";
 // middlewares
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
-import errorHandler from "./middlewares/error_handler/errorHandler.js";
-import requestLogger from "./middlewares/logger/successLogger.js";
-import errorLogger from "./middlewares/logger/errorLogger.js";
-import logCorsError from "./middlewares/logger/corsLogger.js";
+import errorHandler from "./middlewares/error_handler/errorHandler";
+import requestLogger from "./middlewares/logger/successLogger";
+import errorLogger from "./middlewares/logger/errorLogger";
+import logCorsError from "./middlewares/logger/corsLogger";
 
 // Init express app
 const app = express();
