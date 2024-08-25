@@ -1,6 +1,6 @@
 import { Schema, Document, model } from "mongoose";
-// import AutoIncrementFactory from "mongoose-sequence";
-// import AutoIncrement from "mongoose-sequence";
+import Counter from "./Counter";
+
 interface NoteSchema extends Document {
     user: { type: Schema.Types.ObjectId; ref: "User"; required: true };
     title: string;
@@ -28,6 +28,7 @@ const noteSchema = new Schema<NoteSchema>(
             type: Boolean,
             default: false,
         },
+        ticket: Number,
     },
     { timestamps: true }
 );
@@ -41,14 +42,28 @@ noteSchema.set("toJSON", {
     },
 });
 
-// const AutoIncrement = AutoIncrementFactory(noteSchema);
-// const AutoIncrement = Inc(noteSchema);
-// const AutoIncrementSequence = AutoIncrement(noteSchema);
+// Automatic generation of a unique ticket number for each new Note.
+noteSchema.pre("save", async function (next) {
+    if (this.isNew) {
+        try {
+            const counter = await Counter.findByIdAndUpdate(
+                "noteTicket",
+                { $inc: { seq: 1 } },
+                { new: true, upsert: true }
+            );
 
-// noteSchema.plugin(AutoIncrementSequence, {
-//     inc_field: "ticket",
-//     id: "ticketNumbers",
-//     start_seq: 500,
-// });
+            if (!counter) {
+                throw new Error("Can't find counter");
+            }
+
+            this.ticket = counter.seq;
+        } catch (error) {
+            if (error instanceof Error) {
+                next(error);
+            }
+        }
+    }
+    next();
+});
 
 export default model<NoteSchema>("Note", noteSchema);
