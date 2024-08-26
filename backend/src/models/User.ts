@@ -1,13 +1,7 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, model } from "mongoose";
+import { User } from "../types/types";
 
-interface UserSchema extends Document {
-    username: string;
-    password: string;
-    roles: string[];
-    active: boolean;
-}
-
-const userSchema = new Schema<UserSchema>(
+const userSchema = new Schema<User>(
     {
         username: {
             type: String,
@@ -21,7 +15,7 @@ const userSchema = new Schema<UserSchema>(
             type: String,
             required: [true, "please enter a password"],
         },
-        roles: { type: [{ type: String }], default: ["Employee"] },
+        roles: { type: [{ type: String }], default: ["employee"] },
         active: { type: Boolean, default: true },
     },
     { timestamps: true }
@@ -38,4 +32,4 @@ userSchema.set("toJSON", {
     },
 });
 
-export default model<UserSchema>("User", userSchema);
+export default model<User>("User", userSchema);

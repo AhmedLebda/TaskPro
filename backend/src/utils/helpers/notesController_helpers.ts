@@ -1,4 +1,6 @@
-export const getSortQuery = (sortBy) => {
+type Sort = "newest" | "oldest" | "pending" | "completed";
+
+export const getSortQuery = (sortBy: Sort) => {
     let sortQuery = null;
     switch (sortBy) {
         case "newest":
