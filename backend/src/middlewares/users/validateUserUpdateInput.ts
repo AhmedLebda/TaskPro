@@ -1,4 +1,6 @@
 import asyncHandler from "express-async-handler";
+import { toUserRequestBody } from "../../utils/helpers/type_helpers";
+import { User } from "../../types/types";
 /**
  * Middleware function to validate and process user update input data.
  *
@@ -27,14 +29,12 @@ import asyncHandler from "express-async-handler";
  * `req.providedUserUpdates` and proceeds by calling `next()` to continue with the request handling.
  */
 
-const validateUserUpdateInput = asyncHandler(async (req, res, next) => {
-    const { username, password, roles, active } = req.body;
-    // const { user: requestingUser } = req;
-    // const isRequesterAdmin = requestingUser.roles.includes("admin");
+const validateUserUpdateInput = asyncHandler(async (req, _res, next) => {
+    const { username, password, roles, active } = toUserRequestBody(req.body);
 
     const ACCEPTED_ROLES = ["employee", "manager"];
 
-    let updates = null;
+    let updates: Partial<User> | null = null;
 
     if (username) {
         updates = { username };

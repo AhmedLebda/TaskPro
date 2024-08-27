@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 import UserModel from "../../models/User";
 // Utils
 import asyncHandler from "express-async-handler";
-
+// utils
+import { toUserRequestBody } from "../../utils/helpers/type_helpers";
+import { UserWithId } from "../../types/types";
 /**
  * Middleware function to validate and retrieve user data for subsequent processing.
  *
@@ -21,9 +23,9 @@ import asyncHandler from "express-async-handler";
  * the middleware proceeds by calling `next()` to continue with the request handling.
  */
 
-const checkTargetUserExists = asyncHandler(async (req, res, next) => {
+const checkTargetUserExists = asyncHandler(async (req, _res, next) => {
     // Provided data for the target user ( from request body or request parameters )
-    const { id: providedUserId } = req.body;
+    const { id: providedUserId } = toUserRequestBody(req.body);
     const { id: paramUserId } = req.params;
     const targetUserId = providedUserId || paramUserId;
 
@@ -39,7 +41,7 @@ const checkTargetUserExists = asyncHandler(async (req, res, next) => {
         throw Error("User not found");
     }
 
-    req.targetUser = targetUser;
+    req.targetUser = targetUser as UserWithId;
 
     next();
 });

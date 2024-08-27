@@ -1,5 +1,6 @@
 // Utils
 import asyncHandler from "express-async-handler";
+import { toUserRequestBody } from "../../utils/helpers/type_helpers";
 
 /**
  * ! Must be used after 'checkTargetUserExists' middleware
@@ -39,9 +40,12 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
         active: providedActiveStatus,
         username: providedUsername,
         password: providedPassword,
-    } = req.body;
+    } = toUserRequestBody(req.body);
+
     // Target User Data
     const { targetUser } = req;
+    if (!targetUser) throw new Error("Access Denied");
+
     const { _id: targetUserId } = targetUser;
     const isTargetUserAdmin = targetUser.roles.includes("admin");
     const isTargetUserAdminOrManager = targetUser.roles.some(
@@ -50,6 +54,8 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
 
     // Requesting User Data
     const { user: requestingUser } = req;
+    if (!requestingUser) throw new Error("Access Denied");
+
     const { _id: requestingUserId } = requestingUser;
     const isRequesterAdmin = requestingUser.roles.includes("admin");
     const isRequesterManager = requestingUser.roles.includes("manager");
@@ -59,42 +65,47 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
 
     // User attempts to modify user roles to be 'admin'
     if (providedRoles?.includes("admin")) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied",
             isError: true,
         });
+        return;
     }
 
     // only admin is able to modify users role
     if (!isRequesterAdmin && providedRoles) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",
             isError: true,
         });
+        return;
     }
 
     // Admin account roles can't be modified
     if (isTargetUserAdmin && providedRoles) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Admin account roles can't be modified",
             isError: true,
         });
+        return;
     }
 
     // Admin account active status can't be modified
     if (isTargetUserAdmin && providedActiveStatus === false) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Admin account can't be deactivated",
             isError: true,
         });
+        return;
     }
 
     // Employees can't modify another user account
     if (!isRequesterAdminOrManager && !isRequesterTheAccountOwner) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",
             isError: true,
         });
+        return;
     }
 
     // Managers can't modify the admin or another manager account
@@ -103,18 +114,20 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
         isTargetUserAdminOrManager &&
         !isRequesterTheAccountOwner
     ) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",
             isError: true,
         });
+        return;
     }
 
     // User can't change his own active status
     if (isRequesterTheAccountOwner && providedActiveStatus !== undefined) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",
             isError: true,
         });
+        return;
     }
 
     // Only Admin or account owner can change username and password
@@ -124,10 +137,11 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
         !isRequesterTheAccountOwner &&
         (providedUsername || providedPassword)
     ) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",
             isError: true,
         });
+        return;
     }
 
     next();

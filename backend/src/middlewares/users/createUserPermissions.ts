@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-
+import { toUserRequestBody } from "../../utils/helpers/type_helpers";
 /**
  * Middleware function to handle user permissions for creating new user accounts and assigning roles.
  *
@@ -22,26 +22,35 @@ import asyncHandler from "express-async-handler";
  */
 
 const createUserPermissions = asyncHandler(async (req, res, next) => {
-    const { roles: providedRoles } = req.body;
+    const { roles: providedRoles } = toUserRequestBody(req.body);
+
+    if (!providedRoles || providedRoles.length === 0) {
+        return next();
+    }
 
     // Requesting User Data
     const { user: requestingUser } = req;
+
+    if (!requestingUser) throw new Error("Access Denied");
+
     const isRequesterAdmin = requestingUser.roles.includes("admin");
 
     // User attempts to modify user roles to be 'admin'
-    if (providedRoles?.includes("admin")) {
-        return res.status(401).json({
+    if (providedRoles.includes("admin")) {
+        res.status(401).json({
             error: "Access Denied",
             isError: true,
         });
+        return;
     }
 
     // only admin is able to modify users role
     if (!isRequesterAdmin && providedRoles.includes("manager")) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Access Denied: You do not have permission to perform this action.",
             isError: true,
         });
+        return;
     }
 
     next();

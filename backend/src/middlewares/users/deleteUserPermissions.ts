@@ -32,6 +32,8 @@ import NoteModel from "../../models/Note";
 const deleteUserPermissions = asyncHandler(async (req, res, next) => {
     // Target User Data
     const { targetUser } = req;
+    if (!targetUser) throw new Error("Access Denied");
+
     const { _id: targetUserId } = targetUser;
     const isTargetUserAdmin = targetUser.roles.includes("admin");
     const isTargetUserAdminOrManager = targetUser.roles.some(
@@ -40,22 +42,26 @@ const deleteUserPermissions = asyncHandler(async (req, res, next) => {
 
     // Requesting User Data
     const { user: requestingUser } = req;
+    if (!requestingUser) throw new Error("Access Denied");
+
     const isRequesterAdmin = requestingUser.roles.includes("admin");
 
     // only admins are permitted to delete managers
     if (!isRequesterAdmin && isTargetUserAdminOrManager) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "You don't have the permissions to do this action",
             isError: true,
         });
+        return;
     }
 
     // Throw error if request tries to delete an admin user
     if (isTargetUserAdmin) {
-        return res.status(401).json({
+        res.status(401).json({
             error: "Admin account can't be deleted",
             isError: true,
         });
+        return;
     }
 
     // Check if the user still have any notes associated to him

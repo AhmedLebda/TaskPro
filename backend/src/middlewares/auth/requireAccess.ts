@@ -2,6 +2,7 @@ import AuthHelper from "../../utils/helpers/auth_helpers";
 import asyncHandler from "express-async-handler";
 import UserModel from "../../models/User";
 import { Request, Response } from "express";
+import { UserWithId } from "../../types/types";
 
 // Gives access only to authenticated active users (with a valid access token)
 const requireAccessToken = asyncHandler(
@@ -37,7 +38,7 @@ const requireAccessToken = asyncHandler(
         }
 
         // add the user data to the request object
-        req.user = currentUser;
+        req.user = currentUser as UserWithId;
 
         next();
     }
