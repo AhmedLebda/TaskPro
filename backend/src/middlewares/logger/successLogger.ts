@@ -19,7 +19,7 @@ const requestLogStream = fs.createWriteStream(
 
 // Setup morgan middleware for request logging to req.log (only for successful requests)
 const requestLogger = morgan("combined", {
-    skip: (req, res) => res.statusCode >= 400,
+    skip: (_req, res) => res.statusCode >= 400,
     stream: requestLogStream,
 });
 

@@ -1,4 +1,4 @@
-import User from "../../models/User";
+import User from "../../src/models/User";
 
 export const usersInDb = async () => {
     const users = await User.find({});

@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { Request, Response, NextFunction } from "express";
 
 // Define __dirname for ES modules
 const _dirname = path.resolve();
@@ -9,7 +10,12 @@ const logsDirectory = path.join(_dirname, "logs");
 fs.existsSync(logsDirectory) || fs.mkdirSync(logsDirectory);
 
 // Custom middleware to log CORS errors
-function logCorsError(err, req, res, next) {
+function logCorsError(
+    err: Error,
+    req: Request,
+    _res: Response,
+    next: NextFunction
+) {
     // Check if the error is CORS-related (status 403 or "cors error" flag set)
     if (err && err.message === "CORS error") {
         // Log the CORS error details

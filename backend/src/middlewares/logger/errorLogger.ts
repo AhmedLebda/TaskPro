@@ -19,7 +19,7 @@ const errorLogStream = fs.createWriteStream(
 
 // Setup morgan middleware for error logging to error.log
 const errorLogger = morgan("combined", {
-    skip: (req, res) => res.statusCode < 400,
+    skip: (_req, res) => res.statusCode < 400,
     stream: errorLogStream,
 });
 

@@ -68,11 +68,8 @@ const user_create = asyncHandler(async (req, res) => {
 
     // Throw error if there are errors returned from userValidation middleware
     if (!errors.isEmpty()) {
-        const errorObj = errors.array().reduce((acc, curr) => {
-            acc[curr.path] = curr.msg;
-            return acc;
-        }, {});
-        throw Error(JSON.stringify(errorObj));
+        const errorMessage = errors.array()[0].msg;
+        throw Error(errorMessage);
     }
 
     const { username, password, roles } = req.body;
