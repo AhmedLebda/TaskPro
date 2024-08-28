@@ -1,44 +1,48 @@
 // React
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 // React-router-dom
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // React Query
-import { useQueryClient } from "@tanstack/react-query";
 import useUpdateNoteMutation from "../../notes/useUpdateNoteMutation";
 // Custom Hooks
 import useSnackbar from "../snackbar/useSnackbar";
-import { Note, NoteUpdates } from "../../../config/types";
+import { NoteUpdates } from "../../../config/types";
 import { SelectChangeEvent } from "@mui/material";
+import useNoteDetailsQuery from "../../notes/useNoteDetailsQuery";
+
+const initialFormData = {
+    user: "",
+    title: "",
+    text: "",
+    completed: false,
+};
 
 const useEditNote = () => {
     // Error State
     const [errorAlert, setErrorAlert] = useState("");
 
-    // Get query client to get cached notes data
-    const queryClient = useQueryClient();
+    const { data: targetNote, isLoading, error } = useNoteDetailsQuery();
+    if (error) setErrorAlert(error.message);
 
-    // Get notes Data from cache
-    const cachedData = queryClient.getQueryData(["notes"]) as Note[] | null;
+    // Form state
+    const [formData, setFormData] = useState(initialFormData);
 
-    // Get note id from the url parameters
-    const { noteId } = useParams();
-
-    // find the target note
-    const note = cachedData && cachedData.find((note) => note._id === noteId);
+    useEffect(() => {
+        if (targetNote) {
+            setFormData({
+                user: targetNote.user._id,
+                title: targetNote.title,
+                text: targetNote.text,
+                completed: targetNote.completed,
+            });
+        }
+    }, [targetNote]);
 
     // update mutation
     const updateNoteMutation = useUpdateNoteMutation();
 
     // Navigate user
     const navigate = useNavigate();
-
-    // Form state
-    const [formData, setFormData] = useState({
-        user: note?.user._id || "",
-        title: note?.title || "",
-        text: note?.text || "",
-        completed: note?.completed || false,
-    });
 
     // Show successful message on task update
     const { showSnackbar } = useSnackbar();
@@ -66,26 +70,24 @@ const useEditNote = () => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!note || !noteId) {
-            setErrorAlert("note enough note data");
-            return;
-        }
+        if (!targetNote) return;
 
         const { title, text, completed, user } = formData;
+        const { _id: targetNoteId } = targetNote;
 
         // Creating the update object
-        let updates: NoteUpdates = { id: noteId };
+        let updates: NoteUpdates = { id: targetNoteId };
 
-        if (title && title !== note.title) {
+        if (title && title !== targetNote.title) {
             updates = { ...updates, title };
         }
-        if (text && text !== note.text) {
+        if (text && text !== targetNote.text) {
             updates = { ...updates, text };
         }
-        if (completed !== note.completed) {
+        if (completed !== targetNote.completed) {
             updates = { ...updates, completed };
         }
-        if (user && user !== note.user._id) {
+        if (user && user !== targetNote.user._id) {
             updates = { ...updates, user };
         }
 
@@ -104,7 +106,14 @@ const useEditNote = () => {
         });
     };
 
-    return { errorAlert, formData, handleFormDataChange, handleSubmit };
+    return {
+        errorAlert,
+        isLoading,
+        isMutating: updateNoteMutation.isPending,
+        formData,
+        handleFormDataChange,
+        handleSubmit,
+    };
 };
 
 export default useEditNote;

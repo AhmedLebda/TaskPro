@@ -14,9 +14,18 @@ import UsersSelect from "../../../components/notes/UsersSelect";
 import ErrorAlert from "../../../components/general/ErrorAlert";
 // Custom Hooks
 import useEditNote from "../../../hooks/ui/notes/useEditNote";
+import Spinner from "../../../components/general/Spinner";
 const EditNoteForm = () => {
-    const { errorAlert, formData, handleFormDataChange, handleSubmit } =
-        useEditNote();
+    const {
+        errorAlert,
+        isLoading,
+        isMutating,
+        formData,
+        handleFormDataChange,
+        handleSubmit,
+    } = useEditNote();
+
+    if (isLoading) return <Spinner />;
 
     return (
         <Container component="main" maxWidth="xs">
@@ -108,6 +117,7 @@ const EditNoteForm = () => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        disabled={isMutating}
                     >
                         Submit
                     </Button>
