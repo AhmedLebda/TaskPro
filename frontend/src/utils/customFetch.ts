@@ -9,17 +9,17 @@ interface FetchOptions {
         "Content-Type": "application/json";
         Authorization?: `Bearer ${string}`;
     };
-    body?: {};
+    body?: string;
 }
 
 const customFetch = async (
     endpoint: string,
     method: FetchMethods,
     credentials: FetchCredentials,
-    body?: {},
+    body?: string,
     token?: string
 ) => {
-    let options: FetchOptions = {
+    const options: FetchOptions = {
         mode: "cors",
         method: method,
         headers: {

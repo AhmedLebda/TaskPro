@@ -47,7 +47,7 @@ const useAddUser = () => {
     // Validates the form data
     const validateForm = () => {
         // Collect all checked roles into an array
-        for (let [key, value] of Object.entries(formData.roles)) {
+        for (const [key, value] of Object.entries(formData.roles)) {
             if (value) {
                 roles.push(key as Role);
             }

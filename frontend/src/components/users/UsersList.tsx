@@ -84,7 +84,11 @@ const UsersList = ({ data }: UsersListProps) => {
                         {data.map((user) => (
                             <TableRow key={user._id}>
                                 <TableCell component="th" scope="row">
-                                    {user.username}
+                                    <RouterLink
+                                        to={`/dashboard/notes/${user._id}`}
+                                    >
+                                        {user.username}
+                                    </RouterLink>
                                 </TableCell>
                                 <TableCell>
                                     {user.active ? "Active" : "Inactive"}

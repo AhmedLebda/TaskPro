@@ -10,7 +10,7 @@ export interface AuthActionWithoutPayload {
 }
 export interface AuthActionWithPayload {
     type: "auth/setCredentials" | "auth/updateCredentials";
-    payload: any;
+    payload: User;
 }
 export type AuthAction = AuthActionWithoutPayload | AuthActionWithPayload;
 
@@ -81,12 +81,12 @@ export interface PermissionsReturn {
 
 export interface Note {
     _id: string;
-    user: Pick<RequestedUser, "_id" | "username" | "roles">;
+    user: RequestedUser;
     title: string;
     text: string;
     completed: boolean;
     ticket: number;
-    createdAt: number;
+    createdAt: string;
 }
 
 export interface NewNote {

@@ -149,7 +149,7 @@ const useEditUser = () => {
             const rolesArray: Role[] = [];
 
             // Transform roles object into an array
-            for (let [key, value] of Object.entries(formData.roles)) {
+            for (const [key, value] of Object.entries(formData.roles)) {
                 if (value) {
                     rolesArray.push(key as Role);
                 }

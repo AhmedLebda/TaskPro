@@ -20,7 +20,7 @@ const UserAvatar = () => {
     const { getUserData } = useAuthContext();
     const currentUserId = getUserData()?.id;
 
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOpenUserMenu = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorElUser(event.currentTarget);
     };
 

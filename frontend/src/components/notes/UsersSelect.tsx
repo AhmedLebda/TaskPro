@@ -1,16 +1,16 @@
+import { ReactNode } from "react";
 // MUI Components
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import Divider from "@mui/material/Divider";
+import LinearProgress from "@mui/material/LinearProgress";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 // Custom Components
-import LinearLoading from "../general/LinearLoading";
 import CustomPagination from "../general/CustomPagination";
 // Custom Hook
 import useUsersSelect from "../../hooks/ui/notes/useUsersSelect";
-import { Divider } from "@mui/material";
-import { ReactNode } from "react";
 
 interface UsersSelectProps {
     value: string;
@@ -29,7 +29,7 @@ const UsersSelect = ({ value, onChange }: UsersSelectProps) => {
         ? value
         : selectOptions && selectOptions[0]._id;
 
-    if (isLoading) return <LinearLoading />;
+    if (isLoading) return <LinearProgress />;
 
     return (
         isUsersSelectVisible && (

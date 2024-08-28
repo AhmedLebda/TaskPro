@@ -7,6 +7,7 @@ interface ContextValue {
     dispatch: Dispatch<SnackbarAction>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const snackbarContext = createContext({} as ContextValue);
 
 const initialState: DefaultSnackbar = {

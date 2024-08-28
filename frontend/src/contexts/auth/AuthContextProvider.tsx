@@ -35,7 +35,7 @@ const AuthContextProvider = ({ children }: PropsWithChildren) => {
             try {
                 const user = await AuthServices.refreshToken();
                 dispatch(AuthActionsCreator.updateCredentials(user));
-            } catch (error) {
+            } catch {
                 setIsAuthenticated(false);
             } finally {
                 setIsLoading(false);
