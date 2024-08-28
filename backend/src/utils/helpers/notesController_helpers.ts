@@ -1,7 +1,7 @@
-type Sort = "newest" | "oldest" | "pending" | "completed";
+import { SortBy, TaskSort } from "../../types/types";
 
-export const getSortQuery = (sortBy: Sort) => {
-    let sortQuery = null;
+export const getSortQuery = (sortBy: TaskSort): SortBy => {
+    let sortQuery: SortBy;
     switch (sortBy) {
         case "newest":
             sortQuery = { createdAt: -1, completed: 1 };

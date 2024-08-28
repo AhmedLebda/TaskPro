@@ -5,11 +5,14 @@ import UserModel from "../models/User";
 // Utils
 import AuthHelpers from "../utils/helpers/auth_helpers";
 import asyncHandler from "express-async-handler";
+import { User, UserQueryResponse } from "../types/types";
+import { toUserRequestBody } from "../utils/helpers/type_helpers";
 
 // @desc: get all users
 // @route: GET /users
 // @access: Private
 const users_list = asyncHandler(async (req, res) => {
+    if (!req.paginationOptions) throw new Error("pagination error");
     const { page, limit } = req.paginationOptions;
 
     // Perform aggregation to sort users based on roles and paginate the results
@@ -53,11 +56,11 @@ const users_list = asyncHandler(async (req, res) => {
     const totalUsers = await UserModel.countDocuments();
     const totalPages = Math.ceil(totalUsers / limit);
 
-    const response = {
+    const response: UserQueryResponse = {
         data: users,
         totalPages: totalPages,
     };
-    return res.json(response);
+    res.json(response);
 });
 
 // @desc: create new users in db
@@ -72,13 +75,16 @@ const user_create = asyncHandler(async (req, res) => {
         throw Error(errorMessage);
     }
 
-    const { username, password, roles } = req.body;
+    const { username, password, roles } = toUserRequestBody(req.body);
     const ACCEPTED_ROLES = ["employee", "manager"];
+
+    if (!username || !password || !Array.isArray(roles))
+        throw new Error("invalid data");
 
     // Hash user password
     const hashedPassword = await AuthHelpers.generateHashedPassword(password);
 
-    let userObj = { username, password: hashedPassword };
+    let userObj: Partial<User> = { username, password: hashedPassword };
 
     // Add roles to user object if it is provided
     if (roles) {
@@ -105,7 +111,7 @@ const user_create = asyncHandler(async (req, res) => {
 // @route: PATCH /users
 // @access: Private
 const user_update = asyncHandler(async (req, res) => {
-    const { id: targetUserId } = req.body;
+    const { id: targetUserId } = toUserRequestBody(req.body);
 
     const { providedUserUpdates } = req;
 
@@ -125,9 +131,8 @@ const user_update = asyncHandler(async (req, res) => {
 // @route: DELETE /users
 // @access: Private
 const user_delete = asyncHandler(async (req, res) => {
-    // Provided user id
-    const { id: targetUserId } = req.body;
-    const targetUser = await UserModel.findById(targetUserId);
+    if (!req.targetUser) throw new Error("This user doesn't exist");
+    const { targetUser } = req;
     await targetUser.deleteOne();
     res.sendStatus(204);
 });
@@ -136,13 +141,8 @@ const user_delete = asyncHandler(async (req, res) => {
 // @route: GET /users/:id
 // @access: Private
 const user_details = asyncHandler(async (req, res) => {
-    // Provided user id
-    const { id: targetUserId } = req.params;
-
-    const targetUser = await UserModel.findById(targetUserId)
-        .select("username active roles")
-        .lean();
-
+    if (!req.targetUser) throw new Error("This user doesn't exist");
+    const { targetUser } = req;
     res.status(200).json(targetUser);
 });
 

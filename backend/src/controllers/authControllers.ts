@@ -49,8 +49,11 @@ const refresh = asyncHandler(async (req, res) => {
     // Verify that it is valid
     const decoded = AuthHelpers.verifyRefreshToken(ref_jwt);
 
-    // Throw error If refresh token isn't valid
-    if (!decoded.id) throw Error("Expired refresh token");
+    // Throw error if token is invalid
+    if (typeof decoded === "string" || !decoded.id) {
+        res.status(401).json({ error: "invalid token", isError: true });
+        return;
+    }
 
     // Create a new access token
     const accessToken = AuthHelpers.createAccessToken({
@@ -59,7 +62,9 @@ const refresh = asyncHandler(async (req, res) => {
 
     // Get target user
     const user = await User.findById(decoded.id).lean();
-    console.log(user);
+
+    if (!user) throw new Error("User doesn't exist");
+
     // Send a successful response with the new access token
     res.status(200).json({
         access_token: accessToken,
@@ -73,7 +78,7 @@ const refresh = asyncHandler(async (req, res) => {
 // @Desc: logs user out
 // @Route: POST /api/auth/logout
 // @Access: Public
-const logout = asyncHandler(async (req, res) => {
+const logout = asyncHandler(async (_req, res) => {
     res.clearCookie("ref_jwt");
     res.status(200).json({ message: "Cookies cleared!" });
 });

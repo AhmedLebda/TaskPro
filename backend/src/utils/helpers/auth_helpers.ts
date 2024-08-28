@@ -3,9 +3,10 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import User from "../../models/User";
 import { Request } from "express";
+import { Types } from "mongoose";
 
 interface Payload {
-    id: string;
+    id: Types.ObjectId;
 }
 
 const generateHashedPassword = async (password: string) => {

@@ -34,7 +34,9 @@ const checkTargetUserExists = asyncHandler(async (req, _res, next) => {
         throw Error("Invalid id");
     }
 
-    const targetUser = await UserModel.findById(targetUserId).lean();
+    const targetUser = await UserModel.findById(targetUserId).select(
+        "username active roles"
+    );
 
     // Target user doesn't exist
     if (!targetUser) {
