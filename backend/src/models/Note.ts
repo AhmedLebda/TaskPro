@@ -26,15 +26,6 @@ const noteSchema = new Schema<Note>(
     { timestamps: true }
 );
 
-// transform _id to id and remove __v, password, confirmPassword from json return
-noteSchema.set("toJSON", {
-    transform: (_document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
-    },
-});
-
 // Automatic generation of a unique ticket number for each new Note.
 noteSchema.pre("save", async function (next) {
     if (this.isNew) {

@@ -21,15 +21,4 @@ const userSchema = new Schema<User>(
     { timestamps: true }
 );
 
-// transform _id to id and remove __v, password, confirmPassword from json return
-userSchema.set("toJSON", {
-    transform: (_document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
-        delete returnedObject.password;
-        delete returnedObject.confirmPassword;
-    },
-});
-
 export default model<User>("User", userSchema);
