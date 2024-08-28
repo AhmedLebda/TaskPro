@@ -131,7 +131,6 @@ const updateUserPermissions = asyncHandler(async (req, res, next) => {
     }
 
     // Only Admin or account owner can change username and password
-    console.log(isRequesterTheAccountOwner);
     if (
         !isRequesterAdmin &&
         !isRequesterTheAccountOwner &&

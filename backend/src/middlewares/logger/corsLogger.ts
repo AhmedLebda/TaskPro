@@ -7,6 +7,7 @@ const _dirname = path.resolve();
 
 // Ensure logs directory exists
 const logsDirectory = path.join(_dirname, "logs");
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 fs.existsSync(logsDirectory) || fs.mkdirSync(logsDirectory);
 
 // Custom middleware to log CORS errors

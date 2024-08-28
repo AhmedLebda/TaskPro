@@ -1,14 +1,15 @@
 {
   "name": "backend-template",
   "version": "1.1.0",
-  "description": "This is a starter template for node/express REST API backend with basic configuration and packages",
+  "description": "TaskPro is a comprehensive task and user management application designed for small startup businesses. The app provides a centralized dashboard where users can manage tasks and user information with varying levels of access and permissions.",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./index.js",
     "dev": "cross-env NODE_ENV=development ts-node-dev --env-file=.env ./index.ts",
     "build": "tsc",
     "test": "cross-env NODE_ENV=test node --env-file=.env --test --test-concurrency=1",
-    "build:ui": "rm -rf public && cd ../frontend && npm run build && cp -r dist ../backend/public"
+    "build:ui": "rm -rf public && cd ../frontend && npm run build && cp -r dist ../backend/public",
+    "lint": "eslint 'src/**/*.{ts,tsx}'"
   },
   "keywords": [
     "node",
@@ -40,6 +41,9 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mongoose-sequence": "^3.0.11",
     "@types/morgan": "^1.9.9",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "eslint": "^9.9.1",
     "supertest": "^7.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4"

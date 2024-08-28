@@ -7,6 +7,7 @@ const _dirname = path.resolve();
 
 // Ensure logs directory exists
 const logsDirectory = path.join(_dirname, "logs");
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 fs.existsSync(logsDirectory) || fs.mkdirSync(logsDirectory);
 
 // Create a write stream (in append mode) for request logs in logs/req.log

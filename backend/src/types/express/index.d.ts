@@ -1,4 +1,3 @@
-import express, { Request } from "express";
 import { Note, SortBy, User, UserWithId } from "../types";
 
 declare global {
