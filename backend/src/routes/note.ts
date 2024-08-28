@@ -26,6 +26,8 @@ router
     .patch(noteUpdateMiddlewares, NoteControllers.note_update)
     .delete(noteDeleteMiddlewares, NoteControllers.note_delete);
 
+router.get("/details/:id", checkNotePermission, NoteControllers.note_details);
+
 router.get("/:targetUserId", paginationSorting, NoteControllers.user_notes);
 
 export default router;

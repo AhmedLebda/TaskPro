@@ -11,12 +11,12 @@ import { PopulatedNote } from "../../types/types";
 */
 
 /* Checks:
-- Target note0 doesn't exist
+- Target note doesn't exist
 - Employee trying to edit another user task
 - Manager trying to Modify a task assigned to another manager or admin
 */
 const checkNotePermission = asyncHandler(async (req, _res, next) => {
-    const { id: targetNoteId } = toNoteRequestBody(req.body);
+    const targetNoteId = req.params.id ?? toNoteRequestBody(req.body).id;
 
     const targetNote = (await NoteModel.findById(targetNoteId)
         .populate("user")

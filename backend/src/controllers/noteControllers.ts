@@ -32,6 +32,21 @@ const notes_list = asyncHandler(async (req, res) => {
     res.status(200).json(response);
 });
 
+// @desc: Get a note by id
+// @route: GET /api/notes/details/:id
+// @access: Private
+const note_details = asyncHandler(async (req, res) => {
+    const { id: targetNoteId } = req.params;
+
+    const targetNote = (await NoteModel.findById(targetNoteId)
+        .populate({ path: "user", select: "username roles" })
+        .lean()) as PopulatedNote;
+
+    if (!targetNote) throw Error("Note doesn't exist");
+
+    res.status(200).json(targetNote);
+});
+
 // @desc: Add a new note to db
 // @route: POST /api/notes
 // @access: Private
@@ -53,13 +68,13 @@ const note_create = asyncHandler(async (req, res) => {
 // @access: Private
 const note_update = asyncHandler(async (req, res) => {
     const { id: targetNoteId } = toNoteRequestBody(req.body);
-
+    // console.log(targetNoteId);
     const { providedNoteUpdates } = req;
 
     // Find the target note and update
     const note = await NoteModel.findById(targetNoteId);
     if (!note) throw new Error("This note doesn't exist");
-
+    // console.log(note);
     const updatedNote = await note.updateOne(providedNoteUpdates);
 
     // return the updated user
@@ -126,6 +141,7 @@ const user_notes = asyncHandler(async (req, res) => {
 
 export default {
     notes_list,
+    note_details,
     note_create,
     note_update,
     note_delete,
