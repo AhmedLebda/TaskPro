@@ -1,4 +1,6 @@
 import asyncHandler from "express-async-handler";
+import { Note } from "../../types/types";
+import { toNoteRequestBody } from "../../utils/helpers/type_helpers";
 
 // Validates the provided data to update the note
 // Creates an "updates" object with the provided data and attaches it to the request object
@@ -7,14 +9,19 @@ import asyncHandler from "express-async-handler";
 - Provided data are of the right type
 */
 
-const validateNoteUpdateInput = asyncHandler(async (req, res, next) => {
-    const { user: assignedUser, title, text, completed } = req.body;
+const validateNoteUpdateInput = asyncHandler(async (req, _res, next) => {
+    const {
+        user: assignedUser,
+        title,
+        text,
+        completed,
+    } = toNoteRequestBody(req.body);
 
-    let updates = null;
+    let updates: Partial<Note> | null = null;
 
     // Check that user exists
     if (assignedUser) {
-        updates = { assignedUser };
+        updates = { user: assignedUser };
     }
 
     if (title) {
@@ -35,7 +42,7 @@ const validateNoteUpdateInput = asyncHandler(async (req, res, next) => {
         throw Error("No provided values to update");
     }
 
-    req.updates = updates;
+    req.providedNoteUpdates = updates;
 
     next();
 });

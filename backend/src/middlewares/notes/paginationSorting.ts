@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { getSortQuery } from "../../utils/helpers/notesController_helpers";
-
+import { isString } from "../../utils/helpers/type_helpers";
+import { TaskSort } from "../../types/types";
 /**
  * Middleware to handle pagination and sorting for query operations.
  * Extracts `page`, `sortBy` query parameters, and sets pagination and sorting options.
@@ -13,10 +14,18 @@ import { getSortQuery } from "../../utils/helpers/notesController_helpers";
  * Usage: Place this middleware before route handlers that need pagination and sorting.
  */
 
-const paginationSorting = asyncHandler(async (req, res, next) => {
+const toTaskSort = (param: unknown): TaskSort => {
+    const validValues = ["newest", "oldest", "pending", "completed"];
+    if (isString(param) && validValues.includes(param)) {
+        return param as TaskSort;
+    }
+    return "newest";
+};
+
+const paginationSorting = asyncHandler(async (req, _res, next) => {
     const LIMIT = 6;
-    const page = +req.query.page - 1 || 0;
-    const sortBy = getSortQuery(req.query.sortBy);
+    const page = Number(req.query.page) - 1 || 0;
+    const sortBy = getSortQuery(toTaskSort(req.query.sortBy));
 
     req.paginationOptions = {
         limit: LIMIT,

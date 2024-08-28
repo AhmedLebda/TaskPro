@@ -1,15 +1,8 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import Counter from "./Counter";
+import { Note } from "../types/types";
 
-interface NoteSchema extends Document {
-    user: { type: Schema.Types.ObjectId; ref: "User"; required: true };
-    title: string;
-    text: string;
-    completed: boolean;
-    ticket: number;
-}
-
-const noteSchema = new Schema<NoteSchema>(
+const noteSchema = new Schema<Note>(
     {
         user: {
             type: Schema.Types.ObjectId,
@@ -66,4 +59,4 @@ noteSchema.pre("save", async function (next) {
     next();
 });
 
-export default model<NoteSchema>("Note", noteSchema);
+export default model<Note>("Note", noteSchema);

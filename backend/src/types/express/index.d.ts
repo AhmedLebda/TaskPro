@@ -1,5 +1,5 @@
 import express, { Request } from "express";
-import { User, UserWithId } from "../types";
+import { Note, SortBy, User, UserWithId } from "../types";
 
 declare global {
     namespace Express {
@@ -7,7 +7,12 @@ declare global {
             user?: UserWithId;
             targetUser?: UserWithId;
             providedUserUpdates?: Partial<User>;
-            paginationOptions?: { limit: number; page: number };
+            providedNoteUpdates?: Partial<Note>;
+            paginationOptions?: {
+                limit: number;
+                page: number;
+                sortBy?: SortBy;
+            };
         }
     }
 }
