@@ -46,7 +46,7 @@ export default [
                 "warn",
                 "interface",
             ],
-            "no-console": "warn",
+            // "no-console": "warn",
             "no-process-env": "off",
         },
     },
