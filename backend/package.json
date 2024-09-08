@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development ts-node-dev ./index.ts",
     "build": "tsc",
     "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
-    "jest": "cross-env NODE_ENV=test jest",
+    "jest": "cross-env NODE_ENV=test jest --runInBand",
     "build:ui": "rm -rf public && cd ../frontend && npm run build && cp -r dist ../backend/public",
     "lint": "eslint 'src/**/*.{ts,tsx}'"
   },
