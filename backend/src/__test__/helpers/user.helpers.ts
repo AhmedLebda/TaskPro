@@ -4,6 +4,7 @@ import AuthHelpers from "../../utils/helpers/auth_helpers";
 import supertest from "supertest";
 import app from "../../../app";
 import { Role, User } from "../../types/types";
+import { Types } from "mongoose";
 
 const api = supertest(app);
 
@@ -20,7 +21,7 @@ const employeeUserData: UserData = {
     roles: ["employee"],
 };
 
-const createUser = async (data: UserData) => {
+export const createUser = async (data: UserData) => {
     const { username, password, roles } = data;
 
     const hashedPassword = await AuthHelpers.generateHashedPassword(password);
@@ -109,4 +110,17 @@ export const testUserCreate = async (
             active: expect.any(Boolean),
         });
     }
+};
+
+export const testUserDelete = async (
+    role: string,
+    expectedStatus: number,
+    tokens: { [role: string]: string },
+    targetUserId: Types.ObjectId
+) => {
+    await api
+        .delete("/api/users")
+        .set("Authorization", `Bearer ${tokens[role]}`)
+        .send({ id: targetUserId })
+        .expect(expectedStatus);
 };
