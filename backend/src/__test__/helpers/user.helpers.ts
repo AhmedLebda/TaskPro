@@ -3,7 +3,7 @@ import createAdmin from "../../config/initialAdmin";
 import AuthHelpers from "../../utils/helpers/auth_helpers";
 import supertest from "supertest";
 import app from "../../../app";
-import { Role, User } from "../../types/types";
+import { Role, User, UserRequestBody } from "../../types/types";
 import { Types } from "mongoose";
 
 const api = supertest(app);
@@ -122,5 +122,18 @@ export const testUserDelete = async (
         .delete("/api/users")
         .set("Authorization", `Bearer ${tokens[role]}`)
         .send({ id: targetUserId })
+        .expect(expectedStatus);
+};
+
+export const testUserUpdate = async (
+    role: string,
+    expectedStatus: number,
+    tokens: { [role: string]: string },
+    updates: Partial<UserRequestBody>
+) => {
+    await api
+        .patch("/api/users")
+        .set("Authorization", `Bearer ${tokens[role]}`)
+        .send(updates)
         .expect(expectedStatus);
 };
