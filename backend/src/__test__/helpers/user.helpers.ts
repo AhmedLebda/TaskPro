@@ -5,6 +5,7 @@ import supertest from "supertest";
 import app from "../../../app";
 import { Role, User, UserRequestBody } from "../../types/types";
 import { Types } from "mongoose";
+import { Tokens } from "../test_types";
 
 const api = supertest(app);
 
@@ -70,7 +71,7 @@ export const getRandomUserData = (roles: Role[]): Partial<User> => {
 export const testUsersListAccess = async (
     role: string,
     expectedStatus: number,
-    tokens: { [role: string]: string },
+    tokens: Tokens,
     shouldMatch: boolean
 ) => {
     const response = await api
@@ -92,7 +93,7 @@ export const testUsersListAccess = async (
 export const testUserCreate = async (
     role: string,
     expectedStatus: number,
-    tokens: { [role: string]: string },
+    tokens: Tokens,
     userData: Partial<User>,
     shouldMatch: boolean
 ) => {
@@ -115,7 +116,7 @@ export const testUserCreate = async (
 export const testUserDelete = async (
     role: string,
     expectedStatus: number,
-    tokens: { [role: string]: string },
+    tokens: Tokens,
     targetUserId: Types.ObjectId
 ) => {
     await api
@@ -128,7 +129,7 @@ export const testUserDelete = async (
 export const testUserUpdate = async (
     role: string,
     expectedStatus: number,
-    tokens: { [role: string]: string },
+    tokens: Tokens,
     updates: Partial<UserRequestBody>
 ) => {
     await api
@@ -136,4 +137,26 @@ export const testUserUpdate = async (
         .set("Authorization", `Bearer ${tokens[role]}`)
         .send(updates)
         .expect(expectedStatus);
+};
+
+export const testUserDetails = async (
+    role: string,
+    expectedStatus: number,
+    tokens: Tokens,
+    id: string,
+    shouldMatch: boolean
+): Promise<void> => {
+    const response = await api
+        .get(`/api/users/${id}`)
+        .set("Authorization", `Bearer ${tokens[role]}`)
+        .expect(expectedStatus);
+
+    if (shouldMatch) {
+        expect(response.body).toMatchObject({
+            _id: expect.any(String),
+            username: expect.any(String),
+            roles: expect.any(Array),
+            active: expect.any(Boolean),
+        });
+    }
 };

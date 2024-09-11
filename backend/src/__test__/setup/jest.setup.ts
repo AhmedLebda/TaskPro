@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dbConnection from "../../config/dbConnection";
-beforeAll(() => {
-    dbConnection();
+beforeAll(async () => {
+    await dbConnection();
 });
 
 afterAll(async () => {
