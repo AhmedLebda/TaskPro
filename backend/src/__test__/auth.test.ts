@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import app from "../../app";
 import { resetUsersCollection } from "./helpers/user.helpers";
+import { loginAsAdmin } from "./helpers/auth.helpers";
 
 const api = supertest(app);
 
@@ -9,40 +10,21 @@ let refreshToken: string;
 
 beforeAll(async () => {
     await resetUsersCollection();
-
-    // Login as admin and store tokens
-    const loginResponse = await api
-        .post("/api/auth")
-        .send({ username: "admin", password: "admin" })
-        .expect(200);
-
-    accessToken = loginResponse.body.access_token;
-
-    // Extract the cookie from the response for the refresh token
-    const cookies = loginResponse.headers["set-cookie"] as unknown as string[];
-    const refreshTokenCookie = cookies.find((cookie) =>
-        cookie.startsWith("ref_jwt=")
-    );
-
-    // Ensure the cookie is found
-    if (refreshTokenCookie) {
-        refreshToken = refreshTokenCookie.split(";")[0].split("=")[1];
-    } else {
-        throw new Error("Refresh token not found");
-    }
+    ({ accessToken, refreshToken } = await loginAsAdmin());
 });
 
-describe.skip("Auth API", () => {
-    describe("Login", () => {
+describe("Auth Endpoints", () => {
+    describe("POST /api/auth - Login", () => {
         test("Admin user can login with correct credentials", async () => {
             const response = await api
                 .post("/api/auth")
                 .send({ username: "admin", password: "admin" })
                 .expect(200);
 
-            expect(response.body.username).toEqual("admin");
-            expect(Array.isArray(response.body.roles)).toBe(true);
-            expect(response.body.roles).toContain("admin");
+            expect(response.body).toMatchObject({
+                username: "admin",
+                roles: expect.arrayContaining(["admin"]),
+            });
         });
 
         test("Admin user can't login with incorrect credentials", async () => {
@@ -55,7 +37,7 @@ describe.skip("Auth API", () => {
         });
     });
 
-    describe("Logout", () => {
+    describe("POST /api/auth/logout - Logout", () => {
         test("Logged-in user can log out", async () => {
             const logoutResponse = await api
                 .post("/api/auth/logout")
@@ -66,7 +48,7 @@ describe.skip("Auth API", () => {
         });
     });
 
-    describe("Refresh Access Token", () => {
+    describe("GET /api/auth/refresh - Refresh Access Token", () => {
         test("Logged-in user can refresh their access token", async () => {
             const refreshResponse = await api
                 .get("/api/auth/refresh")
