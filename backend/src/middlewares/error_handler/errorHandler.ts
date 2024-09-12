@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 interface CustomError extends Error {
     code?: number;
+    statusCode: number;
 }
 
 const errorhandler = (
@@ -33,6 +34,15 @@ const errorhandler = (
     }
     if (error.name === "TokenExpiredError") {
         res.status(401).json({ error: "Token expired" });
+        return;
+    }
+
+    if (error.name === "PermissionError") {
+        res.status(error.statusCode).json({ error: error.message });
+        return;
+    }
+    if (error.name === "AssociatedDataError") {
+        res.status(error.statusCode).json({ error: error.message });
         return;
     } else {
         res.status(500).json({ error: "Internal Server Error" });
