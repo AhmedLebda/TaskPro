@@ -22,6 +22,11 @@ import { AssociatedDataError, PermissionError } from "./permission_errors";
     * Admin: All roles except his roles and active status
     * Managers: employees active status and his username and password
     * Employees: his username and password only
+* GET DETAILS: 
+------------
+    * Admin: All users
+    * Managers: All users
+    * Employees: His account details only
  */
 
 class UserPermissionsService {
@@ -186,6 +191,20 @@ class UserPermissionsService {
                 "You do not have permission to perform this action.",
                 401
             );
+        }
+    }
+
+    static async canGetUserDetails(
+        requestingUser: UserWithId,
+        targetUser: UserWithId
+    ): Promise<void> {
+        if (this.isEmployee(requestingUser)) {
+            if (!this.isAccountOwner(requestingUser, targetUser)) {
+                throw new PermissionError(
+                    "You do not have permission to perform this action.",
+                    401
+                );
+            }
         }
     }
 }

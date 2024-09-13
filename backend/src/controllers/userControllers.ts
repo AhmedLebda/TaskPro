@@ -7,6 +7,7 @@ import AuthHelpers from "../utils/helpers/auth_helpers";
 import asyncHandler from "express-async-handler";
 import { User, UserQueryResponse } from "../types/types";
 import { toUserRequestBody } from "../utils/helpers/type_helpers";
+import UserPermissionsService from "../middlewares/permissions/permissions_services";
 
 // @desc: get all users
 // @route: GET /users
@@ -141,8 +142,16 @@ const user_delete = asyncHandler(async (req, res) => {
 // @route: GET /users/:id
 // @access: Private
 const user_details = asyncHandler(async (req, res) => {
+    // Requesting User Data
+    const { user: requestingUser } = req;
+    if (!requestingUser) throw new Error("Access Denied");
+
+    // Target User Data
     if (!req.targetUser) throw new Error("This user doesn't exist");
     const { targetUser } = req;
+
+    await UserPermissionsService.canGetUserDetails(requestingUser, targetUser);
+
     res.status(200).json(targetUser);
 });
 
