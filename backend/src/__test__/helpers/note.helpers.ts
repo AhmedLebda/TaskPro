@@ -50,3 +50,20 @@ export const testNotesListAccess = async (
         });
     }
 };
+
+export const testUserNotesListAccess = async (
+    role: string,
+    expectedStatus: number,
+    tokens: Tokens,
+    targetUser: string,
+    shouldMatch: boolean
+) => {
+    const response = await api
+        .get(`/api/notes/${targetUser}`)
+        .set("Authorization", `Bearer ${tokens[role].access_token}`)
+        .expect(expectedStatus);
+
+    if (shouldMatch) {
+        expect(response.body.data[0].user._id).toBe(targetUser);
+    }
+};
