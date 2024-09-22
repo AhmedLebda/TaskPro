@@ -1,8 +1,9 @@
 import NoteModel from "../../models/Note";
 import supertest from "supertest";
 import app from "../../../app";
-import { NoteWithId } from "../../types/types";
+import { NoteWithId, Role, User } from "../../types/types";
 import { NoteObject, Tokens } from "../test_types";
+import { createUser, getRandomUserData } from "./user.helpers";
 
 const api = supertest(app);
 
@@ -83,4 +84,37 @@ export const testNoteDetailsAccess = async (
 	if (shouldMatch) {
 		expect(response.body._id).toBe(targetNote);
 	}
+};
+
+export const testNoteCreatePrivileges = async (
+	role: string,
+	expectedStatus: number,
+	tokens: Tokens,
+	note: NoteObject,
+	shouldMatch: boolean
+) => {
+	const response = await api
+		.post("/api/notes")
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
+		.send(note)
+		.expect(expectedStatus);
+
+	const data: NoteWithId = response.body;
+
+	if (shouldMatch) {
+		expect(data.user).toBe(note.user);
+	}
+};
+
+export const generateNoteDataForNewUser = async (
+	role: Role
+): Promise<NoteObject> => {
+	const userData = getRandomUserData([role]) as User;
+	const targetUser = await createUser(userData);
+	const note: NoteObject = {
+		user: targetUser._id.toString(),
+		title: "Test",
+		text: "Test Note",
+	};
+	return note;
 };
