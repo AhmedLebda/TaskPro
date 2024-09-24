@@ -4,6 +4,7 @@ import app from "../../../app";
 import { NoteWithId, Role, User } from "../../types/types";
 import { NoteObject, Tokens } from "../test_types";
 import { createUser, getRandomUserData } from "./user.helpers";
+import { Types } from "mongoose";
 
 const api = supertest(app);
 
@@ -104,6 +105,19 @@ export const testNoteCreatePrivileges = async (
 	if (shouldMatch) {
 		expect(data.user).toBe(note.user);
 	}
+};
+
+export const testNoteDelete = async (
+	role: string,
+	expectedStatus: number,
+	tokens: Tokens,
+	noteId: Types.ObjectId
+) => {
+	await api
+		.delete("/api/notes")
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
+		.send({ id: noteId })
+		.expect(expectedStatus);
 };
 
 export const generateNoteDataForNewUser = async (
