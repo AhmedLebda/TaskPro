@@ -1,9 +1,9 @@
 import NoteModel from "../../models/Note";
 import supertest from "supertest";
 import app from "../../../app";
-import { NoteWithId, Role, User } from "../../types/types";
+import { NoteRequestBody, NoteWithId, Role } from "../../types/types";
 import { NoteObject, Tokens } from "../test_types";
-import { createUser, getRandomUserData } from "./user.helpers";
+import { createRandomUser } from "./user.helpers";
 import { Types } from "mongoose";
 
 const api = supertest(app);
@@ -120,15 +120,32 @@ export const testNoteDelete = async (
 		.expect(expectedStatus);
 };
 
+export const testNoteUpdate = async (
+	role: string,
+	expectedStatus: number,
+	tokens: Tokens,
+	updates: NoteRequestBody
+) => {
+	await api
+		.patch("/api/notes")
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
+		.send(updates)
+		.expect(expectedStatus);
+};
+
 export const generateNoteDataForNewUser = async (
 	role: Role
 ): Promise<NoteObject> => {
-	const userData = getRandomUserData([role]) as User;
-	const targetUser = await createUser(userData);
+	const targetUser = await createRandomUser(role);
 	const note: NoteObject = {
 		user: targetUser._id.toString(),
 		title: "Test",
 		text: "Test Note",
 	};
 	return note;
+};
+
+export const createNoteForNewUser = async (role: Role): Promise<NoteWithId> => {
+	const noteData = await generateNoteDataForNewUser(role);
+	return await createNote(noteData);
 };
