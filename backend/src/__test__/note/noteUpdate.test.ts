@@ -2,7 +2,7 @@ import { Tokens } from "../test_types";
 import setupNotesTests from "../setup/notes.setup";
 import { createNoteForNewUser, testNoteUpdate } from "../helpers/note.helpers";
 import { Types } from "mongoose";
-import { NoteRequestBody, NoteWithId } from "../../types/types";
+import { NoteRequestBody, NoteWithId, Role } from "../../types/types";
 import { createRandomUser } from "../helpers/user.helpers";
 
 let tokens: Tokens;
@@ -14,230 +14,154 @@ beforeAll(async () => {
 	notes = setupNotes;
 });
 
+// Helper function to prepare updates
+const prepareUpdate = (
+	targetNoteId: string,
+	updates: Partial<NoteRequestBody>
+): NoteRequestBody => ({
+	id: targetNoteId,
+	...updates,
+});
+
+// Helper function for running role-based tests
+const runRoleTests = (
+	role: string,
+	expectedStatus: number,
+	updates: NoteRequestBody
+) => {
+	return testNoteUpdate(role, expectedStatus, tokens, updates);
+};
+
 describe("PATCH /api/notes - Update Note", () => {
 	describe("Given invalid note id", () => {
 		test("should return status 400", async () => {
 			const invalidId = new Types.ObjectId().toString();
-			const updates: NoteRequestBody = {
-				id: invalidId,
-				title: "New title",
-			};
-			await testNoteUpdate("admin", 400, tokens, updates);
+			const updates = prepareUpdate(invalidId, { title: "New title" });
+			await runRoleTests("admin", 400, updates);
 		});
 	});
 
 	describe("Note Update Permissions", () => {
+		const roles: Role[] = ["admin", "manager", "employee"];
+
 		describe("Updating => [title, text, completed status]", () => {
-			describe("Note assigned to the user attempting the update", () => {
-				test.each([
-					["admin", 200],
-					["manager", 200],
-					["employee", 200],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const targetNote = notes.find(
+			const scenarios = [
+				{
+					description:
+						"Note assigned to the user attempting the update",
+					expectedStatus: { admin: 200, manager: 200, employee: 200 },
+					findNote: (role: string) =>
+						notes.find(
 							(note) => note.user.toString() === tokens[role].id
-						);
-						if (!targetNote)
-							throw new Error(`Note ${role} does not exist`);
+						),
+				},
+				{
+					description: "Note Assigned To Admin",
+					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+					findNote: () =>
+						notes.find(
+							(note) =>
+								note.user.toString() === tokens["admin"].id
+						),
+				},
+				{
+					description:
+						"Note Assigned To Employee (Not the employee attempting to update)",
+					expectedStatus: { admin: 200, manager: 200, employee: 400 },
+					createNote: () => createNoteForNewUser("employee"),
+				},
+				{
+					description:
+						"Note Assigned To Manager (Not the employee attempting to update)",
+					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+					createNote: () => createNoteForNewUser("manager"),
+				},
+			];
 
-						const updates: NoteRequestBody = {
-							id: targetNote._id.toString(),
-							title: `New title for ${role}'s note`,
-							text: "New text for ${role}'s note",
-							completed: true,
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
+			for (const scenario of scenarios) {
+				describe(scenario.description, () => {
+					for (const role of roles) {
+						const expectedStatus = scenario.expectedStatus[role];
+
+						test(`User with role: ${role} should return status: ${expectedStatus}`, async () => {
+							let note;
+
+							if (scenario.findNote) {
+								note = scenario.findNote(role);
+							} else if (scenario.createNote) {
+								note = await scenario.createNote();
+							}
+
+							if (!note)
+								throw new Error(
+									`Note not found for role: ${role}`
+								);
+
+							const updates = prepareUpdate(note._id.toString(), {
+								title: `New title for ${role}'s note`,
+								text: "New text",
+								completed: true,
+							});
+							await runRoleTests(role, expectedStatus, updates);
+						});
 					}
-				);
-			});
-
-			describe("Note Assigned To Employee (Not the employee attempting to update)", () => {
-				test.each([
-					["admin", 200],
-					["manager", 200],
-					["employee", 400],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const note = await createNoteForNewUser("employee");
-						const noteId = note._id.toString();
-
-						const updates: NoteRequestBody = {
-							id: noteId,
-							title: "New title",
-							text: "New text",
-							completed: true,
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
-					}
-				);
-			});
-
-			describe("Note Assigned To Manager (Not the employee attempting to update)", () => {
-				test.each([
-					["admin", 200],
-					["manager", 400],
-					["employee", 400],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const note = await createNoteForNewUser("manager");
-						const noteId = note._id.toString();
-
-						const updates: NoteRequestBody = {
-							id: noteId,
-							title: "New title",
-							text: "New text",
-							completed: true,
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
-					}
-				);
-			});
-
-			describe("Note Assigned To Admin", () => {
-				test.each([
-					["admin", 200],
-					["manager", 400],
-					["employee", 400],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const note = notes.find(
-							(n) => n.user.toString() === tokens["admin"].id
-						);
-						if (!note) throw new Error(`Note not found`);
-						const noteId = note._id.toString();
-
-						const updates: NoteRequestBody = {
-							id: noteId,
-							title: "New title",
-							text: "New text",
-							completed: true,
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
-					}
-				);
-			});
+				});
+			}
 		});
 
 		describe("Updating => Note Assigned User", () => {
-			describe("Assign to employee", () => {
-				test.each([
-					["admin", 200],
-					["manager", 200],
-					["employee", 400],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const note = notes.find(
-							(n) => n.user.toString() === tokens["employee"].id
-						);
+			const roles: Role[] = ["admin", "manager", "employee"];
+			const scenarios = [
+				{
+					description: "Assign to employee",
+					assignToRole: "employee",
+					expectedStatus: { admin: 200, manager: 200, employee: 400 },
+				},
+				{
+					description: "Assign to manager",
+					assignToRole: "manager",
+					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+				},
+				{
+					description: "Assign to admin",
+					assignToRole: "admin",
+					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+				},
+			];
 
-						if (!note) throw new Error("Note doesn't exist");
+			for (const scenario of scenarios) {
+				describe(scenario.description, () => {
+					for (const role of roles) {
+						const expectedStatus = scenario.expectedStatus[role];
+						test(`User with role: ${role} should return status: ${expectedStatus}`, async () => {
+							const note = notes.find(
+								(n) =>
+									n.user.toString() === tokens["employee"].id
+							);
 
-						const noteId = note._id.toString();
-
-						const newEmployee = await createRandomUser("employee");
-
-						const updates: NoteRequestBody = {
-							id: noteId,
-							user: newEmployee._id,
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
+							if (!note)
+								throw new Error(
+									`Note doesn't exist for role: ${role}`
+								);
+							let newUserId: Types.ObjectId;
+							if (scenario.assignToRole === "admin") {
+								newUserId = new Types.ObjectId(
+									tokens["admin"].id
+								);
+							} else {
+								const newUser = await createRandomUser(
+									scenario.assignToRole as Role
+								);
+								newUserId = newUser._id;
+							}
+							const updates = prepareUpdate(note._id.toString(), {
+								user: newUserId,
+							});
+							await runRoleTests(role, expectedStatus, updates);
+						});
 					}
-				);
-			});
-			describe("Assign to manager (Not manager attempting to update note)", () => {
-				test.each([
-					["admin", 200],
-					["manager", 400],
-					["employee", 400],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const note = notes.find(
-							(n) => n.user.toString() === tokens["employee"].id
-						);
-
-						if (!note) throw new Error("Note doesn't exist");
-
-						const noteId = note._id.toString();
-
-						const newManager = await createRandomUser("manager");
-
-						const updates: NoteRequestBody = {
-							id: noteId,
-							user: newManager._id,
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
-					}
-				);
-			});
-
-			describe("Assign Admin", () => {
-				test.each([
-					["admin", 200],
-					["manager", 400],
-					["employee", 400],
-				])(
-					"User with role: %s should return status: %i",
-					async (role: string, expectedStatus: number) => {
-						const note = notes.find(
-							(n) => n.user.toString() === tokens["employee"].id
-						);
-
-						if (!note) throw new Error("Note doesn't exist");
-
-						const noteId = note._id.toString();
-
-						const adminId = tokens["admin"].id;
-
-						const updates: NoteRequestBody = {
-							id: noteId,
-							user: new Types.ObjectId(adminId),
-						};
-						await testNoteUpdate(
-							role,
-							expectedStatus,
-							tokens,
-							updates
-						);
-					}
-				);
-			});
+				});
+			}
 		});
 	});
 });
