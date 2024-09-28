@@ -70,7 +70,7 @@ describe("DELETE /api/notes - Delete Note", () => {
 		describe("Assigned To Manager (Not the manager attempting to delete)", () => {
 			test.each([
 				["admin", 204],
-				["manager", 400],
+				["manager", 401],
 				["employee", 401],
 			])(
 				"User with role: %s should return status: %i when trying to delete note assigned to user with 'Manager' role",
@@ -88,7 +88,7 @@ describe("DELETE /api/notes - Delete Note", () => {
 		describe("Assigned To Admin", () => {
 			test.each([
 				["employee", 401],
-				["manager", 400],
+				["manager", 401],
 				["admin", 204],
 			])(
 				"User with role: %s should return status: %i when trying to delete note assigned to user with 'Admin' role",

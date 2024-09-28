@@ -59,7 +59,7 @@ describe("POST /api/notes - Create Note", () => {
 			test.each([
 				["admin", 201, true],
 				["manager", 201, true],
-				["employee", 400, false],
+				["employee", 401, false],
 			])(
 				"User with role: %s should return status: %i when trying to assign note to user with 'Employee' role",
 				async (
@@ -82,8 +82,8 @@ describe("POST /api/notes - Create Note", () => {
 		describe("To Manager", () => {
 			test.each([
 				["admin", 201, true],
-				["manager", 400, false],
-				["employee", 400, false],
+				["manager", 401, false],
+				["employee", 401, false],
 			])(
 				"User with role: %s should return status: %i when trying to assign note to user with 'manager' role",
 				async (
@@ -106,8 +106,8 @@ describe("POST /api/notes - Create Note", () => {
 		describe("To Admin", () => {
 			test.each([
 				["admin", 201, true],
-				["manager", 400, false],
-				["employee", 400, false],
+				["manager", 401, false],
+				["employee", 401, false],
 			])(
 				"User with role: %s should return status: %i when trying to assign note to user with 'admin' role",
 				async (

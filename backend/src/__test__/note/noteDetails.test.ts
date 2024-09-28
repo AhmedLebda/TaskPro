@@ -58,7 +58,7 @@ describe("GET /api/notes/details/:id - Get Note Details", () => {
 		test.each([
 			["admin", 200, true],
 			["manager", 200, true],
-			["employee", 400, false],
+			["employee", 401, false],
 		])(
 			"Users with role '%s' should return status %i when accessing details for note created by Manager",
 
@@ -88,8 +88,8 @@ describe("GET /api/notes/details/:id - Get Note Details", () => {
 	describe("Given note created by admin", () => {
 		test.each([
 			["admin", 200, true],
-			["manager", 400, false],
-			["employee", 400, false],
+			["manager", 401, false],
+			["employee", 401, false],
 		])(
 			"Users with role '%s' should return status %i when accessing details for note created by Admin",
 

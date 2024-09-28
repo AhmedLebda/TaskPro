@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import NoteModel from "../../models/Note";
 import { toNoteRequestBody } from "../../utils/helpers/type_helpers";
 import { PopulatedNote } from "../../types/types";
-
+import { NotePermissionsService } from "../permissions/permissions_services";
 /* Permissions:
 - Employee: Edit his own tasks only
 - Manager: Modify tasks assigned to his employees and himself
@@ -16,57 +16,31 @@ import { PopulatedNote } from "../../types/types";
 - Manager trying to Modify a task assigned to another manager or admin
 */
 const checkNotePermission = asyncHandler(async (req, _res, next) => {
-    const targetNoteId = req.params.id ?? toNoteRequestBody(req.body).id;
+	const targetNoteId = req.params.id ?? toNoteRequestBody(req.body).id;
 
-    const targetNote = (await NoteModel.findById(targetNoteId)
-        .populate("user")
-        .lean()) as PopulatedNote;
+	const targetNote = (await NoteModel.findById(targetNoteId)
+		.populate("user")
+		.lean()) as PopulatedNote;
 
-    // Target note to update doesn't exist
-    if (!targetNote) {
-        throw Error("This note doesn't exist");
-    }
+	// Target note to update doesn't exist
+	if (!targetNote) {
+		throw Error("This note doesn't exist");
+	}
 
-    // The current task owner (before the update)
-    const currentNoteOwner = targetNote.user;
-    const { _id: currentNoteOwnerId } = currentNoteOwner;
-    const isCurrentNoteOwnerAdminOrManager =
-        currentNoteOwner.roles.includes("admin") ||
-        currentNoteOwner.roles.includes("manager");
+	// The current task owner (before the update)
+	const currentNoteOwner = targetNote.user;
 
-    // Requesting user
-    const requestingUser = req.user;
-    if (!requestingUser)
-        throw new Error("Access denied: You lack the necessary permissions.");
+	// Requesting user
+	const requestingUser = req.user;
+	if (!requestingUser)
+		throw new Error("Access denied: You lack the necessary permissions.");
 
-    const { _id: requestingUserId } = requestingUser;
-    const isRequesterAdmin = requestingUser.roles.includes("admin");
-    const isRequesterManager = requestingUser.roles.includes("manager");
-    const isRequesterManagerOrAdmin = isRequesterAdmin || isRequesterManager;
+	await NotePermissionsService.hasNotePermission(
+		requestingUser,
+		currentNoteOwner
+	);
 
-    // Requesting user is the user which the task is currently assigned to.
-    const isRequestingUserCurrentNoteOwner =
-        requestingUserId.toString() === currentNoteOwnerId.toString();
-
-    // Employee trying to edit another user task
-    if (!isRequesterManagerOrAdmin && !isRequestingUserCurrentNoteOwner) {
-        throw Error(
-            "You do not have the necessary permissions to perform this action."
-        );
-    }
-
-    // Manager trying to modify a task assigned to another manager or admin
-    if (
-        isRequesterManager &&
-        isCurrentNoteOwnerAdminOrManager &&
-        !isRequestingUserCurrentNoteOwner
-    ) {
-        throw Error(
-            "You do not have the necessary permissions to perform this action."
-        );
-    }
-
-    next();
+	next();
 });
 
 export default checkNotePermission;

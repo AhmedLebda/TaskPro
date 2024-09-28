@@ -57,7 +57,7 @@ describe("PATCH /api/notes - Update Note", () => {
 				},
 				{
 					description: "Note Assigned To Admin",
-					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+					expectedStatus: { admin: 200, manager: 401, employee: 401 },
 					findNote: () =>
 						notes.find(
 							(note) =>
@@ -67,13 +67,13 @@ describe("PATCH /api/notes - Update Note", () => {
 				{
 					description:
 						"Note Assigned To Employee (Not the employee attempting to update)",
-					expectedStatus: { admin: 200, manager: 200, employee: 400 },
+					expectedStatus: { admin: 200, manager: 200, employee: 401 },
 					createNote: () => createNoteForNewUser("employee"),
 				},
 				{
 					description:
 						"Note Assigned To Manager (Not the employee attempting to update)",
-					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+					expectedStatus: { admin: 200, manager: 401, employee: 401 },
 					createNote: () => createNoteForNewUser("manager"),
 				},
 			];
@@ -115,17 +115,17 @@ describe("PATCH /api/notes - Update Note", () => {
 				{
 					description: "Assign to employee",
 					assignToRole: "employee",
-					expectedStatus: { admin: 200, manager: 200, employee: 400 },
+					expectedStatus: { admin: 200, manager: 200, employee: 401 },
 				},
 				{
 					description: "Assign to manager",
 					assignToRole: "manager",
-					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+					expectedStatus: { admin: 200, manager: 401, employee: 401 },
 				},
 				{
 					description: "Assign to admin",
 					assignToRole: "admin",
-					expectedStatus: { admin: 200, manager: 400, employee: 400 },
+					expectedStatus: { admin: 200, manager: 401, employee: 401 },
 				},
 			];
 
