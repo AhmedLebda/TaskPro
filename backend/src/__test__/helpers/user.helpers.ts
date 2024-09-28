@@ -81,7 +81,7 @@ export const testUsersListAccess = async (
 ) => {
 	const response = await api
 		.get("/api/users")
-		.set("Authorization", `Bearer ${tokens[role]}`)
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
 		.expect(expectedStatus);
 
 	if (shouldMatch) {
@@ -104,7 +104,7 @@ export const testUserCreate = async (
 ) => {
 	const response = await api
 		.post("/api/users")
-		.set("Authorization", `Bearer ${tokens[role]}`)
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
 		.send(userData)
 		.expect(expectedStatus);
 
@@ -126,7 +126,7 @@ export const testUserDelete = async (
 ) => {
 	await api
 		.delete("/api/users")
-		.set("Authorization", `Bearer ${tokens[role]}`)
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
 		.send({ id: targetUserId })
 		.expect(expectedStatus);
 };
@@ -139,7 +139,7 @@ export const testUserUpdate = async (
 ) => {
 	await api
 		.patch("/api/users")
-		.set("Authorization", `Bearer ${tokens[role]}`)
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
 		.send(updates)
 		.expect(expectedStatus);
 };
@@ -153,7 +153,7 @@ export const testUserDetails = async (
 ): Promise<void> => {
 	const response = await api
 		.get(`/api/users/${id}`)
-		.set("Authorization", `Bearer ${tokens[role]}`)
+		.set("Authorization", `Bearer ${tokens[role].access_token}`)
 		.expect(expectedStatus);
 
 	if (shouldMatch) {
