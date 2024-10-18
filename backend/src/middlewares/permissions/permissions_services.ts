@@ -136,17 +136,19 @@ export class UserPermissionsService extends BasePermissions {
 			);
 		}
 
+		//* can't modify admin data (only for testing purposes)
 		if (this.isAdmin(targetUser)) {
-			if (
-				providedRoles ||
-				providedActiveStatus === false ||
-				!this.isAdmin(requestingUser)
-			) {
-				throw new PermissionError(
-					"You do not have permission to perform this action.",
-					401
-				);
-			}
+			// if (
+			// 	providedRoles ||
+			// 	providedActiveStatus === false ||
+			// 	!this.isAdmin(requestingUser)
+			// ) {
+			// 	throw new PermissionError(
+			// 		"You do not have permission to perform this action.",
+			// 		401
+			// 	);
+			// }
+			throw new PermissionError("Admin data can't be modified", 401);
 		}
 
 		// Employees can't modify another user account
